@@ -1,0 +1,32 @@
+.container_logo {
+    display: flex;
+    justify-content: center;
+}
+
+.container_logo > h3{
+    font-size: 128px;
+    font-style: Istok Web;
+    background-image: linear-gradient(to right, #FF0000, #0000FF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+
+
+.container_camps > input{
+    width: 325px;
+    height: 33px;
+    margin-bottom: 20px;
+    border-radius: 100px;
+}
+
+.container_camps > button{
+    background: #0000FF;
+    border-radius: 100px;
+    width: 168px;
+    height: 40px;
+    font-size: 24px;
+    color: #FFFFFF;
+    margin-bottom: 20px;
+}
