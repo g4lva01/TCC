@@ -3,10 +3,12 @@
     <h3 id="title">EBD</h3>
 </div>
 <div class="container_camps">
-    <input type="text" id="nome" placeholder="Matrícula/Nome Completo">
-    <input type="password" id="senha" placeholder="Senha">
+    <input type="text" class="nome" placeholder="Matrícula/Nome Completo">
+    <input type="password" class="senha" placeholder="Senha">
     <br>
-    <button id="entra">ENTRA</button>
+    <button class="entra">ENTRA</button>
     <br>
-    <button id="nova_conta">NEW LOGIN</button>
+    <button class="nova_conta"><a [routerLink]="['/register']">NEW LOGIN</a></button>
+    <br>
+    <button class="nova_senha">ESQUECI A SENHA</button>
 </div>

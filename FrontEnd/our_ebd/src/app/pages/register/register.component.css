@@ -41,15 +41,3 @@
     color: #FFFFFF;
     text-decoration: none;
 }
-
-.container_camps > .nova_senha {
-  color: #0000FF; 
-  font-family: Arial, sans-serif; 
-  font-size: 16px; 
-  font-weight: 400;
-  text-decoration: none; 
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
