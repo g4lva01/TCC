@@ -4,23 +4,21 @@ import { Router} from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-register',
+  selector: 'app-new-password',
   imports: [ReactiveFormsModule, CommonModule],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  templateUrl: './new-password.component.html',
+  styleUrl: './new-password.component.css'
 })
-export class RegisterComponent {
+export class NewPasswordComponent {
   formulario = new FormGroup({
-    nome: new FormControl('', Validators.required),
-    dtNascimento: new FormControl('', Validators.required),
-    matricula: new FormControl('', Validators.required),
-    senha: new FormControl('', Validators.required),
-    cfSenha: new FormControl('', Validators.required)
+    nomeMat: new FormControl('', Validators.required),
+    nvSenha: new FormControl('', Validators.required),
+    cfNvSenha: new FormControl('', Validators.required)
   }, { validators: this.senhasIguaisValidator });
 
   constructor(private router: Router) {}
 
-  criarLogin() {
+  alterarLogin() {
     if (this.formulario.valid) {
       console.log('Formulário enviado:', this.formulario.value);
       this.router.navigate(['']); // redireciona para a tela principal

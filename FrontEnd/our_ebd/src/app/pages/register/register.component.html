@@ -4,10 +4,20 @@
 </div>
 
 <div class="container_camps">
-    <input type="text" placeholder="Nome completo">
-    <input type="date" placeholder="Data de Nascimento">
-    <input type="number" placeholder="Matrícula">
-    <input type="password" placeholder="criar senha">
-    <input type="password" placeholder="confimar senha">
-    <button><a routerLink="['']">Criar Login</a></button>
+    <form [formGroup]="formulario" (ngSubmit)="criarLogin()">
+        <input type="text" formControlName="nome" placeholder="Nome completo" required />
+        <input type="date" formControlName="dtNascimento" placeholder="Data de Nascimento" required />
+        <input type="number" formControlName="matricula" placeholder="Matrícula" required />
+        <input type="password" formControlName="senha" placeholder="Criar senha" required />
+        <small class="info-senha">
+            A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, um número e um símbolo.
+        </small>
+        <input type="password" formControlName="cfSenha" placeholder="Confirmar senha" required />
+
+        <div *ngIf="formulario.errors?.['senhasDiferentes'] && formulario.touched">
+            ⚠️ As senhas não coincidem.
+        </div>
+
+        <button type="submit" [disabled]="formulario.invalid">Criar Login</button>
+    </form>
 </div>
