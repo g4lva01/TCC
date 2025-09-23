@@ -1,13 +1,12 @@
 <div class="layout">
-  <button class="hamburger" (click)="toggleMenu()">☰</button>
-  <app-menu *ngIf="menuVisible"></app-menu>
+  <app-menu></app-menu>
   <div class="main-content">
     <div class="header">
-      <img src="../../../assets/image/logo.png" alt="Logo">
+      <img src="./../../../assets/image/logo.png" alt="Logo">
       <h3 id="title">EBD</h3>
     </div>
     <div class="content">
-      <!-- conteúdo principal -->
+      <app-frequency-graph></app-frequency-graph>
     </div>
   </div>
 </div>

@@ -1,6 +1,15 @@
-<div class="sidebar">
-  <button id="Atividades" [routerLink]="['/activitysManager']">Atividades</button>
-  <button id="Relatório" [routerLink]="['/reportManager']">Relatório</button>
-  <button id="Histórico" [routerLink]="['/schoolHistoryManager']">Histórico Escolar</button>
-  <button id="Frequência" [routerLink]="['/frequencyManager']">Frequência</button>
+<div class="sidebar" [class.aberto]="menuVisible">
+  <button 
+    (click)="toggleMenu()" 
+    class="toggle-button" 
+    [ngClass]="menuVisible ? 'botao-fechar' : 'botao-abrir'">
+    {{ menuVisible ? 'X' : '☰' }}
+  </button>
+
+  <div *ngIf="menuVisible" class="menu-content">
+    <button id="Atividades" [routerLink]="['/activitysManager']">Atividades</button>
+    <button id="Relatório" [routerLink]="['/reportManager']">Relatório</button>
+    <button id="Histórico" [routerLink]="['/schoolHistoryManager']">Histórico Escolar</button>
+    <button id="Frequência" [routerLink]="['/frequencyManager']">Frequência</button>
+  </div>
 </div>
