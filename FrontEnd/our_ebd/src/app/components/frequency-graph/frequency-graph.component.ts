@@ -7,7 +7,7 @@ import { ChartOptions, ChartType, ChartData } from 'chart.js';
   selector: 'app-frequency-graph',
   imports: [CommonModule, BaseChartDirective],
   templateUrl: './frequency-graph.component.html',
-  styleUrl: './frequency-graph.component.css'
+  styleUrls: ['./frequency-graph.component.css']
 })
 export class FrequencyGraphComponent {
   chartOptions: ChartOptions = {
@@ -52,4 +52,7 @@ export class FrequencyGraphComponent {
       }
     ]
   };
+  get temDados(): boolean {
+    return this.chartData.datasets.some(dataset => dataset.data.length > 0);
+  }
 }

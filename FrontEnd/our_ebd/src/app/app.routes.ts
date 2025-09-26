@@ -18,7 +18,7 @@ export const routes: Routes = [
       component: NewPasswordComponent
     },
     {
-      path: 'frequecyManager',
+      path: 'frequencyManager',
       component: ViewFrequencyManagerComponent
     }
 ];
