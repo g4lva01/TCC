@@ -13,8 +13,15 @@
 }
 
 .sidebar.aberto {
-  width: 50vw;
+  width: 25vw;
   background-color: #732991;
+}
+
+/* Quando a tela for menor que 768px */
+@media (max-width: 768px) {
+  .sidebar.aberto {
+    width: 50vw;
+  }
 }
 
 /* Botão de abrir (☰) */

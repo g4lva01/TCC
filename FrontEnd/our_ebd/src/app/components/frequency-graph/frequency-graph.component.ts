@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartOptions, ChartType, ChartData } from 'chart.js';
 
@@ -10,6 +10,7 @@ import { ChartOptions, ChartType, ChartData } from 'chart.js';
   styleUrls: ['./frequency-graph.component.css']
 })
 export class FrequencyGraphComponent {
+  isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   chartOptions: ChartOptions = {
     responsive: true,
     plugins: {
