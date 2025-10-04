@@ -59,3 +59,27 @@ app-menu {
   -webkit-background-clip: text;
   background-clip: text;
 }
+
+.historico-container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: auto;
+}
+
+.registro {
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+  font-family: 'Istok web', sans-serif;
+}
+
+button {
+  background-color: #732991;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}

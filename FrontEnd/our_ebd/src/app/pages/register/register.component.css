@@ -5,7 +5,7 @@
 
 .container_logo > h3{
     font-size: 128px;
-    font-style: "Istok Web", sans-serif;
+    font-family: 'Istok Web', sans-serif;
     background-image: linear-gradient(to right, #FF0000, #0000FF);
     -webkit-background-clip: text;
     background-clip: text;

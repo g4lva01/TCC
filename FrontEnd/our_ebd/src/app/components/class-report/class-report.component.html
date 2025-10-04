@@ -1,1 +1,37 @@
-<p>class-report works!</p>
+<div class="report-container">
+  <h2>DATA DA FREQUÊNCIA</h2>
+
+  <div class="filtro-container">
+    <label for="filtro">Ano e Trimestre:</label>
+    <select id="filtro" class="filtro">
+      <option value="">Selecione</option>
+      <option *ngFor="let trimestre of trimestres" [value]="trimestre">
+        {{ trimestre.replace('-T1', ' - 1º Trimestre')
+                    .replace('-T2', ' - 2º Trimestre')
+                    .replace('-T3', ' - 3º Trimestre')
+                    .replace('-T4', ' - 4º Trimestre') }}
+      </option>
+    </select>
+  </div>
+
+  <div class="grupo" *ngFor="let grupo of grupos">
+    <h3>{{ grupo.nome }}</h3>
+    <p>Matriculados: {{ grupo.matriculados }}</p>
+    <p>Presentes: {{ grupo.presentes }}</p>
+    <p>Ausentes: {{ grupo.ausentes }}</p>
+    <p>Bíblias: {{grupo.biblia}}</p>
+    <p>Revistas: {{grupo.revistas}}</p>
+    <p>Oferta: R$ {{ grupo.oferta }}</p>
+    <button [routerLink]="['/historico', grupo.nome]">Ver Mais</button>
+  </div>
+
+  <div class="total-geral">
+    <h3>Total Geral</h3>
+    <p>Matriculados: {{ totalGeral.matriculados }}</p>
+    <p>Presentes: {{ totalGeral.presentes }}</p>
+    <p>Ausentes: {{ totalGeral.ausentes }}</p>
+    <p>Bíblias: {{totalGeral.biblia}}</p>
+    <p>Revistas: {{totalGeral.revistas}}</p>
+    <p>Oferta: R$ {{ totalGeral.oferta }}</p>
+  </div>
+</div>

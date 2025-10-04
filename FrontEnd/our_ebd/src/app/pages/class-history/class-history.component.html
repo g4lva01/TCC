@@ -1,0 +1,21 @@
+<div class="layout">
+    <app-menu></app-menu>
+    <div class="main-content">
+        <div class="header">
+        <img src="./../../../assets/image/logo.png" alt="">
+        <h3 id="title">EBD</h3>
+        </div>
+    </div>
+</div>
+
+<div class="historico-container">
+  <h2>Histórico de Frequência - {{ turma }}</h2>
+
+  <div class="registro" *ngFor="let item of historico">
+    <p><strong>Data:</strong> {{ item.data }}</p>
+    <p><strong>Total Presentes:</strong> {{ item.presente}}</p>
+    <p><strong>Total de Bíblias:</strong> {{ item.levouBiblia}}</p>
+    <p><strong>Total de Revistas:</strong> {{item.Revistas}}</p>
+    <button [routerLink]="['/chamada', turma, item.data]">Chamada</button>
+  </div>
+</div>
