@@ -59,9 +59,13 @@ create table Gestor_Turma (
 create table Chamada (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     turma_id INT,
+    professor_id INT NOT NULL,
     data_chamada DATE,
     status_chamada VARCHAR(20),
-    FOREIGN KEY (turma_id) REFERENCES Turma(id)
+    valor_oferta DECIMAL(10,2),
+    qtd_visitantes INT,
+    FOREIGN KEY (turma_id) REFERENCES Turma(id),
+    FOREIGN KEY (professor_id) REFERENCES Pessoa(id)
 );
 
 create table Presenca (
@@ -76,6 +80,9 @@ create table Presenca (
 create table Atividade (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     turma_id INT NOT NULL,
+    professor_id INT NOT NULL,
     titulo VARCHAR(100) NOT NULL,
-    descricao TEXT
+    data_publicacao DATETIME NOT NULL,
+    descricao TEXT,
+    FOREIGN KEY (professor_id) REFERENCES Pessoa(id)
 );
