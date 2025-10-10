@@ -3,11 +3,10 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MenuComponent } from '../../components/menu/menu.component';
 import { CommonModule } from '@angular/common';
 import { ChamadaService } from '../../services/chamada.service';
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-class-history',
-  imports: [CommonModule, MenuComponent, HttpClientModule, RouterLink],
+  imports: [CommonModule, MenuComponent, RouterLink],
   standalone: true,
   templateUrl: './class-history.component.html',
   styleUrls: ['./class-history.component.css']
@@ -40,7 +39,7 @@ export class ClassHistoryComponent implements OnInit {
   }
 
   fazerChamada(data: string) {
-    this.chamadaService.registrarChamada(this.turma, data).subscribe({
+    this.chamadaService.registrarChamada({ turma: this.turma, data }).subscribe({
       next: () => alert(`Chamada registrada para ${data}`),
       error: () => alert('Erro ao registrar chamada')
     });

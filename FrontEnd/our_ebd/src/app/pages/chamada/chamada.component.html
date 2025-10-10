@@ -9,8 +9,40 @@
 </div>
 
 <div class="chamada-container">
-  <h2>Chamada da Turma: {{ turma }}</h2>
-  <p>Data: {{ data }}</p>
+  <h2>Chamada - {{data}}</h2>
 
-  <!-- Aqui você pode listar os alunos e registrar presença -->
+  <div class="turma-selector">
+    <label for="turma">Opção de Turmas:</label>
+    <select id="turma">
+      <option>Adultos</option>
+      <option>Adolescentes</option>
+      <option>Infantil</option>
+    </select>
+  </div>
+
+  <div *ngFor="let aluno of alunos; let i = index" class="aluno">
+    <span class="nome">{{ aluno.nome }}</span>
+
+    <button (click)="togglePresenca(i)">
+      Presente: {{ aluno.presente ? '✅' : '❌' }}
+    </button>
+
+    <button (click)="toggleBiblia(i)">
+      Bíblia: {{ aluno.biblia ? '✅' : '❌' }}
+    </button>
+  </div>
+
+
+  <div class="resumo">
+    <div class="campo">
+      <label>Visitantes:</label>
+      <input type="number" [(ngModel)]="visitantes" />
+    </div>
+    <div class="campo">
+      <label>Oferta da Turma:</label>
+      <input type="text" [(ngModel)]="oferta" />
+    </div>
+  </div>
+
+  <button class="finalizar" (click)="finalizarChamada()">Finalizar Chamada</button>
 </div>

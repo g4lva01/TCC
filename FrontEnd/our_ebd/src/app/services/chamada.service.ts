@@ -7,7 +7,8 @@ export class ChamadaService {
 
   constructor(private http: HttpClient) {}
 
-  registrarChamada(turma: string, data: string) {
-    return this.http.post(this.apiUrl, { turma, data });
+  registrarChamada(payload: any) {
+    return this.http.post(this.apiUrl, payload);
   }
+
 }
