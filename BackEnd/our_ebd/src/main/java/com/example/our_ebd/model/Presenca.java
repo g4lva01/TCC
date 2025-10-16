@@ -17,4 +17,28 @@ public class Presenca {
     private Pessoa aluno;
 
     private Boolean presente;
+
+    public Chamada getChamada() {
+        return chamada;
+    }
+
+    public void setChamada(Chamada chamada) {
+        this.chamada = chamada;
+    }
+
+    public Pessoa getAluno() {
+        return aluno;
+    }
+
+    public void setAluno(Pessoa aluno) {
+        this.aluno = aluno;
+    }
+
+    public Boolean getPresente() {
+        return presente;
+    }
+
+    public void setPresente(Boolean presente) {
+        this.presente = presente;
+    }
 }

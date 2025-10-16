@@ -12,4 +12,24 @@ public class Turma {
 
     private String nome;
     private Integer limiteDeIdade;
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Integer getLimiteDeIdade() {
+        return limiteDeIdade;
+    }
+
+    public void setLimiteDeIdade(Integer limiteDeIdade) {
+        this.limiteDeIdade = limiteDeIdade;
+    }
 }
