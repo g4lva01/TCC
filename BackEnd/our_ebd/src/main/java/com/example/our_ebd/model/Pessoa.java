@@ -1,12 +1,10 @@
 package com.example.our_ebd.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Pessoa {
@@ -16,6 +14,9 @@ public class Pessoa {
     private String nome;
     private LocalDate dataDeNascimento;
     private Integer matricula;
+
+    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    private List<PessoaPerfil> perfis;
 
     public Long getId() {
         return id;
@@ -47,5 +48,13 @@ public class Pessoa {
 
     public void setMatricula(Integer matricula) {
         this.matricula = matricula;
+    }
+
+    public List<PessoaPerfil> getPerfis() {
+        return perfis;
+    }
+
+    public void setPerfis(List<PessoaPerfil> perfis) {
+        this.perfis = perfis;
     }
 }
