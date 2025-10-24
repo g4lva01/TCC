@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { Router} from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -18,15 +19,16 @@ export class RegisterComponent {
     cfSenha: new FormControl('', Validators.required)
   }, { validators: this.senhasIguaisValidator });
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
   criarLogin() {
-    if (this.formulario.valid) {
-      console.log('Formulário enviado:', this.formulario.value);
-      this.router.navigate(['']); // redireciona para a tela principal
-    } else {
-      this.formulario.markAllAsTouched();
-    }
+    if (this.formulario.invalid) return;
+
+    this.http.post('http://localhost:8080/api/login/criar', this.formulario.value)
+      .subscribe({
+        next: res => alert('Login criado com sucesso!'),
+        error: err => alert('Erro: ' + err.error)
+      });
   }
 
   senhasIguaisValidator(control: AbstractControl): ValidationErrors | null {

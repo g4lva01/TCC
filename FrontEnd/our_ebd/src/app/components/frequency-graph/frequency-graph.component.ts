@@ -1,4 +1,4 @@
-import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject, PLATFORM_ID, Input } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartOptions, ChartType, ChartData } from 'chart.js';
@@ -55,5 +55,25 @@ export class FrequencyGraphComponent {
   };
   get temDados(): boolean {
     return this.chartData.datasets.some(dataset => dataset.data.length > 0);
+  }
+
+  @Input() frequencias: any[] = [];
+
+  ngOnChanges(): void {
+    if (!this.frequencias || this.frequencias.length === 0) return;
+
+    const alunos = this.frequencias.map(f => f.aluno.nome);
+    const presencas = this.frequencias.map(f => f.presencas);
+
+    this.chartData = {
+      labels: alunos,
+      datasets: [
+        {
+          label: 'Presenças',
+          data: presencas,
+          backgroundColor: '#732991'
+        }
+      ]
+    };
   }
 }
