@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class HomeComponent {
   formulario = new FormGroup({
-    matricula: new FormControl('', Validators.required),
+    identificador: new FormControl('', Validators.required),
     senha: new FormControl('', Validators.required)
   });
 
