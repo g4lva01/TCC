@@ -8,24 +8,20 @@ import com.example.our_ebd.repository.PessoaRepository;
 import com.example.our_ebd.repository.UsuarioAutenticacaoRepository;
 import com.example.our_ebd.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/login")
 public class LoginController {
     @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private CriarLoginRequest criarLoginRequest;
 
     @Autowired
     private PessoaRepository pessoaRepository;
@@ -40,16 +36,29 @@ public class LoginController {
     private JwtService jwtService;
 
     @PostMapping
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getMatricula().toString(),
-                        request.getSenha()
-                )
-        );
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        String identificador = request.getIdentificador();
+        String senha = request.getSenha();
 
-        String token = jwtService.gerarToken(auth.getName());
-        return ResponseEntity.ok(token);
+        UsuarioAutenticacao usuario;
+
+        try {
+            // Tenta interpretar como matrícula
+            Integer matricula = Integer.parseInt(identificador);
+            usuario = usuarioAutenticacaoRepository.findByPessoa_Matricula(matricula)
+                    .orElse(null);
+        } catch (NumberFormatException e) {
+            // Se não for número, tenta buscar por nome
+            usuario = usuarioAutenticacaoRepository.findByPessoa_NomeIgnoreCase(identificador)
+                    .orElse(null);
+        }
+
+        if (usuario == null || !passwordEncoder.matches(senha, usuario.getSenha())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas.");
+        }
+
+        String token = jwtService.gerarToken(String.valueOf(usuario));
+        return ResponseEntity.ok(Map.of("token", token));
     }
 
     @PostMapping("/criar")

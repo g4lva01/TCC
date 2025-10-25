@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface UsuarioAutenticacaoRepository extends JpaRepository<UsuarioAutenticacao, Long> {
     Optional<UsuarioAutenticacao> findByPessoaMatricula(Integer matricula);
-
+    Optional<UsuarioAutenticacao> findByPessoa_Matricula(Integer matricula);
+    Optional<UsuarioAutenticacao> findByPessoa_NomeIgnoreCase(String nome);
     boolean existsByPessoa_Matricula(Integer matricula);
 }

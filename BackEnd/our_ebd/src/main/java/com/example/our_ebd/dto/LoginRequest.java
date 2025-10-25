@@ -1,15 +1,15 @@
 package com.example.our_ebd.dto;
 
 public class LoginRequest {
-    private Integer matricula;
+    private String identificador;
     private String senha;
 
-    public Integer getMatricula() {
-        return matricula;
+    public String getIdentificador() {
+        return identificador;
     }
 
-    public void setMatricula(Integer matricula) {
-        this.matricula = matricula;
+    public void setIdentificador(String identificador) {
+        this.identificador = identificador;
     }
 
     public String getSenha() {
