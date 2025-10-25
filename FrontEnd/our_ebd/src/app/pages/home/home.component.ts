@@ -25,7 +25,7 @@ export class HomeComponent {
       .subscribe({
         next: res => {
           localStorage.setItem('token', res.token); // ou res se for só string
-          this.router.navigate(['/home']);
+          this.router.navigate(['/frequencyManager']);
         },
         error: err => alert('Erro ao fazer login: ' + err.error)
       });

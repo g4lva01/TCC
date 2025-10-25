@@ -22,13 +22,16 @@ export class RegisterComponent {
   constructor(private router: Router, private http: HttpClient) {}
 
   criarLogin() {
-    if (this.formulario.invalid) return;
-
-    this.http.post('http://localhost:8080/api/login/criar', this.formulario.value)
-      .subscribe({
-        next: res => alert('Login criado com sucesso!'),
-        error: err => alert('Erro: ' + err.error)
-      });
+    this.http.post('http://localhost:8080/api/login/criar', this.formulario.value, {
+      withCredentials: true
+    })
+    .subscribe({
+      next: res => {
+        alert('Login criado com sucesso!');
+        this.router.navigate(['/']);
+      },
+      error: err => alert('Erro: ' + err.error)
+    });
   }
 
   senhasIguaisValidator(control: AbstractControl): ValidationErrors | null {
