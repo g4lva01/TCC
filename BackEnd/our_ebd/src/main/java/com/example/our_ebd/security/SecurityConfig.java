@@ -40,6 +40,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/login", "/api/login/criar", "/api/login/alterar").permitAll()
                         .requestMatchers("/api/pessoas/**").hasRole("ADMIN")
                         .requestMatchers("/api/chamadas/**").hasRole("PROFESSOR")
+                        .requestMatchers("/api/turmas/**").hasAnyRole("PROFESSOR", "GESTOR", "ADMIN")
+                        .requestMatchers("/api/atividade/**").hasAnyRole("PROFESSOR", "GESTOR", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
