@@ -55,7 +55,7 @@ app-menu {
   font-family: 'Istok Web', sans-serif;
   margin-top: 20px;
   color: transparent;
-  background: linear-gradient(to right, red, blue, purple);
+  background: linear-gradient(to right, #FF0000, #0000FF);
   -webkit-background-clip: text;
   background-clip: text;
 }

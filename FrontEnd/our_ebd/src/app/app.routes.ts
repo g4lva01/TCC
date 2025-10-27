@@ -6,6 +6,7 @@ import { ViewFrequencyManagerComponent } from './pages/view-frequency-manager/vi
 import { ViewReportManagerComponent } from './pages/view-report-manager/view-report-manager.component';
 import { ClassHistoryComponent } from './pages/class-history/class-history.component';
 import { ChamadaComponent } from './pages/chamada/chamada.component';
+import { ActivitysManagerComponent } from './pages/activitys-manager/activitys-manager.component';
 
 export const routes: Routes = [
     {
@@ -29,11 +30,15 @@ export const routes: Routes = [
       component: ViewReportManagerComponent
     },
     {
-      path: 'historico/:turma',
+      path: 'schoolHistoryManager/:turma',
       component: ClassHistoryComponent
     },
     {
       path: 'chamada/:turma/:data',
       component: ChamadaComponent
+    },
+    {
+      path: 'activitysManager',
+      component: ActivitysManagerComponent
     }
 ];

@@ -1,0 +1,49 @@
+<div class="layout">
+    <app-menu></app-menu>
+    <div class="main-content">
+        <div class="header">
+        <img src="./../../../assets/image/logo.png" alt="">
+        <h3 id="title">EBD</h3>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h2>Atividades Publicadas</h2>
+    <button *ngIf="temPermissao" (click)="mostrarModal = true">Nova Atividade</button>
+    <div class="modal-overlay" *ngIf="mostrarModal">
+        <div class="modal">
+            <button class="fechar" (click)="mostrarModal = false">✖</button>
+
+            <h3>Criar Nova Atividade</h3>
+
+            <label>Opção de Turmas</label>
+            <select [(ngModel)]="novaAtividade.turmaId">
+            <option *ngFor="let turma of turmas" [value]="turma.id">{{ turma.nome }}</option>
+            </select>
+
+            <label>Lição</label>
+            <input type="text" [(ngModel)]="novaAtividade.licao" />
+
+            <label>Título</label>
+            <input type="text" [(ngModel)]="novaAtividade.titulo" />
+
+            <label>Data</label>
+            <input type="date" [(ngModel)]="novaAtividade.dataPublicacao" />
+
+            <label>Texto da Atividade</label>
+            <textarea [(ngModel)]="novaAtividade.descricao"></textarea>
+
+            <a href="#"><span>📎</span> Anexar Material Extra</a>
+
+            <button class="concluido" (click)="salvarAtividade()">CONCLUÍDO</button>
+        </div>
+    </div>
+    <div *ngFor="let atividade of atividades" class="card">
+        <h3>{{ atividade.titulo }}</h3>
+        <p><strong>Data:</strong> {{ atividade.dataPublicacao | date:'dd/MM/yyyy HH:mm' }}</p>
+        <p><strong>Professor:</strong> {{ atividade.professor.nome }}</p>
+        <p><strong>Turma:</strong> {{ atividade.turma.nome }}</p>
+        <p><strong>Descrição:</strong> {{ atividade.descricao }}</p>
+    </div>
+</div>
