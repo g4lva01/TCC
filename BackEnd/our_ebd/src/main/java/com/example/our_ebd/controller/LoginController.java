@@ -1,5 +1,6 @@
 package com.example.our_ebd.controller;
 
+import com.example.our_ebd.dto.AlterarSenhaRequest;
 import com.example.our_ebd.dto.CriarLoginRequest;
 import com.example.our_ebd.dto.LoginRequest;
 import com.example.our_ebd.model.Pessoa;
@@ -14,8 +15,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/login")
@@ -83,5 +84,38 @@ public class LoginController {
         usuarioAutenticacaoRepository.save(usuario);
 
         return ResponseEntity.ok("Login criado com sucesso!");
+    }
+
+    @PutMapping("/alterar")
+    public ResponseEntity<?> alterarSenha(@RequestBody AlterarSenhaRequest request) {
+        if (!request.getNovaSenha().equals(request.getConfirmarSenha())) {
+            return ResponseEntity.badRequest().body("As senhas não coincidem.");
+        }
+
+        Optional<Pessoa> pessoaOpt;
+
+        try {
+            Integer matricula = Integer.parseInt(request.getIdentificador());
+            pessoaOpt = pessoaRepository.findByMatricula(matricula);
+        } catch (NumberFormatException e) {
+            pessoaOpt = pessoaRepository.findByNome(request.getIdentificador());
+        }
+
+        if (pessoaOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Usuário não encontrado.");
+        }
+
+        Pessoa pessoa = pessoaOpt.get();
+        Optional<UsuarioAutenticacao> usuarioOpt = usuarioAutenticacaoRepository.findByPessoa(pessoa);
+
+        if (usuarioOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Usuário de autenticação não encontrado.");
+        }
+
+        UsuarioAutenticacao usuario = usuarioOpt.get();
+        usuario.setSenha(passwordEncoder.encode(request.getNovaSenha()));
+        usuarioAutenticacaoRepository.save(usuario);
+
+        return ResponseEntity.ok("Senha atualizada com sucesso!");
     }
 }
