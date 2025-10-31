@@ -1,0 +1,8 @@
+<div class="container">
+  <h2>Escolha como deseja acessar:</h2>
+  <div class="perfil-card" *ngFor="let perfil of perfis">
+    <button (click)="acessarPerfil(perfil)">
+      {{ perfil }}
+    </button>
+  </div>
+</div>

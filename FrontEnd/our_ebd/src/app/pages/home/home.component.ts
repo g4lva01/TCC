@@ -24,9 +24,9 @@ export class HomeComponent {
     this.http.post<any>('http://localhost:8080/api/login', this.formulario.value)
       .subscribe({
         next: res => {
-          localStorage.setItem('token', res.token); // ou res se for só string
-          this.router.navigate(['/frequencyManager']);
-        },
+        localStorage.setItem('usuarioLogado', JSON.stringify(res));
+        this.router.navigate(['/selecionar-perfil']);
+      },
         error: err => alert('Erro ao fazer login: ' + err.error)
       });
   }
