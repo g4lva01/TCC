@@ -12,11 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/login")
@@ -44,12 +47,10 @@ public class LoginController {
         UsuarioAutenticacao usuario;
 
         try {
-            // Tenta interpretar como matrícula
             Integer matricula = Integer.parseInt(identificador);
             usuario = usuarioAutenticacaoRepository.findByPessoa_Matricula(matricula)
                     .orElse(null);
         } catch (NumberFormatException e) {
-            // Se não for número, tenta buscar por nome
             usuario = usuarioAutenticacaoRepository.findByPessoa_NomeIgnoreCase(identificador)
                     .orElse(null);
         }
@@ -59,7 +60,16 @@ public class LoginController {
         }
 
         String token = jwtService.gerarToken(String.valueOf(usuario));
-        return ResponseEntity.ok(Map.of("token", token));
+
+        List<String> roles = usuario.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(Map.of(
+                "token", token,
+                "nome", usuario.getPessoa().getNome(),
+                "roles", usuario.getRoles()
+        ));
     }
 
     @PostMapping("/criar")
