@@ -1,10 +1,15 @@
 package com.example.our_ebd.controller;
 
 import com.example.our_ebd.dto.AlterarSenhaRequest;
+import com.example.our_ebd.dto.AtualizarPerfisRequest;
 import com.example.our_ebd.dto.CriarLoginRequest;
 import com.example.our_ebd.dto.LoginRequest;
+import com.example.our_ebd.model.Perfil;
 import com.example.our_ebd.model.Pessoa;
+import com.example.our_ebd.model.PessoaPerfil;
 import com.example.our_ebd.model.UsuarioAutenticacao;
+import com.example.our_ebd.repository.PerfilRepository;
+import com.example.our_ebd.repository.PessoaPerfilRepository;
 import com.example.our_ebd.repository.PessoaRepository;
 import com.example.our_ebd.repository.UsuarioAutenticacaoRepository;
 import com.example.our_ebd.security.JwtService;
@@ -38,6 +43,23 @@ public class LoginController {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private PessoaPerfilRepository pessoaPerfilRepository;
+
+    @Autowired
+    private PerfilRepository perfilRepository;
+
+    private void vincularPerfilAluno(Pessoa pessoa) {
+        Perfil perfilAluno = perfilRepository.findById(2L)
+                .orElseThrow(() -> new RuntimeException("Perfil aluno não encontrado"));
+
+        PessoaPerfil vinculo = new PessoaPerfil();
+        vinculo.setPessoa(pessoa);
+        vinculo.setPerfil(perfilAluno);
+
+        pessoaPerfilRepository.save(vinculo);
+    }
 
     @PostMapping
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
@@ -93,6 +115,8 @@ public class LoginController {
         usuario.setSenha(passwordEncoder.encode(request.getSenha()));
         usuarioAutenticacaoRepository.save(usuario);
 
+        vincularPerfilAluno(pessoa);
+
         return ResponseEntity.ok("Login criado com sucesso!");
     }
 
@@ -127,5 +151,44 @@ public class LoginController {
         usuarioAutenticacaoRepository.save(usuario);
 
         return ResponseEntity.ok("Senha atualizada com sucesso!");
+    }
+
+    @PutMapping("/perfil")
+    public ResponseEntity<?> atualizarPerfis(@RequestBody AtualizarPerfisRequest request) {
+        Pessoa pessoa = pessoaRepository.findById(request.getPessoaId())
+                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+
+        List<Perfil> perfis = perfilRepository.findAllById(request.getPerfilIds());
+
+        pessoaPerfilRepository.deleteByPessoa(pessoa); // limpa perfis antigos
+        for (Perfil perfil : perfis) {
+            PessoaPerfil vinculo = new PessoaPerfil();
+            vinculo.setPessoa(pessoa);
+            vinculo.setPerfil(perfil);
+            pessoaPerfilRepository.save(vinculo);
+        }
+
+        return ResponseEntity.ok("Perfis atualizados com sucesso!");
+    }
+
+    @GetMapping("/logins")
+    public ResponseEntity<?> listarLogins() {
+        List<UsuarioAutenticacao> usuarios = usuarioAutenticacaoRepository.findAll();
+
+        List<Map<String, Object>> resultado = usuarios.stream().map(u -> {
+            List<String> perfis = pessoaPerfilRepository.findByPessoa(u.getPessoa()).stream()
+                    .map(pp -> pp.getPerfil().getNome())
+                    .collect(Collectors.toList());
+
+            return Map.of(
+                    "id", u.getPessoa().getId(),
+                    "nome", u.getPessoa().getNome(),
+                    "matricula", u.getPessoa().getMatricula(),
+                    "roles", u.getRoles(),
+                    "perfis", perfis
+            );
+        }).toList();
+
+        return ResponseEntity.ok(resultado);
     }
 }
