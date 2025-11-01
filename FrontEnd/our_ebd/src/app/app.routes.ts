@@ -8,6 +8,7 @@ import { ClassHistoryComponent } from './pages/class-history/class-history.compo
 import { ChamadaComponent } from './pages/chamada/chamada.component';
 import { ActivitysManagerComponent } from './pages/activitys-manager/activitys-manager.component';
 import { PerfilSelectorComponent } from './pages/perfil-selector/perfil-selector.component';
+import { GerenciarPerfisComponent } from './pages/gerenciar-perfis/gerenciar-perfis.component';
 
 export const routes: Routes = [
     {
@@ -45,5 +46,9 @@ export const routes: Routes = [
     {
       path: 'selecionar-perfil',
       component: PerfilSelectorComponent
+    },
+    {
+      path: 'managingProfiles',
+      component: GerenciarPerfisComponent
     }
 ];

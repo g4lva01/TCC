@@ -1,0 +1,24 @@
+<div class="layout">
+    <app-menu></app-menu>
+    <div class="main-content">
+        <div class="header">
+        <img src="./../../../assets/image/logo.png" alt="">
+        <h3 id="title">EBD</h3>
+        </div>
+    </div>
+</div>
+
+<h2>Gerenciar Perfis</h2>
+<div *ngFor="let usuario of usuarios">
+  <h3>{{ usuario.nome }} ({{ usuario.matricula }})</h3>
+  <div *ngFor="let perfil of perfisDisponiveis">
+    <label>
+      <input type="checkbox"
+             [checked]="usuario.perfis.includes(perfil)"
+             (change)="togglePerfil(usuario, perfil)">
+      {{ perfil }}
+    </label>
+  </div>
+  <button (click)="salvar(usuario)">Salvar</button>
+  <hr>
+</div>
