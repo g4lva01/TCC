@@ -18,6 +18,10 @@ public class Pessoa {
     @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
     private List<PessoaPerfil> perfis;
 
+    @ManyToOne
+    @JoinColumn(name = "turma_id")
+    private Turma turma;
+
     public Long getId() {
         return id;
     }
@@ -56,5 +60,13 @@ public class Pessoa {
 
     public void setPerfis(List<PessoaPerfil> perfis) {
         this.perfis = perfis;
+    }
+
+    public Turma getTurma() {
+        return turma;
+    }
+
+    public void setTurma(Turma turma) {
+        this.turma = turma;
     }
 }

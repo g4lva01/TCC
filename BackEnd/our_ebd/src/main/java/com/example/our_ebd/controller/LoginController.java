@@ -4,14 +4,8 @@ import com.example.our_ebd.dto.AlterarSenhaRequest;
 import com.example.our_ebd.dto.AtualizarPerfisRequest;
 import com.example.our_ebd.dto.CriarLoginRequest;
 import com.example.our_ebd.dto.LoginRequest;
-import com.example.our_ebd.model.Perfil;
-import com.example.our_ebd.model.Pessoa;
-import com.example.our_ebd.model.PessoaPerfil;
-import com.example.our_ebd.model.UsuarioAutenticacao;
-import com.example.our_ebd.repository.PerfilRepository;
-import com.example.our_ebd.repository.PessoaPerfilRepository;
-import com.example.our_ebd.repository.PessoaRepository;
-import com.example.our_ebd.repository.UsuarioAutenticacaoRepository;
+import com.example.our_ebd.model.*;
+import com.example.our_ebd.repository.*;
 import com.example.our_ebd.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +15,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,13 +47,15 @@ public class LoginController {
     @Autowired
     private PerfilRepository perfilRepository;
 
+    @Autowired
+    private TurmaRepository turmaRepository;
+
     private void vincularPerfilAluno(Pessoa pessoa) {
         Perfil perfilAluno = perfilRepository.findById(2L)
                 .orElseThrow(() -> new RuntimeException("Perfil aluno não encontrado"));
 
-        PessoaPerfil vinculo = new PessoaPerfil();
-        vinculo.setPessoa(pessoa);
-        vinculo.setPerfil(perfilAluno);
+        PessoaPerfil vinculo = new PessoaPerfil(pessoa, perfilAluno);
+        pessoaPerfilRepository.save(vinculo);
 
         pessoaPerfilRepository.save(vinculo);
     }
@@ -108,11 +107,21 @@ public class LoginController {
         pessoa.setNome(request.getNome());
         pessoa.setDataDeNascimento(request.getDtNascimento());
         pessoa.setMatricula(request.getMatricula());
+
+        int idade = Period.between(pessoa.getDataDeNascimento(), LocalDate.now()).getYears();
+
+        Turma turma = turmaRepository.findAll().stream()
+                .filter(t -> t.getLimiteDeIdade() == null || idade <= t.getLimiteDeIdade())
+                .min(Comparator.comparingInt(t -> t.getLimiteDeIdade() == null ? Integer.MAX_VALUE : t.getLimiteDeIdade()))
+                .orElseThrow(() -> new RuntimeException("Nenhuma turma compatível com a idade"));
+
+        pessoa.setTurma(turma);
         pessoaRepository.save(pessoa);
 
         UsuarioAutenticacao usuario = new UsuarioAutenticacao();
         usuario.setPessoa(pessoa);
         usuario.setSenha(passwordEncoder.encode(request.getSenha()));
+        usuario.setRoles(List.of("ROLE_ALUNO"));
         usuarioAutenticacaoRepository.save(usuario);
 
         vincularPerfilAluno(pessoa);
@@ -162,9 +171,7 @@ public class LoginController {
 
         pessoaPerfilRepository.deleteByPessoa(pessoa); // limpa perfis antigos
         for (Perfil perfil : perfis) {
-            PessoaPerfil vinculo = new PessoaPerfil();
-            vinculo.setPessoa(pessoa);
-            vinculo.setPerfil(perfil);
+            PessoaPerfil vinculo = new PessoaPerfil(pessoa, perfil);
             pessoaPerfilRepository.save(vinculo);
         }
 
