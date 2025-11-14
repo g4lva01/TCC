@@ -16,17 +16,24 @@ export class PerfilSelectorComponent {
   constructor(private router: Router, private http: HttpClient) {
     if (typeof window !== 'undefined') {
       const usuario = JSON.parse(localStorage.getItem('usuarioLogado') || '{}');
+
+      if (usuario.token) {
+        localStorage.setItem('token', usuario.token);
+      }
+
       this.perfis = (usuario.roles || []).map((r: string) => r.replace('ROLE_', ''));
     }
   }
 
   acessarPerfil(perfil: string) {
+    localStorage.setItem('perfilAtivo', perfil); // ✅ salva o perfil ativo
+
     switch (perfil) {
       case 'ALUNO':
         this.router.navigate(['/aluno']);
         break;
       case 'PROFESSOR':
-        this.router.navigate(['/professor']);
+        this.router.navigate(['/frequencyManager']);
         break;
       case 'GESTOR':
         this.router.navigate(['/frequencyManager']);
