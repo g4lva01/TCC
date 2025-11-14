@@ -80,7 +80,7 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas.");
         }
 
-        String token = jwtService.gerarToken(String.valueOf(usuario));
+        String token = jwtService.gerarToken(usuario);
 
         List<String> roles = usuario.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
