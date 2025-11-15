@@ -1,0 +1,58 @@
+/* Estilo base da sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 100vh;
+  background-color: transparent;
+  transition: width 0.3s ease, background-color 0.3s ease;
+  overflow-x: hidden;
+  z-index: 1000;
+  padding: 10px;
+}
+
+.sidebar.aberto {
+  width: 25vw;
+  background-color: #732991;
+}
+
+/* Quando a tela for menor que 768px */
+@media (max-width: 768px) {
+  .sidebar.aberto {
+    width: 50vw;
+  }
+}
+
+/* Botão de abrir (☰) */
+.botao-abrir {
+  background-color: #ffffff;
+  color: #732991;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+/* Botão de fechar (X) */
+.botao-fechar {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+/* Botões do menu */
+.menu-content button {
+  display: block;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  margin: 10px 0;
+  cursor: pointer;
+  text-align: left;
+}

@@ -29,7 +29,6 @@ export class ClassHistoryComponent implements OnInit {
   ngOnInit(): void {
     this.turma = this.route.snapshot.paramMap.get('turma') || '';
 
-    // Simulação de dados — substitua por chamada real ao backend
     this.historico = [
       { data: '04/05/2025', presente: 12, levouBiblia: 10, Revistas: 8 },
       { data: '11/05/2025', presente: 9, levouBiblia: 7, Revistas: 6 },

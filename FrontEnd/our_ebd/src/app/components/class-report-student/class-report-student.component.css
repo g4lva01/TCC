@@ -1,0 +1,36 @@
+.report-container {
+  font-weight: 600;
+  padding: 2rem;
+  max-width: 900px;
+  margin: auto;
+  font-family: 'Istok Web', sans-serif;
+}
+
+h2 {
+  margin: 0.5rem 0 1rem 0;
+  font-size: 1.2rem;
+}
+
+.filtro-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.filtro {
+  padding: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+p {
+  margin: 4px 0;
+}
+hr {
+  margin: 12px 0;
+}
+select {
+  margin-bottom: 16px;
+}

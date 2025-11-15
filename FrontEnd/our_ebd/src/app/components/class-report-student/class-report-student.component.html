@@ -1,0 +1,24 @@
+<div class="report-container">
+    <h2>FREQUÊNCIA</h2>
+
+    <div class="filtro-container">
+        <label for="filtro">Ano e Trimestre:</label>
+        <select id="filtro" class="filtro">
+        <option value="">Selecione</option>
+        <option *ngFor="let trimestre of trimestres" [value]="trimestre">
+            {{ trimestre.replace('-T1', ' - 1º Trimestre')
+                        .replace('-T2', ' - 2º Trimestre')
+                        .replace('-T3', ' - 3º Trimestre')
+                        .replace('-T4', ' - 4º Trimestre') }}
+        </option>
+        </select>
+    </div>
+
+    <div *ngFor="let item of relatorio">
+    <hr />
+    <p><strong>Data:</strong> {{ item.data | date:'dd/MM/yyyy' }}</p>
+    <p><strong>Presente:</strong> {{ item.presente ? 'Sim' : 'Não' }}</p>
+    <p><strong>Levou Bíblia:</strong> {{ item.levouBiblia ? 'Sim' : 'Não' }}</p>
+    <p><strong>Levou Revista:</strong> {{ item.levouRevista ? 'Sim' : 'Não' }}</p>
+    </div>
+</div>

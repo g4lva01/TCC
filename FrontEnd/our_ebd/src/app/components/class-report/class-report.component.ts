@@ -23,7 +23,7 @@ export class ClassReportComponent {
 
   ngOnInit() {
     const anoAtual = new Date().getFullYear();
-    const anos = [anoAtual, anoAtual -1, anoAtual -2];
+    const anos = [anoAtual, anoAtual -1];
 
     this.trimestres = anos.flatMap(ano => [
       `${ano}-T1`,

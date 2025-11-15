@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 })
 export class PerfilSelectorComponent {
   perfis: string[] = [];
+  aluno: any = {};
 
   constructor(private router: Router, private http: HttpClient) {
     if (typeof window !== 'undefined') {
@@ -22,15 +23,17 @@ export class PerfilSelectorComponent {
       }
 
       this.perfis = (usuario.roles || []).map((r: string) => r.replace('ROLE_', ''));
+      this.aluno = usuario;
     }
   }
 
   acessarPerfil(perfil: string) {
-    localStorage.setItem('perfilAtivo', perfil); // ✅ salva o perfil ativo
+    localStorage.setItem('perfilAtivo', perfil);
+    localStorage.setItem('alunoId', this.aluno.id);
 
     switch (perfil) {
       case 'ALUNO':
-        this.router.navigate(['/aluno']);
+        this.router.navigate(['/frequencyStudent']);
         break;
       case 'PROFESSOR':
         this.router.navigate(['/frequencyManager']);

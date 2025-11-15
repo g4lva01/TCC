@@ -9,6 +9,9 @@ import { ChamadaComponent } from './pages/chamada/chamada.component';
 import { ActivitysManagerComponent } from './pages/activitys-manager/activitys-manager.component';
 import { PerfilSelectorComponent } from './pages/perfil-selector/perfil-selector.component';
 import { GerenciarPerfisComponent } from './pages/gerenciar-perfis/gerenciar-perfis.component';
+import { FrequencyStudentComponent } from './pages/frequency-student/frequency-student.component';
+import { ReportStudentComponent } from './pages/report-student/report-student.component';
+import { SchoolHistoryStudentComponent } from './pages/school-history-student/school-history-student.component';
 
 export const routes: Routes = [
     {
@@ -50,5 +53,17 @@ export const routes: Routes = [
     {
       path: 'managingProfiles',
       component: GerenciarPerfisComponent
+    },
+    {
+      path: 'frequencyStudent',
+      component: FrequencyStudentComponent
+    },
+    {
+      path: 'reportStudent',
+      component: ReportStudentComponent
+    },
+    {
+      path: 'schoolHistoryStudent',
+      component: SchoolHistoryStudentComponent
     }
 ];
