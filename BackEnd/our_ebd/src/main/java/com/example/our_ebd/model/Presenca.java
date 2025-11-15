@@ -18,6 +18,8 @@ public class Presenca {
 
     private Boolean presente;
 
+    private Boolean levouBiblia;
+
     public Chamada getChamada() {
         return chamada;
     }
@@ -40,5 +42,13 @@ public class Presenca {
 
     public void setPresente(Boolean presente) {
         this.presente = presente;
+    }
+
+    public Boolean getLevouBiblia() {
+        return levouBiblia;
+    }
+
+    public void setLevouBiblia(Boolean levouBiblia) {
+        this.levouBiblia = levouBiblia;
     }
 }
