@@ -20,7 +20,7 @@ export class MenuComponent implements OnInit {
 
   ngOnInit() {
     const token = localStorage.getItem('token');
-    this.perfilAtivo = localStorage.getItem('perfilAtivo'); // ✅ lê o perfil ativo
+    this.perfilAtivo = localStorage.getItem('perfilAtivo');
 
     if (token) {
       try {
