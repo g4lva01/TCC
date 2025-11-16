@@ -89,7 +89,8 @@ public class LoginController {
         return ResponseEntity.ok(Map.of(
                 "token", token,
                 "nome", usuario.getPessoa().getNome(),
-                "roles", usuario.getRoles()
+                "roles", usuario.getRoles(),
+                "id", usuario.getPessoa().getId()
         ));
     }
 

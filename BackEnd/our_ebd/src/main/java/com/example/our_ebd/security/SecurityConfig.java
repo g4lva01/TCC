@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/login", "/api/login/criar", "/api/login/alterar", "/api/login/logins").permitAll()
                         .requestMatchers("/api/chamada/**").hasAnyAuthority("ROLE_PROFESSOR", "ROLE_GESTOR")
+                        .requestMatchers("/api/alunos/**").hasAnyAuthority("ROLE_ALUNO")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
