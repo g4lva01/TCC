@@ -17,5 +17,9 @@
       *ngIf="perfilAtivo === 'GESTOR' || perfilAtivo === 'ADMIN'">
       Gerenciar Perfis
     </button>
+    <button [routerLink]="['/enroll']"
+      *ngIf="perfilAtivo === 'GESTOR' || perfilAtivo === 'ADMIN'">
+      Matricular
+    </button>
   </div>
 </div>

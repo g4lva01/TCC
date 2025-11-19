@@ -12,6 +12,7 @@ import { GerenciarPerfisComponent } from './pages/gerenciar-perfis/gerenciar-per
 import { FrequencyStudentComponent } from './pages/frequency-student/frequency-student.component';
 import { ReportStudentComponent } from './pages/report-student/report-student.component';
 import { SchoolHistoryStudentComponent } from './pages/school-history-student/school-history-student.component';
+import { EnrollComponent } from './pages/enroll/enroll.component';
 
 export const routes: Routes = [
     {
@@ -65,5 +66,9 @@ export const routes: Routes = [
     {
       path: 'schoolHistoryStudent',
       component: SchoolHistoryStudentComponent
+    },
+    {
+      path: 'enroll',
+      component: EnrollComponent
     }
 ];
