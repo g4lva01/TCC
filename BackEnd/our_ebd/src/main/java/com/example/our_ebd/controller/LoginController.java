@@ -1,9 +1,6 @@
 package com.example.our_ebd.controller;
 
-import com.example.our_ebd.dto.AlterarSenhaRequest;
-import com.example.our_ebd.dto.AtualizarPerfisRequest;
-import com.example.our_ebd.dto.CriarLoginRequest;
-import com.example.our_ebd.dto.LoginRequest;
+import com.example.our_ebd.dto.*;
 import com.example.our_ebd.model.*;
 import com.example.our_ebd.repository.*;
 import com.example.our_ebd.security.JwtService;
@@ -13,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -196,6 +194,87 @@ public class LoginController {
                     "perfis", perfis
             );
         }).toList();
+
+        return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/pesquisar")
+    public ResponseEntity<?> pesquisar(@RequestParam String query) {
+        Optional<Pessoa> aluno;
+
+        try {
+            Integer matricula = Integer.parseInt(query);
+            aluno = pessoaRepository.findByMatricula(matricula);
+        } catch (NumberFormatException e) {
+            aluno = pessoaRepository.findByNomeIgnoreCase(query);
+        }
+
+        if (aluno.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aluno não encontrado.");
+        }
+
+        Pessoa p = aluno.get();
+
+        // monta resposta no formato que o Angular espera
+        Map<String, Object> resultado = Map.of(
+                "id", p.getId(),
+                "nome", p.getNome(),
+                "matricula", p.getMatricula(),
+                "dtNascimento", p.getDataDeNascimento()
+        );
+
+        return ResponseEntity.ok(resultado);
+    }
+
+    @Transactional
+    @DeleteMapping("/desmatricular/{id}")
+    public ResponseEntity<?> desmatricularAluno(@PathVariable Long id) {
+        Optional<Pessoa> alunoOpt = pessoaRepository.findById(id);
+
+        if (alunoOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Aluno não encontrado."));
+        }
+
+        Pessoa aluno = alunoOpt.get();
+        pessoaPerfilRepository.deleteByPessoa(aluno);
+        usuarioAutenticacaoRepository.findByPessoa(aluno)
+                .ifPresent(usuarioAutenticacaoRepository::delete);
+        pessoaRepository.delete(aluno);
+
+        // Retorna JSON válido
+        return ResponseEntity.ok(Map.of("message", "Aluno desmatriculado com sucesso!"));
+    }
+
+    @PostMapping("/matricular")
+    public ResponseEntity<?> matricularAluno(@RequestBody MatricularAlunoRequest request) {
+        if (pessoaRepository.findByMatricula(request.getMatricula()).isPresent()) {
+            return ResponseEntity.badRequest().body("Matrícula já cadastrada.");
+        }
+
+        Pessoa pessoa = new Pessoa();
+        pessoa.setNome(request.getNome());
+        pessoa.setDataDeNascimento(request.getDtNascimento());
+        pessoa.setMatricula(request.getMatricula());
+
+        int idade = Period.between(pessoa.getDataDeNascimento(), LocalDate.now()).getYears();
+
+        Turma turma = turmaRepository.findAll().stream()
+                .filter(t -> t.getLimiteDeIdade() == null || idade <= t.getLimiteDeIdade())
+                .min(Comparator.comparingInt(t -> t.getLimiteDeIdade() == null ? Integer.MAX_VALUE : t.getLimiteDeIdade()))
+                .orElseThrow(() -> new RuntimeException("Nenhuma turma compatível com a idade"));
+
+        pessoa.setTurma(turma);
+        pessoaRepository.save(pessoa);
+
+        vincularPerfilAluno(pessoa);
+
+        Map<String, Object> resultado = Map.of(
+                "id", pessoa.getId(),
+                "nome", pessoa.getNome(),
+                "matricula", pessoa.getMatricula(),
+                "dtNascimento", pessoa.getDataDeNascimento()
+        );
 
         return ResponseEntity.ok(resultado);
     }

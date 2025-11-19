@@ -38,16 +38,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login", "/api/login/criar", "/api/login/alterar", "/api/login/logins").permitAll()
-                        .requestMatchers("/api/chamada/**").hasAnyAuthority("ROLE_PROFESSOR", "ROLE_GESTOR")
-                        .requestMatchers("/api/alunos/**").hasAnyAuthority("ROLE_ALUNO")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() // libera todos os endpoints
                 )
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .httpBasic(httpBasic -> httpBasic.disable())
+                .formLogin(form -> form.disable());
 
         return http.build();
     }
