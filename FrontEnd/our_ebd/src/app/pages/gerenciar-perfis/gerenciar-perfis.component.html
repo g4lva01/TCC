@@ -9,14 +9,16 @@
 </div>
 
 <h2>Gerenciar Perfis</h2>
-<div *ngFor="let usuario of usuarios" class="botao">
-  <h3>{{ usuario.nome }} ({{ usuario.matricula }})</h3>
-  <div *ngFor="let perfil of perfisDisponiveis">
-    <label>
-      <input type="checkbox" [(ngModel)]="usuario.perfisMap[perfil]">
+<div *ngFor="let usuario of usuarios" class="usuario-card">
+  <h3>{{ usuario.nome }} (Matrícula: {{ usuario.matricula }})</h3>
+
+  <div class="checkbox-group">
+    <label *ngFor="let perfil of perfisDisponiveis">
+      <input type="checkbox"
+              [(ngModel)]="usuario.perfisMap[perfil]">
       {{ perfil }}
     </label>
   </div>
+
   <button (click)="salvar(usuario)">Salvar</button>
-  <hr>
 </div>
