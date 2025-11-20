@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -162,30 +159,58 @@ public class LoginController {
     }
 
     @PutMapping("/perfil")
+    @Transactional
     public ResponseEntity<?> atualizarPerfis(@RequestBody AtualizarPerfisRequest request) {
         Pessoa pessoa = pessoaRepository.findById(request.getPessoaId())
                 .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
 
-        List<Perfil> perfis = perfilRepository.findAllById(request.getPerfilIds());
+        UsuarioAutenticacao usuario = usuarioAutenticacaoRepository.findByPessoa(pessoa)
+                .orElseThrow(() -> new RuntimeException("Usuário de autenticação não encontrado"));
 
-        pessoaPerfilRepository.deleteByPessoa(pessoa); // limpa perfis antigos
-        for (Perfil perfil : perfis) {
-            PessoaPerfil vinculo = new PessoaPerfil(pessoa, perfil);
-            pessoaPerfilRepository.save(vinculo);
+        Set<Long> novosIds = new HashSet<>(request.getPerfilIds());
+        List<PessoaPerfil> atuais = pessoaPerfilRepository.findByPessoa(pessoa);
+        Set<Long> atuaisIds = atuais.stream()
+                .map(pp -> pp.getPerfil().getId())
+                .collect(Collectors.toSet());
+
+        Set<Long> adicionar = new HashSet<>(novosIds);
+        adicionar.removeAll(atuaisIds);
+
+        Set<Long> remover = new HashSet<>(atuaisIds);
+        remover.removeAll(novosIds);
+
+        for (Long id : adicionar) {
+            Perfil perfil = perfilRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Perfil não encontrado: " + id));
+            pessoaPerfilRepository.save(new PessoaPerfil(pessoa, perfil));
+
+            String role = "ROLE_" + perfil.getNome().toUpperCase();
+            if (!usuario.getRoles().contains(role)) {
+                usuario.getRoles().add(role);
+            }
         }
 
-        return ResponseEntity.ok("Perfis atualizados com sucesso!");
+        for (PessoaPerfil pp : atuais) {
+            if (remover.contains(pp.getPerfil().getId())) {
+                pessoaPerfilRepository.delete(pp);
+
+                String role = "ROLE_" + pp.getPerfil().getNome().toUpperCase();
+                usuario.getRoles().remove(role);
+            }
+        }
+
+        usuarioAutenticacaoRepository.save(usuario);
+
+        return ResponseEntity.ok(Map.of("message", "Perfis e roles atualizados com sucesso!"));
     }
 
     @GetMapping("/logins")
     public ResponseEntity<?> listarLogins() {
         List<UsuarioAutenticacao> usuarios = usuarioAutenticacaoRepository.findAll();
-
         List<Map<String, Object>> resultado = usuarios.stream().map(u -> {
             List<String> perfis = pessoaPerfilRepository.findByPessoa(u.getPessoa()).stream()
                     .map(pp -> pp.getPerfil().getNome())
                     .collect(Collectors.toList());
-
             return Map.of(
                     "id", u.getPessoa().getId(),
                     "nome", u.getPessoa().getNome(),
@@ -194,7 +219,6 @@ public class LoginController {
                     "perfis", perfis
             );
         }).toList();
-
         return ResponseEntity.ok(resultado);
     }
 
@@ -215,7 +239,6 @@ public class LoginController {
 
         Pessoa p = aluno.get();
 
-        // monta resposta no formato que o Angular espera
         Map<String, Object> resultado = Map.of(
                 "id", p.getId(),
                 "nome", p.getNome(),
@@ -242,7 +265,6 @@ public class LoginController {
                 .ifPresent(usuarioAutenticacaoRepository::delete);
         pessoaRepository.delete(aluno);
 
-        // Retorna JSON válido
         return ResponseEntity.ok(Map.of("message", "Aluno desmatriculado com sucesso!"));
     }
 
