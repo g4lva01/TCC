@@ -1,24 +1,16 @@
 <div class="layout">
-    <app-menu></app-menu>
-    <div class="main-content">
-        <div class="header">
-        <img src="./../../../assets/image/logo.png" alt="">
-        <h3 id="title">EBD</h3>
-        </div>
+  <app-menu></app-menu>
+  <div class="main-content">
+    <div class="header">
+      <img src="./../../../assets/image/logo.png" alt="">
+      <h3 id="title">EBD</h3>
     </div>
+  </div>
 </div>
 
 <div class="chamada-container">
-  <h2>Chamada - {{data}}</h2>
-
-  <div class="turma-selector">
-    <label for="turma">Opção de Turmas:</label>
-    <select id="turma">
-      <option>Adultos</option>
-      <option>Adolescentes</option>
-      <option>Infantil</option>
-    </select>
-  </div>
+  <h2>Chamada - {{ data }}</h2>
+  <h3>Turma: {{ turmaNome }}</h3>
 
   <div *ngFor="let aluno of alunos; let i = index" class="aluno">
     <span class="nome">{{ aluno.nome }}</span>
@@ -31,7 +23,6 @@
       Bíblia: {{ aluno.biblia ? '✅' : '❌' }}
     </button>
   </div>
-
 
   <div class="resumo">
     <div class="campo">

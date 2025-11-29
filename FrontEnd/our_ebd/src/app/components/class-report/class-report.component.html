@@ -3,7 +3,7 @@
 
   <div class="filtro-container">
     <label for="filtro">Ano e Trimestre:</label>
-    <select id="filtro" class="filtro">
+    <select id="filtro" class="filtro" [(ngModel)]="trimestreSelecionado" (change)="onTrimestreChange()">
       <option value="">Selecione</option>
       <option *ngFor="let trimestre of trimestres" [value]="trimestre">
         {{ trimestre.replace('-T1', ' - 1º Trimestre')
@@ -14,13 +14,24 @@
     </select>
   </div>
 
+  <div class="filtro-container" *ngIf="trimestreSelecionado">
+    <label for="data">Data:</label>
+    <input
+      type="date"
+      [(ngModel)]="dataSelecionada"
+      [min]="dataMin"
+      [max]="dataMax"
+      (change)="onDataChange()"
+    />
+  </div>
+
   <div class="grupo" *ngFor="let grupo of grupos">
     <h3>{{ grupo.nome }}</h3>
     <p>Matriculados: {{ grupo.matriculados }}</p>
     <p>Presentes: {{ grupo.presentes }}</p>
     <p>Ausentes: {{ grupo.ausentes }}</p>
-    <p>Bíblias: {{grupo.biblia}}</p>
-    <p>Revistas: {{grupo.revistas}}</p>
+    <p>Bíblias: {{ grupo.biblia }}</p>
+    <p>Revistas: {{ grupo.revistas }}</p>
     <p>Oferta: R$ {{ grupo.oferta }}</p>
     <button [routerLink]="['/schoolHistoryManager/', grupo.nome]">Ver Mais</button>
   </div>
@@ -30,8 +41,8 @@
     <p>Matriculados: {{ totalGeral.matriculados }}</p>
     <p>Presentes: {{ totalGeral.presentes }}</p>
     <p>Ausentes: {{ totalGeral.ausentes }}</p>
-    <p>Bíblias: {{totalGeral.biblia}}</p>
-    <p>Revistas: {{totalGeral.revistas}}</p>
+    <p>Bíblias: {{ totalGeral.biblia }}</p>
+    <p>Revistas: {{ totalGeral.revistas }}</p>
     <p>Oferta: R$ {{ totalGeral.oferta }}</p>
   </div>
 </div>

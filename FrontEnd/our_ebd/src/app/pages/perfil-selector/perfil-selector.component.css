@@ -17,10 +17,3 @@ button {
   color: white;
   cursor: pointer;
 }
-
-.container > h2 {
-    background-image: linear-gradient(to right, #FF0000, #0000FF);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}

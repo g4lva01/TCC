@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MenuComponent } from '../../components/menu/menu.component';
 import { CommonModule } from '@angular/common';
 import { ChamadaService } from '../../services/chamada.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-class-history',
@@ -18,23 +19,26 @@ export class ClassHistoryComponent implements OnInit {
     data: string;
     presente: number;
     levouBiblia: number;
-    Revistas: number;
+    revistas: number;
   }[] = [];
 
   constructor(
     private route: ActivatedRoute,
-    private chamadaService: ChamadaService
+    private chamadaService: ChamadaService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
     this.turma = this.route.snapshot.paramMap.get('turma') || '';
 
-    this.historico = [
-      { data: '04/05/2025', presente: 12, levouBiblia: 10, Revistas: 8 },
-      { data: '11/05/2025', presente: 9, levouBiblia: 7, Revistas: 6 },
-      { data: '18/05/2025', presente: 11, levouBiblia: 9, Revistas: 7 },
-      { data: '25/05/2025', presente: 13, levouBiblia: 12, Revistas: 10 }
-    ];
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+
+    this.http.get<any[]>(`http://localhost:8080/api/presencas/historico/turma/${this.turma}`, { headers })
+      .subscribe({
+        next: res => this.historico = res,
+        error: err => console.error('Erro ao buscar histórico:', err)
+      });
   }
 
   fazerChamada(data: string) {

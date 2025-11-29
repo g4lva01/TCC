@@ -1,35 +1,53 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuComponent } from '../../components/menu/menu.component';
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MenuComponent } from '../../components/menu/menu.component';
 import { ChamadaService } from '../../services/chamada.service';
 
 @Component({
   selector: 'app-chamada',
+  standalone: true,
   imports: [CommonModule, MenuComponent, FormsModule],
   templateUrl: './chamada.component.html',
   styleUrl: './chamada.component.css'
 })
-
 export class ChamadaComponent implements OnInit {
-  turma: string = '';
+  turmaNome: string = '';
+  turmaId: number = 0;
+  professorId: number = 1;
   data: string = '';
   visitantes: number = 0;
   oferta: string = '0,00';
+  alunos: any[] = [];
 
-  constructor(private route: ActivatedRoute, private chamadaService: ChamadaService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private chamadaService: ChamadaService,
+    private http: HttpClient
+  ) {}
 
   ngOnInit() {
-    this.turma = this.route.snapshot.paramMap.get('turma') || '';
+    this.turmaNome = this.route.snapshot.paramMap.get('turma') || '';
     this.data = this.route.snapshot.paramMap.get('data') || '';
-  }
 
-  alunos = [
-    { nome: 'João', presente: false, biblia: false },
-    { nome: 'Maria', presente: false, biblia: false },
-    // ...
-  ];
+    this.http.get<any>(`http://localhost:8080/api/turmas/nome/${this.turmaNome}`)
+      .subscribe(turma => {
+        this.turmaId = turma.id;
+
+        this.http.get<any[]>(`http://localhost:8080/api/matriculas/turma/${this.turmaNome}/alunos`)
+          .subscribe(alunos => {
+            this.alunos = alunos.map(a => ({
+              id: a.id,
+              nome: a.nome,
+              presente: false,
+              biblia: false,
+              revista: false
+            }));
+          });
+      });
+  }
 
   togglePresenca(index: number) {
     this.alunos[index].presente = !this.alunos[index].presente;
@@ -40,12 +58,20 @@ export class ChamadaComponent implements OnInit {
   }
 
   finalizarChamada() {
+    const presencas = this.alunos.map(aluno => ({
+      alunoId: aluno.id,
+      presente: aluno.presente,
+      levouBiblia: aluno.biblia,
+      levouRevista: aluno.revista
+    }));
+
     const chamada = {
-      turma: this.turma,
-      data: this.data,
-      alunos: this.alunos,
-      visitantes: this.visitantes,
-      oferta: this.oferta
+      turmaId: this.turmaId,
+      dataChamada: this.data,
+      statusChamada: 'Realizada',
+      valorOferta: parseFloat(this.oferta.replace(',', '.')),
+      qtdVisitantes: this.visitantes,
+      presencas: presencas
     };
 
     this.chamadaService.registrarChamada(chamada).subscribe({

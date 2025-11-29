@@ -13,6 +13,7 @@ import { FrequencyStudentComponent } from './pages/frequency-student/frequency-s
 import { ReportStudentComponent } from './pages/report-student/report-student.component';
 import { SchoolHistoryStudentComponent } from './pages/school-history-student/school-history-student.component';
 import { EnrollComponent } from './pages/enroll/enroll.component';
+import { SelectionClassComponent } from './pages/selection-class/selection-class.component';
 
 export const routes: Routes = [
     {
@@ -70,5 +71,9 @@ export const routes: Routes = [
     {
       path: 'enroll',
       component: EnrollComponent
+    },
+    {
+      path: 'chamada',
+      component: SelectionClassComponent
     }
 ];
