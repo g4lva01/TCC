@@ -16,7 +16,7 @@ public class Chamada {
     private Turma turma;
 
     @ManyToOne
-    @JoinColumn(name = "professor_id", nullable = false)
+    @JoinColumn(name = "professor_id", nullable = true)
     private Pessoa professor;
 
     private LocalDate dataChamada;
@@ -85,5 +85,26 @@ public class Chamada {
 
     public void setPresencas(List<Presenca> presencas) {
         this.presencas = presencas;
+    }
+
+    public long getPresentes() {
+        if (presencas == null) return 0;
+        return presencas.stream()
+                .filter(p -> Boolean.TRUE.equals(p.getPresente()))
+                .count();
+    }
+
+    public long getLevouBiblia() {
+        if (presencas == null) return 0;
+        return presencas.stream()
+                .filter(p -> Boolean.TRUE.equals(p.getLevouBiblia()))
+                .count();
+    }
+
+    public long getRevistas() {
+        if (presencas == null) return 0;
+        return presencas.stream()
+                .filter(p -> Boolean.TRUE.equals(p.getLevouRevista()))
+                .count();
     }
 }

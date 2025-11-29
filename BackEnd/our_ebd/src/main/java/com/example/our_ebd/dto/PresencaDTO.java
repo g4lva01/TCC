@@ -1,41 +1,17 @@
-package com.example.our_ebd.model;
+package com.example.our_ebd.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.ManyToOne;
-
-@Entity
-@IdClass(Presenca.class)
-public class Presenca {
-    @Id
-    @ManyToOne
-    private Chamada chamada;
-
-    @Id
-    @ManyToOne
-    private Pessoa aluno;
-
+public class PresencaDTO{
+    private Long alunoId;
     private Boolean presente;
-
     private Boolean levouBiblia;
-
     private Boolean levouRevista;
 
-    public Chamada getChamada() {
-        return chamada;
+    public Long getAlunoId() {
+        return alunoId;
     }
 
-    public void setChamada(Chamada chamada) {
-        this.chamada = chamada;
-    }
-
-    public Pessoa getAluno() {
-        return aluno;
-    }
-
-    public void setAluno(Pessoa aluno) {
-        this.aluno = aluno;
+    public void setAlunoId(Long alunoId) {
+        this.alunoId = alunoId;
     }
 
     public Boolean getPresente() {

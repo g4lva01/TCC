@@ -1,5 +1,6 @@
 package com.example.our_ebd.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 
@@ -20,6 +21,7 @@ public class Pessoa {
 
     @ManyToOne
     @JoinColumn(name = "turma_id")
+    @JsonIgnore
     private Turma turma;
 
     public Long getId() {

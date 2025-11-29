@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/turmas")
-@CrossOrigin(origins = "*")
 public class TurmaController {
     @Autowired
     private TurmaRepository turmaRepository;
@@ -68,5 +67,12 @@ public class TurmaController {
         }).toList();
 
         return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<?> buscarPorNome(@PathVariable String nome) {
+        Optional<Turma> turma = turmaRepository.findByNomeIgnoreCase(nome);
+        return turma.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

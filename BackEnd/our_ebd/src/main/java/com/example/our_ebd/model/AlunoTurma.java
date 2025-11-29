@@ -5,16 +5,16 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@IdClass(com.example.our_ebd.model.AlunoTurma.class)
+@IdClass(AlunoTurmaId.class)
 public class AlunoTurma {
     @Id
     @ManyToOne
-    @JoinColumn(name = "aluno_id")
+    @JoinColumn(name = "aluno_id", nullable = false)
     private Pessoa aluno;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "turma_id")
+    @JoinColumn(name = "turma_id", nullable = false)
     private Turma turma;
 
     private LocalDate dataMatricula;

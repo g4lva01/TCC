@@ -1,36 +1,73 @@
 package com.example.our_ebd.controller;
 
+import com.example.our_ebd.dto.ChamadaRegistroDTO;
+import com.example.our_ebd.dto.ChamadaRespostaDTO;
 import com.example.our_ebd.model.Chamada;
+import com.example.our_ebd.model.Pessoa;
+import com.example.our_ebd.model.Presenca;
+import com.example.our_ebd.model.Turma;
 import com.example.our_ebd.repository.ChamadaRepository;
+import com.example.our_ebd.repository.PessoaRepository;
+import com.example.our_ebd.repository.TurmaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/chamada")
-@CrossOrigin(origins = "*")
 public class ChamadaController {
     @Autowired
     private ChamadaRepository chamadaRepository;
 
+    @Autowired
+    private PessoaRepository pessoaRepository;
+
+    @Autowired
+    private TurmaRepository turmaRepository;
+
     @PostMapping
-    public ResponseEntity<?> registrarChamada(@RequestBody Chamada chamada) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<?> registrarChamada(@RequestBody ChamadaRegistroDTO dto) {
+        Turma turma = turmaRepository.findById(dto.getTurmaId())
+                .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
 
-        boolean isAutorizado = auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_PROFESSOR") || a.getAuthority().equals("ROLE_GESTOR"));
+        Chamada chamada = new Chamada();
+        chamada.setTurma(turma);
+        chamada.setDataChamada(dto.getDataChamada());
+        chamada.setStatusChamada(dto.getStatusChamada());
+        chamada.setValorOferta(dto.getValorOferta());
+        chamada.setQtdVisitantes(dto.getQtdVisitantes());
 
-        if (!isAutorizado) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Apenas professores ou gestores podem registrar chamadas.");
-        }
+        List<Presenca> presencas = dto.getPresencas().stream().map(p -> {
+            if (p.getAlunoId() == null) {
+                throw new IllegalArgumentException("alunoId não pode ser nulo");
+            }
+            Pessoa aluno = pessoaRepository.findById(p.getAlunoId())
+                    .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+            Presenca presenca = new Presenca();
+            presenca.setAluno(aluno);
+            presenca.setPresente(p.getPresente());
+            presenca.setLevouBiblia(p.getLevouBiblia());
+            presenca.setLevouRevista(p.getLevouRevista());
+            presenca.setChamada(chamada);
+            return presenca;
+        }).collect(Collectors.toCollection(ArrayList::new));
 
-        return ResponseEntity.ok(chamadaRepository.save(chamada));
+        chamada.setPresencas(presencas);
+
+        Chamada chamadaSalva = chamadaRepository.save(chamada);
+        ChamadaRespostaDTO resposta = new ChamadaRespostaDTO(
+                chamadaSalva.getId(),
+                chamadaSalva.getDataChamada(),
+                chamadaSalva.getStatusChamada(),
+                chamadaSalva.getValorOferta(),
+                chamadaSalva.getQtdVisitantes()
+        );
+
+        return ResponseEntity.ok(resposta);
     }
 
     @GetMapping

@@ -1,9 +1,9 @@
 package com.example.our_ebd.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Turma {
@@ -12,6 +12,12 @@ public class Turma {
 
     private String nome;
     private Integer limiteDeIdade;
+
+    @OneToMany(mappedBy = "turma", cascade = CascadeType.ALL)
+    private List<Pessoa> alunos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AlunoTurma> matriculas = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -35,5 +41,13 @@ public class Turma {
 
     public void setLimiteDeIdade(Integer limiteDeIdade) {
         this.limiteDeIdade = limiteDeIdade;
+    }
+
+    public List<AlunoTurma> getMatriculas() { return matriculas; }
+
+    public void setMatriculas(List<AlunoTurma> matriculas) { this.matriculas = matriculas; }
+
+    public List<Pessoa> getAlunos() {
+        return alunos != null ? alunos : List.of();
     }
 }
