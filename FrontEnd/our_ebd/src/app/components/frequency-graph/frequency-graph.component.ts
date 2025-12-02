@@ -1,10 +1,11 @@
-import { Component, inject, PLATFORM_ID, Input } from '@angular/core';
+import { Component, inject, PLATFORM_ID, Input, OnInit } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartOptions, ChartType, ChartData } from 'chart.js';
-import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, BarController } from 'chart.js';
+import { FrequencyService } from '../../services/frequency.service';
 
-Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, BarController);
 
 @Component({
   selector: 'app-frequency-graph',
@@ -12,16 +13,17 @@ Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
   templateUrl: './frequency-graph.component.html',
   styleUrls: ['./frequency-graph.component.css']
 })
-export class FrequencyGraphComponent {
+export class FrequencyGraphComponent implements OnInit {
   isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
+  constructor(private frequencyService: FrequencyService) {}
+
   chartOptions: ChartOptions = {
     responsive: true,
     plugins: {
       legend: {
         position: 'top',
-        labels: {
-          color: '#732991'
-        }
+        labels: { color: '#732991' }
       },
       title: {
         display: true,
@@ -30,53 +32,39 @@ export class FrequencyGraphComponent {
       }
     },
     scales: {
-      x: {
-        ticks: { color: '#732991' }
-      },
-      y: {
-        ticks: { color: '#732991' }
-      }
+      x: { ticks: { color: '#732991' } },
+      y: { ticks: { color: '#732991' } }
     }
   };
 
   chartType: ChartType = 'bar';
 
   chartData: ChartData<'bar'> = {
-    labels: ['Aluno 1', 'Aluno 2', 'Aluno 3', 'Aluno 4'],
-    datasets: [
-      {
-        label: 'Turma 1',
-        data: [12, 18, 9, 14],
-        backgroundColor: '#732991'
-      },
-      {
-        label: 'Turma 2',
-        data: [10, 20, 7, 16],
-        backgroundColor: '#a55fc4'
-      }
-    ]
+    labels: [],
+    datasets: []
   };
+
+  @Input() frequencias: any[] = [];
+
   get temDados(): boolean {
     return this.chartData.datasets.some(dataset => dataset.data.length > 0);
   }
 
-  @Input() frequencias: any[] = [];
+  ngOnInit(): void {
+    this.atualizarGrafico();
+  }
 
-  ngOnChanges(): void {
-    if (!this.frequencias || this.frequencias.length === 0) return;
-
-    const alunos = this.frequencias.map(f => f.aluno.nome);
-    const presencas = this.frequencias.map(f => f.presencas);
+  atualizarGrafico(): void {
+    const labels = this.frequencias.map(f => f.nomeAluno);
+    const data = this.frequencias.map(f => f.presencas);
 
     this.chartData = {
-      labels: alunos,
-      datasets: [
-        {
-          label: 'Presenças',
-          data: presencas,
-          backgroundColor: '#732991'
-        }
-      ]
+      labels,
+      datasets: [{
+        label: 'Presenças',
+        data,
+        backgroundColor: '#732991'
+      }]
     };
   }
 }

@@ -6,7 +6,10 @@
       <h3 id="title">EBD</h3>
     </div>
     <div class="content">
-      <app-frequency-graph [frequencias]="frequencias"></app-frequency-graph>
+      <div *ngFor="let turma of turmas">
+        <h4>{{ turma }}</h4>
+        <app-frequency-graph [frequencias]="agrupadoPorTurma[turma]"></app-frequency-graph>
+      </div>
     </div>
   </div>
 </div>

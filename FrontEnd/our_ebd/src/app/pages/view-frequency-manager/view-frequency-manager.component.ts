@@ -13,14 +13,22 @@ import { FrequencyService } from '../../services/frequency.service';
 })
 export class ViewFrequencyManagerComponent {
   frequencias: any[] = [];
+  turmas: string[] = [];
+  agrupadoPorTurma: Record<string, any[]> = {};
 
   constructor(private frequencyService: FrequencyService) {}
 
   ngOnInit(): void {
-    const turmaId = 1;
-    this.frequencyService.getFrequenciasPorTurma(turmaId).subscribe({
-      next: dados => this.frequencias = dados,
+    this.frequencyService.getFrequenciasTodasTurmas().subscribe({
+      next: dados => {
+        this.turmas = [...new Set(dados.map(d => d.nomeTurma))];
+        this.agrupadoPorTurma = dados.reduce((acc, item) => {
+          if (!acc[item.nomeTurma]) acc[item.nomeTurma] = [];
+          acc[item.nomeTurma].push(item);
+          return acc;
+        }, {});
+      },
       error: err => console.error('Erro ao buscar frequências:', err)
-    })
+    });
   }
 }
