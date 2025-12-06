@@ -75,4 +75,18 @@ public class TurmaController {
         return turma.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @GetMapping
+    public ResponseEntity<List<Map<String, Object>>> listarNomesTurmas() {
+        List<Turma> turmas = turmaRepository.findAll();
+
+        List<Map<String, Object>> resultado = turmas.stream().map(t -> {
+            Map<String, Object> dados = new HashMap<>();
+            dados.put("id", t.getId());
+            dados.put("nome", t.getNome());
+            return dados;
+        }).toList();
+
+        return ResponseEntity.ok(resultado);
+    }
 }

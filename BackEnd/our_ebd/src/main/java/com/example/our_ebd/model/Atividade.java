@@ -2,6 +2,7 @@ package com.example.our_ebd.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,14 +16,14 @@ public class Atividade {
     private Turma turma;
 
     @ManyToOne
-    @JoinColumn(name = "professor_id", nullable = false)
+    @JoinColumn(name = "professor_id", nullable = true)
     private Pessoa professor;
 
     @Column(nullable = false, length = 100)
     private String titulo;
 
     @Column(nullable = false)
-    private LocalDateTime dataPublicacao;
+    private LocalDate dataPublicacao;
 
     @Column(columnDefinition = "TEXT")
     private String descricao;
@@ -59,11 +60,11 @@ public class Atividade {
         this.titulo = titulo;
     }
 
-    public LocalDateTime getDataPublicacao() {
+    public LocalDate getDataPublicacao() {
         return dataPublicacao;
     }
 
-    public void setDataPublicacao(LocalDateTime dataPublicacao) {
+    public void setDataPublicacao(LocalDate dataPublicacao) {
         this.dataPublicacao = dataPublicacao;
     }
 

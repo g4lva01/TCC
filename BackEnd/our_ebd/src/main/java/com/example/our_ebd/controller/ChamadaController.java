@@ -154,4 +154,43 @@ public class ChamadaController {
 
         return ResponseEntity.ok(resultado);
     }
+
+    @GetMapping("/frequencia/trimestre/aluno/{alunoId}")
+    public ResponseEntity<FrequenciaAlunoDTO> getFrequenciaTrimestralAluno(@PathVariable Long alunoId) {
+        Pessoa aluno = pessoaRepository.findById(alunoId)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+
+        Turma turma = aluno.getTurma();
+        if (turma == null) {
+            throw new RuntimeException("Aluno não está matriculado em nenhuma turma");
+        }
+
+        // Define trimestre atual
+        LocalDate hoje = LocalDate.now();
+        int trimestre = (hoje.getMonthValue() - 1) / 3 + 1;
+        LocalDate inicio = LocalDate.of(hoje.getYear(), (trimestre - 1) * 3 + 1, 1);
+        LocalDate fim = inicio.plusMonths(3).minusDays(1);
+
+        // Conta domingos no trimestre
+        int domingos = (int) Stream.iterate(inicio, d -> d.plusDays(1))
+                .limit(ChronoUnit.DAYS.between(inicio, fim) + 1)
+                .filter(d -> d.getDayOfWeek() == DayOfWeek.SUNDAY)
+                .count();
+
+        // Conta presenças do aluno
+        long presencas = presencaRepository
+                .countByAlunoAndPresenteTrueAndChamada_DataChamadaBetween(aluno, inicio, fim);
+
+        double percentual = domingos > 0 ? (presencas * 100.0) / domingos : 0.0;
+
+        FrequenciaAlunoDTO resultado = new FrequenciaAlunoDTO(
+                aluno.getNome(),
+                turma.getNome(),
+                presencas,
+                domingos,
+                percentual
+        );
+
+        return ResponseEntity.ok(resultado);
+    }
 }

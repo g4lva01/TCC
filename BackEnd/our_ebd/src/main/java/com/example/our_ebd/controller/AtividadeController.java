@@ -11,13 +11,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/atividade")
-@CrossOrigin(origins = "*")
 public class AtividadeController {
     @Autowired
     private AtividadeRepository atividadeRepository;
@@ -47,22 +47,7 @@ public class AtividadeController {
 
     @PostMapping
     public ResponseEntity<?> criar(@RequestBody Atividade atividade) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        boolean isAutorizado = auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_PROFESSOR") || a.getAuthority().equals("ROLE_GESTOR"));
-
-        if (!isAutorizado) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Apenas professores ou gestores podem criar atividades.");
-        }
-
-        Integer matricula = Integer.parseInt(auth.getName());
-        Pessoa autor = pessoaRepository.findByMatricula(matricula)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-
-        atividade.setProfessor(autor); // pode ser professor ou gestor
-        atividade.setDataPublicacao(LocalDateTime.now());
+        atividade.setDataPublicacao(LocalDate.now());
 
         return ResponseEntity.ok(atividadeRepository.save(atividade));
     }
