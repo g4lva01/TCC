@@ -12,4 +12,8 @@ export class FrequencyService {
   getFrequenciasTodasTurmas(): Observable<any[]> {
     return this.http.get<any[]>(`http://localhost:8080/api/chamada/frequencia/trimestre/todas`);
   }
+
+  getFrequenciaAluno(alunoId: number): Observable<any> {
+    return this.http.get<any>(`http://localhost:8080/api/chamada/frequencia/trimestre/aluno/${alunoId}`);
+  }
 }

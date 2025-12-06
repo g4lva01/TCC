@@ -1,1 +1,13 @@
-<p>frequency-graph-student works!</p>
+<div class="grafico-container">
+    <ng-container *ngIf="isBrowser">
+      <canvas baseChart
+        [type]="chartType"
+        [data]="chartData"
+        [options]="chartOptions">
+      </canvas>
+    </ng-container>
+
+  <ng-template #semDados>
+    <p class="mensagem-vazia">Nenhum dado disponível para exibir o gráfico.</p>
+  </ng-template>
+</div>

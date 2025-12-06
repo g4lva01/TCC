@@ -1,10 +1,11 @@
 <div class="layout">
-    <app-menu-student></app-menu-student>
-    <div class="main-content">
-        <div class="header">
-        <img src="./../../../assets/image/logo.png" alt="">
-        <h3 id="title">EBD</h3>
-        </div>
+  <app-menu-student></app-menu-student>
+  <div class="main-content">
+    <div class="header">
+      <h3 id="title">EBD</h3>
     </div>
-    <app-frequency-graph-student></app-frequency-graph-student>
+    <div class="content">
+      <app-frequency-graph-student [frequencias]="frequencias"></app-frequency-graph-student>
+    </div>
+  </div>
 </div>
