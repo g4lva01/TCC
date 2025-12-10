@@ -39,9 +39,9 @@
   </div>
 
   <div *ngFor="let atividade of atividades" class="card">
+    <h2>{{atividade.licao}}</h2>
     <h3>{{ atividade.titulo }}</h3>
     <p><strong>Data:</strong> {{ atividade.dataPublicacao | date:'dd/MM/yyyy HH:mm' }}</p>
-    <p><strong>Professor:</strong> {{ atividade.professor.nome }}</p>
     <p><strong>Descrição:</strong> {{ atividade.descricao }}</p>
   </div>
 </div>

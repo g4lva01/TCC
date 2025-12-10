@@ -162,5 +162,9 @@ app-menu {
 }
 
 .card h3 {
+  color: #5a216f;
+}
+
+.card h2 {
   color: #732991;
 }
