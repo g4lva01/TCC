@@ -15,9 +15,12 @@ public class Atividade {
     @JoinColumn(name = "turma_id", nullable = false)
     private Turma turma;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "professor_id", nullable = true)
     private Pessoa professor;
+
+    @Column(name = "numero_licao", nullable = true)
+    private Integer numeroLicao;
 
     @Column(nullable = false, length = 100)
     private String titulo;
@@ -50,6 +53,14 @@ public class Atividade {
 
     public void setProfessor(Pessoa professor) {
         this.professor = professor;
+    }
+
+    public Integer getNumeroLicao() {
+        return numeroLicao;
+    }
+
+    public void setNumeroLicao(Integer numeroLicao) {
+        this.numeroLicao = numeroLicao;
     }
 
     public String getTitulo() {

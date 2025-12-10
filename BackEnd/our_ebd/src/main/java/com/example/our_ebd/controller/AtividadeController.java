@@ -1,5 +1,6 @@
 package com.example.our_ebd.controller;
 
+import com.example.our_ebd.dto.AtividadeDTO;
 import com.example.our_ebd.model.Atividade;
 import com.example.our_ebd.model.Pessoa;
 import com.example.our_ebd.repository.AtividadeRepository;
@@ -36,8 +37,12 @@ public class AtividadeController {
     }
 
     @GetMapping("/turma/{turmaId}")
-    public List<Atividade> listarPorTurma(@PathVariable Long turmaId) {
-        return atividadeRepository.findByTurmaId(turmaId);
+    public ResponseEntity<List<AtividadeDTO>> listarPorTurma(@PathVariable Long turmaId) {
+        List<Atividade> atividades = atividadeRepository.findByTurmaId(turmaId);
+        List<AtividadeDTO> dtos = atividades.stream()
+                .map(AtividadeDTO::new)
+                .toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/professor/{professorId}")
@@ -60,6 +65,7 @@ public class AtividadeController {
            atividade.setDataPublicacao(nova.getDataPublicacao());
            atividade.setTurma(nova.getTurma());
            atividade.setProfessor(nova.getProfessor());
+           atividade.setNumeroLicao(nova.getNumeroLicao());
            return atividadeRepository.save(atividade);
        }).orElseGet(()-> {
            nova.setId(id);
