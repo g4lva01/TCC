@@ -3,11 +3,12 @@ import { MenuComponent } from '../../components/menu/menu.component';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { MenuStudentComponent } from '../../components/menu-student/menu-student.component';
 
 @Component({
   selector: 'app-activitys-manager',
   standalone: true,
-  imports: [MenuComponent, CommonModule, FormsModule],
+  imports: [MenuComponent, CommonModule, FormsModule, MenuStudentComponent],
   templateUrl: './activitys-manager.component.html',
   styleUrl: './activitys-manager.component.css'
 })

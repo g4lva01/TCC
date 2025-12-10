@@ -1,5 +1,6 @@
 <div class="layout">
-  <app-menu></app-menu>
+  <app-menu-student></app-menu-student>
+  <app-menu *ngIf="temPermissao"></app-menu>
   <div class="main-content">
     <div class="header">
       <h3 id="title">EBD</h3>

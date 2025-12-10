@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ClassReportComponent {
   grupos: any[] = [];
-  totalGeral = { matriculados: 0, presentes: 0, ausentes: 0, biblia: 0, revistas: 0, oferta: 0 };
+  totalGeral = { matriculados: 0, presentes: 0, ausentes: 0, biblia: 0, revistas: 0, visitante: 0, oferta: 0 };
 
   constructor(private http: HttpClient) {}
 
@@ -75,8 +75,9 @@ export class ClassReportComponent {
       ausentes: acc.ausentes + g.ausentes,
       biblia: acc.biblia + g.biblia,
       revistas: acc.revistas + g.revistas,
+      visitante: acc.visitante + g.qtdVisitantes,
       oferta: acc.oferta + g.oferta
-    }), { matriculados: 0, presentes: 0, ausentes: 0, biblia: 0, revistas: 0, oferta: 0 });
+    }), { matriculados: 0, presentes: 0, ausentes: 0, biblia: 0, revistas: 0, visitante: 0, oferta: 0 });
   }
   verMais(grupo: string) {
     console.log(`Ver mais sobre ${grupo}`);
