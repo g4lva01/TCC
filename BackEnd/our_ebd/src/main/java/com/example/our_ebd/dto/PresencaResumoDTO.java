@@ -7,5 +7,6 @@ public record PresencaResumoDTO(
         int ausentes,
         int biblia,
         int revistas,
+        int qtdVisitantes,
         double oferta
 ) {}

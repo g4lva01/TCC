@@ -26,9 +26,10 @@ public class PresencaService {
             int ausentes = matriculados - presentes;
             int biblia = (int) presencas.stream().filter(Presenca::getLevouBiblia).count();
             int revistas = (int) presencas.stream().filter(Presenca::getLevouRevista).count();
+            int visitantes = chamada.getQtdVisitantes() != null ? chamada.getQtdVisitantes() : 0;
             double oferta = chamada.getValorOferta() != null ? chamada.getValorOferta().doubleValue() : 0.0;
 
-            return new PresencaResumoDTO(chamada.getTurma().getNome(), matriculados, presentes, ausentes, biblia, revistas, oferta);
+            return new PresencaResumoDTO(chamada.getTurma().getNome(), matriculados, presentes, ausentes, biblia, revistas, visitantes, oferta);
         }).toList();
     }
 }

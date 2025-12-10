@@ -24,6 +24,7 @@ public class RelatorioService {
         int presentes = (int) chamada.getPresencas().stream().filter(Presenca::getPresente).count();
         int ausentes = matriculados - presentes;
         int biblia = (int) chamada.getPresencas().stream().filter(Presenca::getLevouBiblia).count();
+        int visitantes = chamada.getQtdVisitantes() != null ? chamada.getQtdVisitantes() : 0;
         int revistas = (int) chamada.getPresencas().stream().filter(Presenca::getLevouRevista).count();
 
         return new PresencaResumoDTO(
@@ -33,6 +34,7 @@ public class RelatorioService {
                 ausentes,
                 biblia,
                 revistas,
+                visitantes,
                 chamada.getValorOferta() != null ? chamada.getValorOferta().doubleValue() : 0.0
         );
     }

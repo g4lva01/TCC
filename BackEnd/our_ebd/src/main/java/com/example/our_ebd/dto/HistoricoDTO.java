@@ -6,5 +6,6 @@ public record HistoricoDTO(
         LocalDate data,
         long presentes,
         long levouBiblia,
-        long revistas
+        long revistas,
+        int visitantes
 ) {}
