@@ -141,7 +141,7 @@ app-menu {
   padding: 10px 16px;
   border-radius: 4px;
   cursor: pointer;
-  margin: 10px 0 20px 0;
+  margin: 10px 15px 20px 0;
   font-weight: bold;
   transition: background-color 0.3s ease;
 }
@@ -167,4 +167,35 @@ app-menu {
 
 .card h2 {
   color: #732991;
+}
+
+.botao-editar {
+  background-color: #5a216f;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 10px 15px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.botao-editar:hover {
+  background-color: #732991;
+}
+
+.botao-excluir {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.botao-excluir:hover {
+  background-color: #c9302c;
 }

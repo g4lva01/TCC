@@ -18,12 +18,12 @@ export class ActivitysManagerComponent implements OnInit{
   turmaSelecionada: string = '';
   temPermissao = false;
   mostrarModal = false;
+  atividadeEditandoId: number | null = null;
 
   novaAtividade = {
     titulo: '',
     descricao: '',
-    dataPublicacao: '',
-    licao: ''
+    numeroLicao: ''
   };
 
   constructor(private http: HttpClient) {
@@ -53,24 +53,65 @@ export class ActivitysManagerComponent implements OnInit{
     this.http.get<any[]>(`http://localhost:8080/api/atividade/turma/${this.turmaSelecionada}`)
       .subscribe(res => this.atividades = res);
   }
-
+  
+  editarAtividade(atividade: any) {
+    this.novaAtividade = {
+      titulo: atividade.titulo,
+      descricao: atividade.descricao,
+      numeroLicao: atividade.numeroLicao
+    };
+    this.turmaSelecionada = atividade.turmaId;
+    this.atividadeEditandoId = atividade.id;
+    this.mostrarModal = true;
+  }
+  
   salvarAtividade() {
     const body = {
       titulo: this.novaAtividade.titulo,
       descricao: this.novaAtividade.descricao,
-      dataPublicacao: this.novaAtividade.dataPublicacao,
-      licao: this.novaAtividade.licao,
+      numeroLicao: this.novaAtividade.numeroLicao,
       turma: { id: this.turmaSelecionada }
     };
 
-    this.http.post('http://localhost:8080/api/atividade', body)
+    if (this.atividadeEditandoId) {
+      this.http.put(`http://localhost:8080/api/atividade/${this.atividadeEditandoId}`, body)
       .subscribe({
         next: () => {
-          alert('Atividade criada com sucesso!');
+          alert('Atividade atualizada com sucesso!');
           this.mostrarModal = false;
           this.carregarAtividades();
         },
-        error: () => alert('Erro ao criar atividade')
+        error: () => alert('Erro ao atualizar atividade')
       });
+    } else {
+      this.http.post('http://localhost:8080/api/atividade', body)
+        .subscribe({
+          next: () => {
+            alert('Atividade criada com sucesso!');
+            this.mostrarModal = false;
+            this.carregarAtividades();
+          },
+          error: () => alert('Erro ao criar atividade')
+        });
+    }
+  }
+
+  excluirAtividade(atividade: any) {
+    if (confirm('Tem certeza que deseja excluir esta atividade?')) {
+      const body = {
+        titulo: atividade.titulo,
+        numeroLicao: atividade.numeroLicao,
+        turma: { id: this.turmaSelecionada }
+      };
+
+      this.http.request('delete', 'http://localhost:8080/api/atividade', {body})
+        .subscribe({
+          next: () => {
+            alert('Atividade excluída com sucesso!');
+            this.carregarAtividades();
+          },
+          error: () => alert('Erro ao excluir atividade')
+        });
+    }
   }
 }
