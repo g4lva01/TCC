@@ -45,13 +45,14 @@ public class LoginController {
     @Autowired
     private TurmaRepository turmaRepository;
 
+    @Autowired
+    private PresencaRepository presencaRepository;
+
     private void vincularPerfilAluno(Pessoa pessoa) {
         Perfil perfilAluno = perfilRepository.findById(2L)
                 .orElseThrow(() -> new RuntimeException("Perfil aluno não encontrado"));
 
         PessoaPerfil vinculo = new PessoaPerfil(pessoa, perfilAluno);
-        pessoaPerfilRepository.save(vinculo);
-
         pessoaPerfilRepository.save(vinculo);
     }
 
@@ -89,6 +90,7 @@ public class LoginController {
         ));
     }
 
+    @Transactional
     @PostMapping("/criar")
     public ResponseEntity<?> criarLogin(@RequestBody CriarLoginRequest request) {
         if (!request.getSenha().equals(request.getCfSenha())) {
@@ -106,12 +108,12 @@ public class LoginController {
 
         int idade = Period.between(pessoa.getDataDeNascimento(), LocalDate.now()).getYears();
 
-        Turma turma = turmaRepository.findAll().stream()
-                .filter(t -> t.getLimiteDeIdade() == null || idade <= t.getLimiteDeIdade())
+        Turma turma = turmaRepository.findAll().stream() .filter(
+                t -> t.getLimiteDeIdade() == null || idade <= t.getLimiteDeIdade())
                 .min(Comparator.comparingInt(t -> t.getLimiteDeIdade() == null ? Integer.MAX_VALUE : t.getLimiteDeIdade()))
                 .orElseThrow(() -> new RuntimeException("Nenhuma turma compatível com a idade"));
-
         pessoa.setTurma(turma);
+
         pessoaRepository.save(pessoa);
 
         UsuarioAutenticacao usuario = new UsuarioAutenticacao();
@@ -122,7 +124,7 @@ public class LoginController {
 
         vincularPerfilAluno(pessoa);
 
-        return ResponseEntity.ok("Login criado com sucesso!");
+        return ResponseEntity.ok(Map.of("message", "Login criado com sucesso!"));
     }
 
     @PutMapping("/alterar")
@@ -155,7 +157,7 @@ public class LoginController {
         usuario.setSenha(passwordEncoder.encode(request.getNovaSenha()));
         usuarioAutenticacaoRepository.save(usuario);
 
-        return ResponseEntity.ok("Senha atualizada com sucesso!");
+        return ResponseEntity.ok(Map.of("message", "Senha atualizada com sucesso!"));
     }
 
     @PutMapping("/perfil")
@@ -252,22 +254,22 @@ public class LoginController {
     @Transactional
     @DeleteMapping("/desmatricular/{id}")
     public ResponseEntity<?> desmatricularAluno(@PathVariable Long id) {
-        Optional<Pessoa> alunoOpt = pessoaRepository.findById(id);
-
-        if (alunoOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "Aluno não encontrado."));
-        }
-
-        Pessoa aluno = alunoOpt.get();
+        Pessoa aluno = pessoaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+        // Apaga perfis e login
         pessoaPerfilRepository.deleteByPessoa(aluno);
         usuarioAutenticacaoRepository.findByPessoa(aluno)
                 .ifPresent(usuarioAutenticacaoRepository::delete);
+        // Apaga histórico de presenças
+        presencaRepository.deleteByAluno(aluno);
+        // Agora pode apagar o aluno
         pessoaRepository.delete(aluno);
 
-        return ResponseEntity.ok(Map.of("message", "Aluno desmatriculado com sucesso!"));
+        return ResponseEntity.ok(Map.of("message", "Aluno e histórico excluídos com sucesso!"));
     }
 
+
+    @Transactional
     @PostMapping("/matricular")
     public ResponseEntity<?> matricularAluno(@RequestBody MatricularAlunoRequest request) {
         if (pessoaRepository.findByMatricula(request.getMatricula()).isPresent()) {

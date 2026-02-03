@@ -20,4 +20,5 @@ public interface PresencaRepository extends JpaRepository<Presenca, Long> {
             LocalDate inicio,
             LocalDate fim
     );
+    void deleteByAluno(Pessoa aluno);
 }

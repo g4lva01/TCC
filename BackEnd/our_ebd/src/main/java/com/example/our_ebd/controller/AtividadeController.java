@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -52,29 +53,57 @@ public class AtividadeController {
 
     @PostMapping
     public ResponseEntity<?> criar(@RequestBody Atividade atividade) {
+        boolean existe = atividadeRepository.existsByTituloAndNumeroLicaoAndTurmaId(
+                atividade.getTitulo(), atividade.getNumeroLicao(), atividade.getTurma().getId()
+        );
+
+        if (existe) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Atividade já cadastrada para essa lição e turna.");
+        }
+
         atividade.setDataPublicacao(LocalDate.now());
+        Atividade salva = atividadeRepository.save(atividade);
 
-        return ResponseEntity.ok(atividadeRepository.save(atividade));
+        return ResponseEntity.ok(Map.of("message", "Atividade criada com sucesso!",
+                "atividade", salva));
     }
 
-    @PostMapping("/{id}")
-    public Atividade atualizar(@PathVariable Long id, @RequestBody Atividade nova) {
-       return atividadeRepository.findById(id).map(atividade -> {
-           atividade.setTitulo(nova.getTitulo());
-           atividade.setDescricao(nova.getDescricao());
-           atividade.setDataPublicacao(nova.getDataPublicacao());
-           atividade.setTurma(nova.getTurma());
-           atividade.setProfessor(nova.getProfessor());
-           atividade.setNumeroLicao(nova.getNumeroLicao());
-           return atividadeRepository.save(atividade);
-       }).orElseGet(()-> {
-           nova.setId(id);
-           return atividadeRepository.save(nova);
-       });
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Atividade nova) {
+        return atividadeRepository.findById(id).map(atividade -> {
+            atividade.setTitulo(nova.getTitulo());
+            atividade.setDescricao(nova.getDescricao());
+            atividade.setTurma(nova.getTurma());
+            atividade.setProfessor(nova.getProfessor());
+            atividade.setNumeroLicao(nova.getNumeroLicao());
+            atividade.setDataPublicacao(LocalDate.now());
+            Atividade atualizada = atividadeRepository.save(atividade);
+            return ResponseEntity.ok(Map.of("message", "Atividade atualizada com sucesso!", "atividade", atualizada));
+        }).orElseGet(() -> {
+            nova.setId(id);
+            nova.setDataPublicacao(LocalDate.now());
+            Atividade criada = atividadeRepository.save(nova);
+            return ResponseEntity.ok(Map.of("message", "Atividade criada via PUT!", "atividade", criada));
+        });
     }
 
-    @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        atividadeRepository.deleteById(id);
+
+    @DeleteMapping
+    public ResponseEntity<?> deletarPorCampos(@RequestBody Atividade atividade) {
+        Optional<Atividade> atividadeOptional = atividadeRepository
+                .findByTituloAndNumeroLicaoAndTurmaId(
+                        atividade.getTitulo(),
+                        atividade.getNumeroLicao(),
+                        atividade.getTurma().getId()
+                );
+
+        if (atividadeOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Atividade não encontrada."));
+        }
+
+        atividadeRepository.delete(atividadeOptional.get());
+        return ResponseEntity.ok(Map.of("message", "Atividade deletada com sucesso!"));
     }
 }

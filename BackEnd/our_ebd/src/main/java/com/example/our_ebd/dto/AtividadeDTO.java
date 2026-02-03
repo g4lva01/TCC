@@ -10,6 +10,7 @@ public class AtividadeDTO {
     private String descricao;
     private LocalDate dataPublicacao;
     private String turmaNome;
+    private Long turmaId;
     private Integer numeroLicao;
 
     public AtividadeDTO(Atividade atividade) {
@@ -18,7 +19,8 @@ public class AtividadeDTO {
         this.descricao = atividade.getDescricao();
         this.dataPublicacao = atividade.getDataPublicacao();
         this.turmaNome = atividade.getTurma().getNome();
-        this.numeroLicao = atividade.getNumeroLicao(); // novo campo
+        this.turmaId = atividade.getTurma().getId();
+        this.numeroLicao = atividade.getNumeroLicao();
     }
 
     public Long getId() {
@@ -39,6 +41,10 @@ public class AtividadeDTO {
 
     public String getTurmaNome() {
         return turmaNome;
+    }
+
+    public Long getTurmaId() {
+        return turmaId;
     }
 
     public Integer getNumeroLicao() {

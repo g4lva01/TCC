@@ -13,7 +13,7 @@ import java.util.Date;
 
 @Service
 public class JwtService {
-    private static final String SECRET_KEY = "sua-chave-secreta-super-segura-de-no-minimo-256-bits";
+    private static final String SECRET_KEY = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2";
     private static final long EXPIRATION_MS = 86400000;
 
     private Key getSigningKey() {
