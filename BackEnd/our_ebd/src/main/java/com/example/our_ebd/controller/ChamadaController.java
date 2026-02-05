@@ -60,7 +60,7 @@ public class ChamadaController {
             presenca.setAluno(aluno);
             presenca.setPresente(p.getPresente());
             presenca.setLevouBiblia(p.getLevouBiblia());
-            presenca.setLevouRevista(p.getLevouRevista());
+            presenca.setLevouRevista(p.getPresente());
             presenca.setChamada(chamada);
             return presenca;
         }).collect(Collectors.toCollection(ArrayList::new));

@@ -67,7 +67,7 @@ public class PresencaController {
                             chamada.getDataChamada(),
                             chamada.getPresencas().stream().filter(Presenca::getPresente).count(),
                             chamada.getPresencas().stream().filter(Presenca::getLevouBiblia).count(),
-                            chamada.getPresencas().stream().filter(Presenca::getLevouRevista).count(),
+                            chamada.getPresencas().stream().filter(Presenca::getPresente).count(),
                             chamada.getQtdVisitantes() != null ? chamada.getQtdVisitantes() : 0
                     ));
                 } else {
