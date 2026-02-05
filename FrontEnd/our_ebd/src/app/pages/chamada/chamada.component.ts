@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MenuComponent } from '../../components/menu/menu.component';
 import { ChamadaService } from '../../services/chamada.service';
+import { NgxCurrencyDirective } from 'ngx-currency';
 
 @Component({
   selector: 'app-chamada',
   standalone: true,
-  imports: [CommonModule, MenuComponent, FormsModule],
+  imports: [CommonModule, MenuComponent, FormsModule, NgxCurrencyDirective],
   templateUrl: './chamada.component.html',
   styleUrl: './chamada.component.css'
 })
@@ -19,7 +20,7 @@ export class ChamadaComponent implements OnInit {
   professorId: number = 1;
   data: string = '';
   visitantes: number = 0;
-  oferta: string = '0,00';
+  oferta: number = 0;
   alunos: any[] = [];
 
   constructor(
@@ -54,6 +55,9 @@ export class ChamadaComponent implements OnInit {
   }
 
   toggleBiblia(index: number) {
+    if (!this.alunos[index].presente) {
+      return;
+    }
     this.alunos[index].biblia = !this.alunos[index].biblia;
   }
 
@@ -69,7 +73,7 @@ export class ChamadaComponent implements OnInit {
       turmaId: this.turmaId,
       dataChamada: this.data,
       statusChamada: 'Realizada',
-      valorOferta: parseFloat(this.oferta.replace(',', '.')),
+      valorOferta: this.oferta,
       qtdVisitantes: this.visitantes,
       presencas: presencas
     };

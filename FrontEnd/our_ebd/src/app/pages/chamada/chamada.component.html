@@ -18,7 +18,7 @@
       Presente: {{ aluno.presente ? '✅' : '❌' }}
     </button>
 
-    <button (click)="toggleBiblia(i)">
+    <button (click)="toggleBiblia(i)" [disabled]="!aluno.presente">
       Bíblia: {{ aluno.biblia ? '✅' : '❌' }}
     </button>
   </div>
@@ -30,7 +30,9 @@
     </div>
     <div class="campo">
       <label>Oferta da Turma:</label>
-      <input type="text" [(ngModel)]="oferta" />
+      <input currencyMask [(ngModel)]="oferta"
+        [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+      />
     </div>
   </div>
 
