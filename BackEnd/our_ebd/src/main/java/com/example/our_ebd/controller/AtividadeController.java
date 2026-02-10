@@ -59,7 +59,7 @@ public class AtividadeController {
 
         if (existe) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("Atividade já cadastrada para essa lição e turna.");
+                    .body("Atividade já cadastrada para essa lição e turma.");
         }
 
         atividade.setDataPublicacao(LocalDate.now());
