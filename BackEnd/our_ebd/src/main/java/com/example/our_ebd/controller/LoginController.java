@@ -256,13 +256,13 @@ public class LoginController {
     public ResponseEntity<?> desmatricularAluno(@PathVariable Long id) {
         Pessoa aluno = pessoaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
-        // Apaga perfis e login
+
         pessoaPerfilRepository.deleteByPessoa(aluno);
         usuarioAutenticacaoRepository.findByPessoa(aluno)
                 .ifPresent(usuarioAutenticacaoRepository::delete);
-        // Apaga histórico de presenças
+
         presencaRepository.deleteByAluno(aluno);
-        // Agora pode apagar o aluno
+
         pessoaRepository.delete(aluno);
 
         return ResponseEntity.ok(Map.of("message", "Aluno e histórico excluídos com sucesso!"));
@@ -282,6 +282,14 @@ public class LoginController {
         pessoa.setMatricula(request.getMatricula());
 
         int idade = Period.between(pessoa.getDataDeNascimento(), LocalDate.now()).getYears();
+
+        if (idade < 2) {
+            return ResponseEntity.badRequest().body("Não é permitido matricular alunos com menos de 2 anos.");
+        }
+
+        if (idade > 120) {
+            return ResponseEntity.badRequest().body("Idade inválida. Não é permitido matricular alunos com idade muito avançada.");
+        }
 
         Turma turma = turmaRepository.findAll().stream()
                 .filter(t -> t.getLimiteDeIdade() == null || idade <= t.getLimiteDeIdade())
