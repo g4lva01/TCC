@@ -22,7 +22,9 @@ export class GerenciarPerfisComponent implements OnInit {
 
     this.http.get<any[]>('http://localhost:8080/api/login/logins', { headers }).subscribe({
       next: res => {
-        this.usuarios = res.map(u => ({
+        this.usuarios = res
+        .filter(u => u.nome.toLowerCase() !== 'admin' && u.matricula !=='999999')
+        .map(u => ({
           ...u,
           perfisMap: this.perfisDisponiveis.reduce((map: any, p) => {
             map[p] = u.perfis?.includes(p) || false;
