@@ -24,13 +24,13 @@
       <h3>Criar Nova Atividade</h3>
 
       <label>Número da Lição</label>
-      <input type="number" [(ngModel)]="novaAtividade.numeroLicao" />
+      <input type="number" [(ngModel)]="novaAtividade.numeroLicao" placeholder="Ex: 1"/>
 
       <label>Título</label>
-      <input type="text" [(ngModel)]="novaAtividade.titulo" />
+      <input type="text" [(ngModel)]="novaAtividade.titulo" placeholder="Ex: Estudo Bíblico sobre Romanos"/>
 
       <label>Descrição</label>
-      <textarea [(ngModel)]="novaAtividade.descricao"></textarea>
+      <textarea [(ngModel)]="novaAtividade.descricao" placeholder="Ex: Encontro semanal para estudo e reflexão sobre o livro de Romanos"></textarea>
 
       <button class="concluido" (click)="salvarAtividade()">CONCLUÍDO</button>
     </div>

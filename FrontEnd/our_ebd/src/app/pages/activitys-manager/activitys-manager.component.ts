@@ -91,7 +91,13 @@ export class ActivitysManagerComponent implements OnInit{
             this.mostrarModal = false;
             this.carregarAtividades();
           },
-          error: () => alert('Erro ao criar atividade')
+          error: (err) => {
+            if (err.status === 409) {
+              alert(err.error);
+            } else {
+            alert('Erro ao criar atividade');
+          }
+          }
         });
     }
   }
