@@ -27,10 +27,16 @@ export class EnrollComponent {
     this.http.post('http://localhost:8080/api/login/matricular', this.novoAluno)
       .subscribe({
         next: res => {
-          this.alunoEncontrado = res; // já pode mostrar o aluno cadastrado
+          this.alunoEncontrado = res;
           alert('Aluno matriculado com sucesso!');
         },
-        error: err => console.error('Erro ao matricular aluno:', err)
+        error: err => {
+          if (err.status === 400) {
+            alert(err.error);
+          } else {
+             alert('Erro ao matricular aluno.');
+          }
+        }
       });
   }
 
