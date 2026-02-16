@@ -8,7 +8,24 @@
 </div>
 
 <div class="chamada-container">
-  <h2>Chamada - {{ data }}</h2>
+  <div class="trimestre-selector">
+    <label>Selecione o trimestre:</label>
+    <select [(ngModel)]="trimestreSelecionado" (change)="onTrimestreChange()">
+      <option *ngFor="let t of trimestres" [value]="t">{{ t }}</option>
+    </select>
+  </div>
+
+  <div class="domingos-trimestre" *ngIf="domingosTrimestre.length > 0">
+    <label>Domingos do trimestre:</label>
+    <div class="botoes-domingos">
+      <button *ngFor="let d of domingosTrimestre"
+              (click)="selecionarDomingo(d)"
+              [class.selecionado]="data === d">
+        {{ d | date:'dd/MM/yyyy' }}
+      </button>
+    </div>
+  </div>
+
   <h3>Turma: {{ turmaNome }}</h3>
 
   <div *ngFor="let aluno of alunos; let i = index" class="aluno">

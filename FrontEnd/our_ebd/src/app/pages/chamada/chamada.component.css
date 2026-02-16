@@ -146,3 +146,17 @@ input {
 .finalizar:hover {
   background-color: #0056b3;
 }
+
+.botoes-domingos button {
+  margin: 5px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  background: #f5f5f5;
+  cursor: pointer;
+}
+
+.botoes-domingos button.selecionado {
+  background: #007bff;
+  color: white;
+  border-color: #0056b3;
+}
