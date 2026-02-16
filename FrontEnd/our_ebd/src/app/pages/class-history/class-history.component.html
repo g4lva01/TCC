@@ -10,11 +10,30 @@
 <div class="historico-container">
   <h2>Histórico de Frequência - {{ turma }}</h2>
 
+  <div class="filtros">
+    <div class="filtro">
+      <label for="trimestre">Trimestre:</label>
+      <select id="trimestre" [(ngModel)]="trimestreSelecionado" (change)="carregarHistorico()">
+        <option value="1">1º Trimestre</option>
+        <option value="2">2º Trimestre</option>
+        <option value="3">3º Trimestre</option>
+        <option value="4">4º Trimestre</option>
+      </select>
+    </div>
+
+    <div class="filtro">
+      <label for="ano">Ano:</label>
+      <select id="ano" [(ngModel)]="anoSelecionado" (change)="carregarHistorico()">
+        <option *ngFor="let ano of anosDisponiveis" [value]="ano">{{ ano }}</option>
+      </select>
+    </div>
+  </div>
+
   <div class="registro" *ngFor="let item of historico">
     <p><strong>Data:</strong> {{ item.data }}</p>
-    <p><strong>Total Presentes:</strong> {{ item.presente}}</p>
-    <p><strong>Total de Bíblias:</strong> {{ item.levouBiblia}}</p>
-    <p><strong>Total de Revistas:</strong> {{item.revistas}}</p>
+    <p><strong>Total Presentes:</strong> {{ item.presentes }}</p>
+    <p><strong>Total de Bíblias:</strong> {{ item.levouBiblia }}</p>
+    <p><strong>Total de Revistas:</strong> {{ item.revistas }}</p>
     <button [routerLink]="['/chamada', turma, item.data]">Chamada</button>
   </div>
 </div>
