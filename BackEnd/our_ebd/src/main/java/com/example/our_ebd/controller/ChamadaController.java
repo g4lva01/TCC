@@ -1,8 +1,6 @@
 package com.example.our_ebd.controller;
 
-import com.example.our_ebd.dto.ChamadaRegistroDTO;
-import com.example.our_ebd.dto.ChamadaRespostaDTO;
-import com.example.our_ebd.dto.FrequenciaAlunoDTO;
+import com.example.our_ebd.dto.*;
 import com.example.our_ebd.model.Chamada;
 import com.example.our_ebd.model.Pessoa;
 import com.example.our_ebd.model.Presenca;
@@ -12,6 +10,8 @@ import com.example.our_ebd.repository.PessoaRepository;
 import com.example.our_ebd.repository.PresencaRepository;
 import com.example.our_ebd.repository.TurmaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -192,5 +193,53 @@ public class ChamadaController {
         );
 
         return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/{turmaNome}/{data}")
+    public ResponseEntity<?> buscarChamadaPorTurmaENomeEData(
+            @PathVariable String turmaNome,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
+
+        Turma turma = turmaRepository.findByNomeIgnoreCase(turmaNome)
+                .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
+
+        Optional<Chamada> chamadaOpt = chamadaRepository.findByTurmaAndDataChamada(turma, data);
+
+        if (chamadaOpt.isPresent()) {
+            Chamada c = chamadaOpt.get();
+
+            int totalMatriculados = c.getPresencas().size();
+            int totalPresentes = (int) c.getPresencas().stream().filter(Presenca::getPresente).count();
+            int totalAusentes = totalMatriculados - totalPresentes;
+            int totalBiblias = (int) c.getPresencas().stream().filter(Presenca::getLevouBiblia).count();
+            int totalRevistas = (int) c.getPresencas().stream().filter(Presenca::getLevouRevista).count();
+
+            List<PresencaResumoDTO> presencasDTO = c.getPresencas().stream()
+                    .map(p -> new PresencaResumoDTO(
+                            p.getAluno().getNome(),
+                            totalMatriculados,
+                            totalPresentes,
+                            totalAusentes,
+                            totalBiblias,
+                            totalRevistas,
+                            c.getQtdVisitantes(),
+                            c.getValorOferta().doubleValue()
+                    ))
+                    .toList();
+
+            ChamadaComPresencasDTO dto = new ChamadaComPresencasDTO(
+                    c.getId(),
+                    c.getDataChamada(),
+                    c.getStatusChamada(),
+                    c.getValorOferta(),
+                    c.getQtdVisitantes(),
+                    presencasDTO
+            );
+
+            return ResponseEntity.ok(dto);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Nenhuma chamada encontrada para essa turma e data.");
+        }
     }
 }
