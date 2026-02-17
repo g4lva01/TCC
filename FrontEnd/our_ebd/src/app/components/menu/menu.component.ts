@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink} from '@angular/router';
 import { CommonModule } from "@angular/common";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -11,11 +12,30 @@ import { CommonModule } from "@angular/common";
 })
 export class MenuComponent implements OnInit {
   menuVisible = false;
+  perfilMenuVisible = false;
   rolesUsuario: string[] = [];
   perfilAtivo: string | null = null;
 
+  private router = inject(Router);
+
   toggleMenu() {
     this.menuVisible = !this.menuVisible;
+  }
+
+  togglePerfilMenu() {
+    this.perfilMenuVisible = !this.perfilMenuVisible;
+  }
+
+  trocarPerfil(perfil: string) {
+    this.perfilAtivo = perfil;
+    localStorage.setItem('perfilAtivo', perfil);
+    this.perfilMenuVisible = false;
+    
+    if (this.perfilAtivo === 'ALUNO') {
+      this.router.navigate(['/frequencyStudent']);
+    } else {
+      this.router.navigate(['/frequencyManager']);
+    }
   }
 
   ngOnInit() {

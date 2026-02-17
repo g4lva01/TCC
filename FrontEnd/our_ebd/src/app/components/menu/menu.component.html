@@ -6,7 +6,18 @@
     {{ menuVisible ? 'X' : '☰' }}
   </button>
 
-  <div *ngIf="menuVisible" class="menu-content">
+  <div class="menu-content">
+    <div class="user-menu">
+      <button class="user-icon" (click)="togglePerfilMenu()">
+        👤 <!-- pode trocar por um ícone SVG ou FontAwesome -->
+      </button>
+
+      <div *ngIf="perfilMenuVisible" class="perfil-dropdown">
+        <button *ngFor="let perfil of rolesUsuario" (click)="trocarPerfil(perfil)">
+          {{ perfil }}
+        </button>
+      </div>
+    </div>
     <button id="Atividades" [routerLink]="['/activitysManager']">Atividades</button>
     <button id="Relatório" [routerLink]="['/reportManager']">Relatório</button>
     <button id="Chamada" [routerLink]="['/chamada']">Chamada</button>

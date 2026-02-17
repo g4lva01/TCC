@@ -1,58 +1,122 @@
-/* Estilo base da sidebar */
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 60px;
-  height: 100vh;
-  background-color: transparent;
-  transition: width 0.3s ease, background-color 0.3s ease;
-  overflow-x: hidden;
-  z-index: 1000;
-  padding: 10px;
-}
+/* ===== Desktop: barra superior ===== */
+@media (min-width: 769px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;              /* ocupa toda a largura */
+    height: 60px;             /* altura da barra */
+    background-color: #732991;
+    display: flex;
+    align-items: center;
+    justify-content: center;  /* centraliza os botões */
+    padding: 0 1rem;
+    z-index: 1000;
+  }
 
-.sidebar.aberto {
-  width: 25vw;
-  background-color: #732991;
-}
+  .toggle-button {
+    display: none; /* esconde o ☰ no desktop */
+  }
 
-/* Quando a tela for menor que 768px */
-@media (max-width: 768px) {
-  .sidebar.aberto {
-    width: 50vw;
+  .menu-content {
+    display: flex !important; /* sempre visível no desktop */
+    gap: 2rem;
+  }
+
+  .menu-content button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
   }
 }
 
-/* Botão de abrir (☰) */
-.botao-abrir {
-  background-color: #ffffff;
-  color: #732991;
+/* ===== Mobile: sidebar lateral ===== */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: transparent;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    overflow-x: hidden;
+    z-index: 1000;
+    padding: 10px;
+  }
+
+  .sidebar.aberto {
+    width: 50vw;
+    background-color: #732991;
+  }
+
+  .toggle-button {
+    display: block; /* mostra o ☰ no mobile */
+    background: none;
+    border: none;
+    color: rgb(99, 99, 99);
+    font-size: 28px;
+    cursor: pointer;
+    margin: 10px;
+  }
+
+  .menu-content {
+    display: none; /* escondido por padrão */
+    flex-direction: column;
+    margin-top: 20px;
+  }
+
+  .sidebar.aberto .menu-content {
+    display: flex; /* aparece quando menuVisible = true */
+  }
+
+  .menu-content button {
+    text-align: left;
+    margin: 10px 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-icon {
+  background: none;
   border: none;
   font-size: 24px;
+  color: white;
   cursor: pointer;
-  padding: 8px;
+}
+
+.perfil-dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: #732991;
   border-radius: 6px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Botão de fechar (X) */
-.botao-fechar {
+.perfil-dropdown button {
   background: none;
   border: none;
   color: white;
-  font-size: 24px;
-  cursor: pointer;
-  margin-bottom: 20px;
-}
-
-/* Botões do menu */
-.menu-content button {
-  display: block;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 16px;
-  margin: 10px 0;
-  cursor: pointer;
+  padding: 0.4rem 0.8rem;
   text-align: left;
+  cursor: pointer;
+}
+
+.perfil-dropdown button:hover {
+  background-color: rgba(255,255,255,0.1);
 }
