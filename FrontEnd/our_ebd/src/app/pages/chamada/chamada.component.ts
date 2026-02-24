@@ -25,6 +25,7 @@ export class ChamadaComponent implements OnInit {
   domingosTrimestre: string[] = [];
   trimestres: string[] = [];
   trimestreSelecionado: string | null = null;
+  chamadaExistente: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -108,6 +109,7 @@ export class ChamadaComponent implements OnInit {
     this.http.get<any>(`http://localhost:8080/api/chamada/${this.turmaNome}/${this.data}`)
       .subscribe({
         next: chamada => {
+          this.chamadaExistente = true;
           this.visitantes = chamada.qtdVisitantes;
           this.oferta = chamada.valorOferta;
           this.alunos = chamada.presencas.map((p: any) => ({
@@ -120,6 +122,7 @@ export class ChamadaComponent implements OnInit {
         },
         error: err => {
           if (err.status === 404) {
+            this.chamadaExistente = false;
             this.visitantes = 0;
             this.oferta = 0;
             this.alunos.forEach(a => {
@@ -163,9 +166,16 @@ export class ChamadaComponent implements OnInit {
       presencas: presencas
     };
 
-    this.chamadaService.registrarChamada(chamada).subscribe({
-      next: () => alert('Chamada registrada com sucesso!'),
-      error: () => alert('Erro ao registrar chamada.')
-    });
+    if (this.chamadaExistente) {
+      this.chamadaService.atualizarChamada(this.turmaNome, this.data, chamada).subscribe({
+        next: () => alert('Chamada atualizada com sucesso!'),
+        error: () => alert('Erro ao atualizar chamada.')
+      });
+    } else {
+      this.chamadaService.registrarChamada(chamada).subscribe({
+        next: () => alert('Chamada registrada com sucesso!'),
+        error: () => alert('Erro ao registrar chamada.')
+      });
+    }
   }
 }

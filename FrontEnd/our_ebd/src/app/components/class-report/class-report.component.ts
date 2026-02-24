@@ -22,6 +22,7 @@ export class ClassReportComponent {
   dataSelecionada: string | null = null;
   dataMin: string | null = null;
   dataMax: string | null = null;
+  domingosTrimestre: string[] = [];
 
   ngOnInit() {
     const anoAtual = new Date().getFullYear();
@@ -53,6 +54,18 @@ export class ClassReportComponent {
     this.dataMin = startDate.toISOString().split('T')[0];
     this.dataMax = endDate.toISOString().split('T')[0];
     this.dataSelecionada = null;
+
+    this.domingosTrimestre = [];
+    let data = new Date(startDate);
+
+    while (data.getDay() !== 0) {
+      data.setDate(data.getDate() + 1);
+    }
+
+    while (data <= endDate) {
+      this.domingosTrimestre.push(data.toISOString().split('T')[0]);
+      data.setDate(data.getDate() + 7);
+    }
   }
 
   onDataChange() {

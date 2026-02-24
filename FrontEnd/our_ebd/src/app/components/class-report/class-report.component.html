@@ -15,14 +15,13 @@
   </div>
 
   <div class="filtro-container" *ngIf="trimestreSelecionado">
-    <label for="data">Data:</label>
-    <input
-      type="date"
-      [(ngModel)]="dataSelecionada"
-      [min]="dataMin"
-      [max]="dataMax"
-      (change)="onDataChange()"
-    />
+    <label for="data">Data (Domingos):</label>
+    <select id="data" [(ngModel)]="dataSelecionada" (change)="onDataChange()">
+      <option value="">Selecione</option>
+      <option *ngFor="let domingo of domingosTrimestre" [value]="domingo">
+        {{ domingo }}
+      </option>
+    </select>
   </div>
 
   <div class="grupo" *ngFor="let grupo of grupos">
