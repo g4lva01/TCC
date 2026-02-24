@@ -10,5 +10,5 @@ public record ChamadaComPresencasDTO(
         String statusChamada,
         BigDecimal valorOferta,
         Integer qtdVisitantes,
-        List<PresencaResumoDTO> presencas
+        List<PresencaEdicaoDTO> presencas
 ) {}

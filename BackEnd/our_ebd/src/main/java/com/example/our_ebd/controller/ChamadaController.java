@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
@@ -90,13 +91,11 @@ public class ChamadaController {
         Turma turma = turmaRepository.findById(turmaId)
                 .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
 
-        // Define trimestre atual
         LocalDate hoje = LocalDate.now();
         int trimestre = (hoje.getMonthValue() - 1) / 3 + 1;
         LocalDate inicio = LocalDate.of(hoje.getYear(), (trimestre - 1) * 3 + 1, 1);
         LocalDate fim = inicio.plusMonths(3).minusDays(1);
 
-        // Conta domingos no trimestre
         int domingosCount = 0;
         for (LocalDate d = inicio; !d.isAfter(fim); d = d.plusDays(1)) {
             if (d.getDayOfWeek() == DayOfWeek.SUNDAY) domingosCount++;
@@ -166,19 +165,16 @@ public class ChamadaController {
             throw new RuntimeException("Aluno não está matriculado em nenhuma turma");
         }
 
-        // Define trimestre atual
         LocalDate hoje = LocalDate.now();
         int trimestre = (hoje.getMonthValue() - 1) / 3 + 1;
         LocalDate inicio = LocalDate.of(hoje.getYear(), (trimestre - 1) * 3 + 1, 1);
         LocalDate fim = inicio.plusMonths(3).minusDays(1);
 
-        // Conta domingos no trimestre
         int domingos = (int) Stream.iterate(inicio, d -> d.plusDays(1))
                 .limit(ChronoUnit.DAYS.between(inicio, fim) + 1)
                 .filter(d -> d.getDayOfWeek() == DayOfWeek.SUNDAY)
                 .count();
 
-        // Conta presenças do aluno
         long presencas = presencaRepository
                 .countByAlunoAndPresenteTrueAndChamada_DataChamadaBetween(aluno, inicio, fim);
 
@@ -214,16 +210,13 @@ public class ChamadaController {
             int totalBiblias = (int) c.getPresencas().stream().filter(Presenca::getLevouBiblia).count();
             int totalRevistas = (int) c.getPresencas().stream().filter(Presenca::getLevouRevista).count();
 
-            List<PresencaResumoDTO> presencasDTO = c.getPresencas().stream()
-                    .map(p -> new PresencaResumoDTO(
+            List<PresencaEdicaoDTO> presencasDTO = c.getPresencas().stream()
+                    .map(p -> new PresencaEdicaoDTO(
+                            p.getAluno().getId(),
                             p.getAluno().getNome(),
-                            totalMatriculados,
-                            totalPresentes,
-                            totalAusentes,
-                            totalBiblias,
-                            totalRevistas,
-                            c.getQtdVisitantes(),
-                            c.getValorOferta().doubleValue()
+                            p.getPresente(),
+                            p.getLevouBiblia(),
+                            p.getLevouRevista()
                     ))
                     .toList();
 
@@ -241,5 +234,54 @@ public class ChamadaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Nenhuma chamada encontrada para essa turma e data.");
         }
+    }
+
+    @Transactional
+    @PutMapping("/{turmaNome}/{data}")
+    public ResponseEntity<?> atualizarChamada(
+            @PathVariable String turmaNome,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data,
+            @RequestBody ChamadaRegistroDTO dto) {
+
+        Turma turma = turmaRepository.findByNomeIgnoreCase(turmaNome)
+                .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
+
+        Chamada chamada = chamadaRepository.findByTurmaAndDataChamada(turma, data)
+                .orElseThrow(() -> new RuntimeException("Chamada não encontrada"));
+
+        chamada.setStatusChamada(dto.getStatusChamada());
+        chamada.setValorOferta(dto.getValorOferta());
+        chamada.setQtdVisitantes(dto.getQtdVisitantes());
+
+        presencaRepository.deleteByChamada(chamada);
+        presencaRepository.flush();
+
+        List<Presenca> novasPresencas = new ArrayList<>();
+
+        for (PresencaDTO p : dto.getPresencas()) {
+            Pessoa aluno = pessoaRepository.findById(p.getAlunoId())
+                    .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+
+            Presenca presenca = new Presenca();
+            presenca.setAluno(aluno);
+            presenca.setPresente(p.getPresente());
+            presenca.setLevouBiblia(p.getLevouBiblia());
+            presenca.setLevouRevista(p.getLevouRevista());
+            presenca.setChamada(chamada);
+
+            novasPresencas.add(presenca);
+        }
+
+        chamada.setPresencas(novasPresencas);
+
+        Chamada chamadaAtualizada = chamadaRepository.save(chamada);
+
+        return ResponseEntity.ok(new ChamadaRespostaDTO(
+                chamadaAtualizada.getId(),
+                chamadaAtualizada.getDataChamada(),
+                chamadaAtualizada.getStatusChamada(),
+                chamadaAtualizada.getValorOferta(),
+                chamadaAtualizada.getQtdVisitantes()
+        ));
     }
 }
