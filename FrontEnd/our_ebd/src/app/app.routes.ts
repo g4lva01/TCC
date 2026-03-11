@@ -61,7 +61,7 @@ export const routes: Routes = [
       component: FrequencyStudentComponent
     },
     {
-      path: 'reportStudent',
+      path: 'reportStudent/:nomeTurma',
       component: ReportStudentComponent
     },
     {

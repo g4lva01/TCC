@@ -25,6 +25,9 @@ export class HomeComponent {
       .subscribe({
         next: res => {
         localStorage.setItem('usuarioLogado', JSON.stringify(res));
+
+        localStorage.setItem('alunoNome', res.nome);
+
         this.router.navigate(['/selecionar-perfil']);
       },
         error: err => alert('Erro ao fazer login: ' + err.error)

@@ -6,3 +6,18 @@
         </div>
     </div>
 </div>
+
+
+<div class="historico-container">
+    <h2>Histórico Escolar</h2>
+
+    <div class="turma-card" *ngFor="let turma of turmas">
+        <h5>{{ turma.nomeTurma }}</h5>
+        <p>Presenças: {{ turma.presencas }}</p>
+        <p>Qtd. Bíblia: {{ turma.qtdBiblia }}</p>
+        <p>Ausências: {{ turma.ausencias }}</p>
+        <p>Qtd. Revista: {{ turma.qtdRevista }}</p>
+
+        <button [routerLink]="['/reportStudent', turma.nomeTurma]">Ver Mais</button>
+    </div>
+</div>
