@@ -6,7 +6,7 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-@IdClass(Presenca.class)
+@IdClass(PresencaId.class)
 public class Presenca {
     @Id
     @ManyToOne

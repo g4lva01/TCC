@@ -1,5 +1,6 @@
 package com.example.our_ebd.controller;
 
+import com.example.our_ebd.dto.HistoricoAlunoDTO;
 import com.example.our_ebd.dto.HistoricoDTO;
 import com.example.our_ebd.dto.PresencaResumoDTO;
 import com.example.our_ebd.model.Chamada;
@@ -109,5 +110,11 @@ public class PresencaController {
     @GetMapping("/historico/data/{data}")
     public List<PresencaResumoDTO> getHistoricoPorData(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
         return presencaService.buscarPorData(data);
+    }
+
+    @GetMapping("/historico/aluno/{nomeAluno}")
+    public ResponseEntity<?> getHistoricoAluno(@PathVariable String nomeAluno) {
+        List<HistoricoAlunoDTO> resultado = presencaService.buscarHistoricoPorAluno(nomeAluno);
+        return ResponseEntity.ok(resultado);
     }
 }
