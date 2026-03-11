@@ -2,6 +2,7 @@ package com.example.our_ebd.service;
 
 import com.example.our_ebd.dto.HistoricoAlunoDTO;
 import com.example.our_ebd.dto.PresencaResumoDTO;
+import com.example.our_ebd.dto.RelatorioAlunoDTO;
 import com.example.our_ebd.model.Chamada;
 import com.example.our_ebd.model.Pessoa;
 import com.example.our_ebd.model.Presenca;
@@ -12,6 +13,7 @@ import com.example.our_ebd.repository.PresencaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,5 +79,32 @@ public class PresencaService {
         }
 
         return resultado;
+    }
+
+    public List<RelatorioAlunoDTO> buscarRelatorioPorAlunoETrimestre(String alunoNome, int ano, int trimestre) {
+        Pessoa aluno = pessoaRepository.findByNomeIgnoreCase(alunoNome)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+
+        LocalDate inicio;
+        LocalDate fim;
+
+        switch (trimestre) {
+            case 1: inicio = LocalDate.of(ano, 1, 1); fim = LocalDate.of(ano, 3, 31); break;
+            case 2: inicio = LocalDate.of(ano, 4, 1); fim = LocalDate.of(ano, 6, 30); break;
+            case 3: inicio = LocalDate.of(ano, 7, 1); fim = LocalDate.of(ano, 9, 30); break;
+            case 4: inicio = LocalDate.of(ano, 10, 1); fim = LocalDate.of(ano, 12, 31); break;
+            default: throw new IllegalArgumentException("Trimestre inválido");
+        }
+
+        return presencaRepository.findByAlunoAndChamada_DataChamadaBetween(aluno, inicio, fim)
+                .stream()
+                .filter(p -> p.getChamada().getDataChamada().getDayOfWeek() == DayOfWeek.SUNDAY)
+                .map(p -> new RelatorioAlunoDTO(
+                        p.getChamada().getDataChamada(),
+                        Boolean.TRUE.equals(p.getPresente()),
+                        Boolean.TRUE.equals(p.getLevouBiblia()),
+                        Boolean.TRUE.equals(p.getLevouRevista())
+                ))
+                .collect(Collectors.toList());
     }
 }

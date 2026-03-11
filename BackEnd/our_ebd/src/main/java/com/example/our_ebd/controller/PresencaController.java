@@ -3,6 +3,7 @@ package com.example.our_ebd.controller;
 import com.example.our_ebd.dto.HistoricoAlunoDTO;
 import com.example.our_ebd.dto.HistoricoDTO;
 import com.example.our_ebd.dto.PresencaResumoDTO;
+import com.example.our_ebd.dto.RelatorioAlunoDTO;
 import com.example.our_ebd.model.Chamada;
 import com.example.our_ebd.model.Presenca;
 import com.example.our_ebd.model.Turma;
@@ -116,5 +117,14 @@ public class PresencaController {
     public ResponseEntity<?> getHistoricoAluno(@PathVariable String nomeAluno) {
         List<HistoricoAlunoDTO> resultado = presencaService.buscarHistoricoPorAluno(nomeAluno);
         return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/relatorio/aluno/{alunoNome}/{ano}/{trimestre}")
+    public ResponseEntity<?> getRelatorioAlunoPorTrimestre(
+            @PathVariable String alunoNome,
+            @PathVariable int ano,
+            @PathVariable int trimestre) {
+        List<RelatorioAlunoDTO> relatorio = presencaService.buscarRelatorioPorAlunoETrimestre(alunoNome, ano, trimestre);
+        return ResponseEntity.ok(relatorio);
     }
 }

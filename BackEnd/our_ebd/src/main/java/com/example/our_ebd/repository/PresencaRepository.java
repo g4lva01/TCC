@@ -18,6 +18,7 @@ public interface PresencaRepository extends JpaRepository<Presenca, Long> {
     @Query("SELECT DISTINCT p.chamada.turma.id FROM Presenca p WHERE p.aluno.id = :alunoId")
     List<Long> findDistinctTurmaIdsByAlunoId(@Param("alunoId") Long alunoId);
     List<Presenca> findByAluno(Pessoa nome);
+    List<Presenca> findByAlunoAndChamada_DataChamadaBetween(Pessoa aluno, LocalDate inicio, LocalDate fim);
     Optional<Presenca> findByAlunoAndChamada(Pessoa alunoId, Chamada chamada);
     long countByAlunoAndPresenteTrueAndChamada_DataChamadaBetween(
             Pessoa aluno,
