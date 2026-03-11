@@ -3,7 +3,7 @@
 
     <div class="filtro-container">
         <label for="filtro">Ano e Trimestre:</label>
-        <select id="filtro" class="filtro">
+        <select id="filtro" class="filtro" (change)="onTrimestreChange($event)">
         <option value="">Selecione</option>
         <option *ngFor="let trimestre of trimestres" [value]="trimestre">
             {{ trimestre.replace('-T1', ' - 1º Trimestre')
