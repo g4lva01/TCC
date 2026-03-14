@@ -12,9 +12,17 @@
   <h2>Atividades da Turma</h2>
 
   <label>Selecione a turma:</label>
-    <select [(ngModel)]="turmaSelecionada" (change)="carregarAtividades()">
-        <option *ngFor="let turma of turmas" [value]="turma.id">{{ turma.nome }}</option>
-    </select>
+  <select [(ngModel)]="turmaSelecionada" (change)="carregarAtividades()">
+      <option *ngFor="let turma of turmas" [value]="turma.id">{{ turma.nome }}</option>
+  </select>
+
+  <label>Selecione o trimestre:</label>
+  <select [(ngModel)]="trimestreSelecionado" (change)="onTrimestreChange($event)">
+    <option [value]="1">1º Trimestre</option>
+    <option [value]="2">2º Trimestre</option>
+    <option [value]="3">3º Trimestre</option>
+    <option [value]="4">4º Trimestre</option>
+  </select>
 
   <button *ngIf="temPermissao" (click)="mostrarModal = true">Nova Atividade</button>
 
@@ -25,6 +33,13 @@
 
       <label>Número da Lição</label>
       <input type="number" [(ngModel)]="novaAtividade.numeroLicao" placeholder="Ex: 1"/>
+
+      <label>Data (Domingo)</label>
+      <select [(ngModel)]="novaAtividade.dataPublicacao">
+        <option *ngFor="let domingo of domingos" [ngValue]="domingo">
+          {{ domingo | date:'dd/MM/yyyy' }}
+        </option>
+      </select>
 
       <label>Título</label>
       <input type="text" [(ngModel)]="novaAtividade.titulo" placeholder="Ex: Estudo Bíblico sobre Romanos"/>
@@ -39,7 +54,7 @@
   <div *ngFor="let atividade of atividades" class="card">
     <h2>{{atividade.licao}}</h2>
     <h3>{{ atividade.titulo }}</h3>
-    <p><strong>Data:</strong> {{ atividade.dataPublicacao | date:'dd/MM/yyyy HH:mm' }}</p>
+    <p><strong>Data (Domingo):</strong> {{ atividade.dataPublicacao | date:'dd/MM/yyyy' }}</p>
     <p><strong>Descrição:</strong> {{ atividade.descricao }}</p>
 
     <div *ngIf="temPermissao">

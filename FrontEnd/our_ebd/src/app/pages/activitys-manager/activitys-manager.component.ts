@@ -19,11 +19,14 @@ export class ActivitysManagerComponent implements OnInit{
   temPermissao = false;
   mostrarModal = false;
   atividadeEditandoId: number | null = null;
-
+  domingos: Date[] = [];
+  trimestreSelecionado: number | null = null;
+  
   novaAtividade = {
     titulo: '',
     descricao: '',
-    numeroLicao: ''
+    numeroLicao: '',
+    dataPublicacao: ''
   };
 
   constructor(private http: HttpClient) {
@@ -58,7 +61,8 @@ export class ActivitysManagerComponent implements OnInit{
     this.novaAtividade = {
       titulo: atividade.titulo,
       descricao: atividade.descricao,
-      numeroLicao: atividade.numeroLicao
+      numeroLicao: atividade.numeroLicao,
+      dataPublicacao: atividade.dataPublicacao
     };
     this.turmaSelecionada = atividade.turmaId;
     this.atividadeEditandoId = atividade.id;
@@ -70,6 +74,7 @@ export class ActivitysManagerComponent implements OnInit{
       titulo: this.novaAtividade.titulo,
       descricao: this.novaAtividade.descricao,
       numeroLicao: this.novaAtividade.numeroLicao,
+      dataPublicacao: this.novaAtividade.dataPublicacao,
       turma: { id: this.turmaSelecionada }
     };
 
@@ -119,5 +124,18 @@ export class ActivitysManagerComponent implements OnInit{
           error: () => alert('Erro ao excluir atividade')
         });
     }
+  }
+
+  onTrimestreChange(event: any) {
+    const trimestre = event.target.value;
+    const ano = new  Date().getFullYear();
+
+    this.http.get<string[]>(`http://localhost:8080/api/atividade/domingos/${ano}/${trimestre}`)
+      .subscribe({
+        next: data => {
+          this.domingos = data.map(d => new Date(d + 'T00:00:00'));
+        },
+        error: err => console.error('Erro ao buscar domingos:', err)
+      });
   }
 }
