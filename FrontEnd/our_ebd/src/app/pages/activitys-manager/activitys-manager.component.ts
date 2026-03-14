@@ -29,12 +29,12 @@ export class ActivitysManagerComponent implements OnInit{
   constructor(private http: HttpClient) {
     const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado') || '{}');
     const roles: string[] = usuarioLogado.roles || [];
+    const perfilAtivo: string = localStorage.getItem('perfilAtivo') || '';
 
-    this.temPermissao = roles.some(r => 
-      ['ROLE_PROFESSOR', 'ROLE_GESTOR', 'ROLE_ADMIN'].includes(r)
-    );
+    this.temPermissao = ['PROFESSOR', 'GESTOR', 'ADMIN'].includes(perfilAtivo);
 
     console.log('Roles do usuário:', roles);
+    console.log('Perfil ativo:', perfilAtivo);
     console.log('Tem permissão:', this.temPermissao);
   }
 
