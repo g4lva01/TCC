@@ -12,8 +12,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +28,29 @@ public class AtividadeController {
 
     @Autowired
     private PessoaRepository pessoaRepository;
+
+    private List<LocalDate> calcularDomingosDoTrimestre(int ano, int trimestre) {
+        LocalDate inicio;
+        LocalDate fim;
+
+        switch (trimestre) {
+            case 1: inicio = LocalDate.of(ano, 1, 1); fim = LocalDate.of(ano, 3, 31); break;
+            case 2: inicio = LocalDate.of(ano, 4, 1); fim = LocalDate.of(ano, 6, 30); break;
+            case 3: inicio = LocalDate.of(ano, 7, 1); fim = LocalDate.of(ano, 9, 30); break;
+            case 4: inicio = LocalDate.of(ano, 10, 1); fim = LocalDate.of(ano, 12, 31); break;
+            default: throw new IllegalArgumentException("Trimestre inválido");
+        }
+
+        List<LocalDate> domingos = new ArrayList<>();
+        LocalDate data = inicio;
+        while (!data.isAfter(fim)) {
+            if (data.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                domingos.add(data);
+            }
+            data = data.plusDays(1);
+        }
+        return domingos;
+    }
 
     @GetMapping
     public List<Atividade> listarTodas() {
@@ -51,6 +76,12 @@ public class AtividadeController {
         return atividadeRepository.findByProfessorId(professorId);
     }
 
+    @GetMapping("/domingos/{ano}/{trimestre}")
+    public ResponseEntity<List<LocalDate>> listarDomingos(@PathVariable int ano, @PathVariable int trimestre) {
+        List<LocalDate> domingos = calcularDomingosDoTrimestre(ano, trimestre);
+        return ResponseEntity.ok(domingos);
+    }
+
     @PostMapping
     public ResponseEntity<?> criar(@RequestBody Atividade atividade) {
         boolean existe = atividadeRepository.existsByTituloAndNumeroLicaoAndTurmaId(
@@ -62,7 +93,9 @@ public class AtividadeController {
                     .body("Atividade já cadastrada para essa lição e turma.");
         }
 
-        atividade.setDataPublicacao(LocalDate.now());
+        if (atividade.getDataPublicacao() == null) {
+            atividade.setDataPublicacao(LocalDate.now());
+        }
         Atividade salva = atividadeRepository.save(atividade);
 
         return ResponseEntity.ok(Map.of("message", "Atividade criada com sucesso!",
@@ -77,7 +110,7 @@ public class AtividadeController {
             atividade.setTurma(nova.getTurma());
             atividade.setProfessor(nova.getProfessor());
             atividade.setNumeroLicao(nova.getNumeroLicao());
-            atividade.setDataPublicacao(LocalDate.now());
+            atividade.setDataPublicacao(nova.getDataPublicacao());
             Atividade atualizada = atividadeRepository.save(atividade);
             return ResponseEntity.ok(Map.of("message", "Atividade atualizada com sucesso!", "atividade", atualizada));
         }).orElseGet(() -> {
