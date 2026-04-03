@@ -1,9 +1,12 @@
 package com.example.our_ebd.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Atividade {
@@ -30,6 +33,10 @@ public class Atividade {
 
     @Column(columnDefinition = "TEXT")
     private String descricao;
+
+    @OneToMany(mappedBy = "atividade", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<AtividadeLink> links = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -85,5 +92,13 @@ public class Atividade {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public List<AtividadeLink> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<AtividadeLink> links) {
+        this.links = links;
     }
 }

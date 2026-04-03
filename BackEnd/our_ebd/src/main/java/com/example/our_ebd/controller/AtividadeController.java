@@ -5,13 +5,21 @@ import com.example.our_ebd.model.Atividade;
 import com.example.our_ebd.model.Pessoa;
 import com.example.our_ebd.repository.AtividadeRepository;
 import com.example.our_ebd.repository.PessoaRepository;
+import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -93,6 +101,10 @@ public class AtividadeController {
                     .body("Atividade já cadastrada para essa lição e turma.");
         }
 
+        if (atividade.getLinks() != null) {
+            atividade.getLinks().forEach(link -> link.setAtividade(atividade));
+        }
+
         if (atividade.getDataPublicacao() == null) {
             atividade.setDataPublicacao(LocalDate.now());
         }
@@ -110,6 +122,9 @@ public class AtividadeController {
             atividade.setTurma(nova.getTurma());
             atividade.setProfessor(nova.getProfessor());
             atividade.setNumeroLicao(nova.getNumeroLicao());
+            atividade.getLinks().clear();
+            atividade.getLinks().addAll(nova.getLinks());
+            atividade.getLinks().forEach(link -> link.setAtividade(atividade));
             atividade.setDataPublicacao(nova.getDataPublicacao());
             Atividade atualizada = atividadeRepository.save(atividade);
             return ResponseEntity.ok(Map.of("message", "Atividade atualizada com sucesso!", "atividade", atualizada));

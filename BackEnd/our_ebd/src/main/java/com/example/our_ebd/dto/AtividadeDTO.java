@@ -3,6 +3,7 @@ package com.example.our_ebd.dto;
 import com.example.our_ebd.model.Atividade;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class AtividadeDTO {
     private Long id;
@@ -12,6 +13,7 @@ public class AtividadeDTO {
     private String turmaNome;
     private Long turmaId;
     private Integer numeroLicao;
+    private List<LinkDTO> links;
 
     public AtividadeDTO(Atividade atividade) {
         this.id = atividade.getId();
@@ -21,6 +23,7 @@ public class AtividadeDTO {
         this.turmaNome = atividade.getTurma().getNome();
         this.turmaId = atividade.getTurma().getId();
         this.numeroLicao = atividade.getNumeroLicao();
+        this.links = atividade.getLinks().stream().map(LinkDTO::new).toList();
     }
 
     public Long getId() {
@@ -49,5 +52,9 @@ public class AtividadeDTO {
 
     public Integer getNumeroLicao() {
         return numeroLicao;
+    }
+
+    public List<LinkDTO> getLinks() {
+        return links;
     }
 }
