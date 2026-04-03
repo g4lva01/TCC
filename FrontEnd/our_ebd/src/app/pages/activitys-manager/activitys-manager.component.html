@@ -47,15 +47,31 @@
       <label>Descrição</label>
       <textarea [(ngModel)]="novaAtividade.descricao" placeholder="Ex: Encontro semanal para estudo e reflexão sobre o livro de Romanos"></textarea>
 
+      <label>Links</label>
+      <div *ngFor="let link of novaAtividade.links; let i = index">
+        <input type="text" [(ngModel)]="link.url" placeholder="URL">
+        <input type="text" [(ngModel)]="link.descricao" placeholder="Descrição">
+        <button (click)="removerLink(i)">Remover</button>
+      </div>
+      <button (click)="adicionarLink()">+ Adicionar Link</button>
+
       <button class="concluido" (click)="salvarAtividade()">CONCLUÍDO</button>
     </div>
   </div>
 
   <div *ngFor="let atividade of atividades" class="card">
-    <h2>{{atividade.licao}}</h2>
+    <h2>Lição {{ atividade.numeroLicao }}</h2>
     <h3>{{ atividade.titulo }}</h3>
     <p><strong>Data (Domingo):</strong> {{ atividade.dataPublicacao | date:'dd/MM/yyyy' }}</p>
     <p><strong>Descrição:</strong> {{ atividade.descricao }}</p>
+    <div *ngIf="atividade.links?.length">
+      <strong>Links:</strong>
+      <ul>
+        <li *ngFor="let link of atividade.links">
+          <a [href]="link.url" target="_blank">{{ link.descricao || link.url }}</a>
+        </li>
+      </ul>
+    </div>
 
     <div *ngIf="temPermissao">
       <button class="botao-editar" (click)="editarAtividade(atividade)">Editar</button>

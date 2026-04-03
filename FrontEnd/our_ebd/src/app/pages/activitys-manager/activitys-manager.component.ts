@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MenuStudentComponent } from '../../components/menu-student/menu-student.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-activitys-manager',
@@ -26,10 +27,12 @@ export class ActivitysManagerComponent implements OnInit{
     titulo: '',
     descricao: '',
     numeroLicao: '',
-    dataPublicacao: ''
+    dataPublicacao: '',
+    links: [] as {url: string, descricao: string}[],
+    anexos: [] as {nomeArquivo: string; caminho: string; tipo: string; file?: File }[]
   };
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, public sanitizer: DomSanitizer) {
     const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado') || '{}');
     const roles: string[] = usuarioLogado.roles || [];
     const perfilAtivo: string = localStorage.getItem('perfilAtivo') || '';
@@ -62,7 +65,9 @@ export class ActivitysManagerComponent implements OnInit{
       titulo: atividade.titulo,
       descricao: atividade.descricao,
       numeroLicao: atividade.numeroLicao,
-      dataPublicacao: atividade.dataPublicacao
+      dataPublicacao: atividade.dataPublicacao,
+      links: atividade.links,
+      anexos: atividade.anexos
     };
     this.turmaSelecionada = atividade.turmaId;
     this.atividadeEditandoId = atividade.id;
@@ -75,6 +80,8 @@ export class ActivitysManagerComponent implements OnInit{
       descricao: this.novaAtividade.descricao,
       numeroLicao: this.novaAtividade.numeroLicao,
       dataPublicacao: this.novaAtividade.dataPublicacao,
+      links: this.novaAtividade.links,
+      anexos: this.novaAtividade.anexos,
       turma: { id: this.turmaSelecionada }
     };
 
@@ -137,5 +144,13 @@ export class ActivitysManagerComponent implements OnInit{
         },
         error: err => console.error('Erro ao buscar domingos:', err)
       });
+  }
+
+  adicionarLink() {
+    this.novaAtividade.links.push({url: '', descricao: ''});
+  }
+
+  removerLink(index: number) {
+    this.novaAtividade.links.splice(index, 1);
   }
 }
