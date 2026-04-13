@@ -65,13 +65,11 @@ CREATE TABLE Gestor_Turma (
 CREATE TABLE Chamada (
     id INT AUTO_INCREMENT PRIMARY KEY,
     turma_id INT,
-    professor_id INT NOT NULL,
     data_chamada DATE,
     status_chamada VARCHAR(20),
     valor_oferta DECIMAL(10, 2),
     qtd_visitantes INT,
-    FOREIGN KEY (turma_id) REFERENCES Turma(id),
-    FOREIGN KEY (professor_id) REFERENCES Pessoa(id)
+    FOREIGN KEY (turma_id) REFERENCES Turma(id)
 );
 
 -- Registro de presença individual por chamada

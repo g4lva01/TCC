@@ -4,10 +4,67 @@
     <div class="header">
       <h3 id="title">EBD</h3>
     </div>
-    <div class="content">
-      <div *ngFor="let turma of turmas">
-        <h4>{{ turma }}</h4>
-        <app-frequency-graph [frequencias]="agrupadoPorTurma[turma]"></app-frequency-graph>
+    <div class="dashboard">
+      <!-- Top Presenças -->
+      <div class="card">
+        <app-frequency-graph
+          [titulo]="'Top Presenças'"
+          [labels]="presencasLabels"
+          [datasets]="[
+            { label: 'Presenças', data: presencasData, backgroundColor: '#732991' }
+          ]">
+        </app-frequency-graph>
+      </div>
+
+      <!-- Top Faltas -->
+      <div class="card">
+        <app-frequency-graph
+          [titulo]="'Top Faltas'"
+          [labels]="faltasLabels"
+          [datasets]="[
+            { label: 'Faltas', data: faltasData, backgroundColor: '#e74c3c' }
+          ]">
+        </app-frequency-graph>
+      </div>
+
+      <!-- Faltas por Dia -->
+      <div class="card">
+        <app-frequency-graph
+          [titulo]="'Faltas por Dia'"
+          [labels]="faltasDiaLabels"
+          [datasets]="[
+            { label: 'Faltas', data: faltasDiaData, backgroundColor: '#e67e22' }
+          ]">
+        </app-frequency-graph>
+      </div>
+
+      <!-- Frequência por Turma -->
+      <div class="card">
+        <app-frequency-graph
+          [titulo]="'Frequência por Turma'"
+          [labels]="turmasLabels"
+          [datasets]="[
+            { label: 'Frequência', data: turmasData, backgroundColor: '#3498db' }
+          ]">
+        </app-frequency-graph>
+      </div>
+
+      <!-- Avisos -->
+      <div class="avisos">
+        <h4>Avisos</h4>
+        <ul>
+          <li *ngFor="let aviso of diasSemChamada">
+            📌 Turma {{ aviso.nomeTurma }}
+            <ul>
+              <li *ngFor="let dia of aviso.diasSemChamada">
+                <a class="aviso-link"
+                  [routerLink]="['/chamada', aviso.nomeTurma, (dia | date:'yyyy-MM-dd')]">
+                  - Dia {{ dia | date:'dd/MM/yyyy' }} sem chamada registrada
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </div>
     </div>
   </div>

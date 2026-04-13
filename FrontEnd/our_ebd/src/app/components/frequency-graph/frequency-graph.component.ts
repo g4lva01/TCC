@@ -1,6 +1,5 @@
 import { Component, inject, PLATFORM_ID, Input, OnInit } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { BaseChartDirective } from 'ng2-charts';
 import { ChartOptions, ChartType, ChartData } from 'chart.js';
 import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, BarController } from 'chart.js';
 import { FrequencyService } from '../../services/frequency.service';
@@ -9,12 +8,16 @@ Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, B
 
 @Component({
   selector: 'app-frequency-graph',
-  imports: [CommonModule, BaseChartDirective],
+  imports: [CommonModule],
   templateUrl: './frequency-graph.component.html',
   styleUrls: ['./frequency-graph.component.css']
 })
 export class FrequencyGraphComponent implements OnInit {
   isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
+  @Input() titulo: string = '';
+  @Input() datasets: any[] = [];
+  @Input() labels: string[] = [];
 
   constructor(private frequencyService: FrequencyService) {}
 
@@ -27,7 +30,7 @@ export class FrequencyGraphComponent implements OnInit {
       },
       title: {
         display: true,
-        text: 'Frequência de Alunos por Turma',
+        text: this.titulo,
         color: '#732991'
       }
     },
@@ -59,12 +62,8 @@ export class FrequencyGraphComponent implements OnInit {
     const data = this.frequencias.map(f => f.presencas);
 
     this.chartData = {
-      labels,
-      datasets: [{
-        label: 'Presenças',
-        data,
-        backgroundColor: '#732991'
-      }]
+      labels: this.labels,
+      datasets: this.datasets
     };
   }
 }

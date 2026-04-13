@@ -236,6 +236,116 @@ public class ChamadaController {
         }
     }
 
+    @GetMapping("/frequencia/trimestre/top-presencas")
+    public ResponseEntity<List<AlunoFrequenciaDTO>> getTopPresencas(@RequestParam int ano, @RequestParam int trimestre){
+        LocalDate inicio;
+        LocalDate fim;
+
+        switch (trimestre) {
+            case 1: inicio = LocalDate.of(ano, 1, 1); fim = LocalDate.of(ano, 3, 31); break;
+            case 2: inicio = LocalDate.of(ano, 4, 1); fim = LocalDate.of(ano, 6, 30); break;
+            case 3: inicio = LocalDate.of(ano, 7, 1); fim = LocalDate.of(ano, 9, 30); break;
+            case 4: inicio = LocalDate.of(ano, 10, 1); fim = LocalDate.of(ano, 12, 31); break;
+            default: throw new IllegalArgumentException("Trimestre inválido");
+        }
+
+        List<AlunoFrequenciaDTO> resultado = presencaRepository.findTopPresencas(inicio, fim);
+        return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/frequencia/trimestre/top-faltas")
+    public ResponseEntity<List<AlunoFrequenciaDTO>> getTopFaltas(@RequestParam int ano, @RequestParam int trimestre) {
+        LocalDate inicio;
+        LocalDate fim;
+
+        switch (trimestre) {
+            case 1: inicio = LocalDate.of(ano, 1, 1); fim = LocalDate.of(ano, 3, 31); break;
+            case 2: inicio = LocalDate.of(ano, 4, 1); fim = LocalDate.of(ano, 6, 30); break;
+            case 3: inicio = LocalDate.of(ano, 7, 1); fim = LocalDate.of(ano, 9, 30); break;
+            case 4: inicio = LocalDate.of(ano, 10, 1); fim = LocalDate.of(ano, 12, 31); break;
+            default: throw new IllegalArgumentException("Trimestre inválido");
+        }
+
+        List<AlunoFrequenciaDTO> resultado = presencaRepository.findTopFaltas(inicio, fim);
+        return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/frequencia/trimestre/turmas")
+    public ResponseEntity<List<TurmaFrequenciaDTO>> getTurmasComMaiorFrequencia(@RequestParam int ano, @RequestParam int trimestre) {
+        LocalDate inicio;
+        LocalDate fim;
+
+        switch (trimestre) {
+            case 1: inicio = LocalDate.of(ano, 1, 1); fim = LocalDate.of(ano, 3, 31); break;
+            case 2: inicio = LocalDate.of(ano, 4, 1); fim = LocalDate.of(ano, 6, 30); break;
+            case 3: inicio = LocalDate.of(ano, 7, 1); fim = LocalDate.of(ano, 9, 30); break;
+            case 4: inicio = LocalDate.of(ano, 10, 1); fim = LocalDate.of(ano, 12, 31); break;
+            default: throw new IllegalArgumentException("Trimestre inválido");
+        }
+
+        List<TurmaFrequenciaDTO> resultado = presencaRepository.findTurmasComMaiorFrequencia(inicio, fim);
+        return  ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/frequencia/trimestre/faltas-por-dia")
+    public ResponseEntity<List<FaltasDiaDTO>> getDiasComMaisFaltas(@RequestParam int ano, @RequestParam int trimestre) {
+        LocalDate inicio;
+        LocalDate fim;
+
+        switch (trimestre) {
+            case 1: inicio = LocalDate.of(ano, 1, 1); fim = LocalDate.of(ano, 3, 31); break;
+            case 2: inicio = LocalDate.of(ano, 4, 1); fim = LocalDate.of(ano, 6, 30); break;
+            case 3: inicio = LocalDate.of(ano, 7, 1); fim = LocalDate.of(ano, 9, 30); break;
+            case 4: inicio = LocalDate.of(ano, 10, 1); fim = LocalDate.of(ano, 12, 31); break;
+            default: throw new IllegalArgumentException("Trimestre inválido");
+        }
+
+        List<FaltasDiaDTO> resultado = presencaRepository.findDiasComMaisFaltas(inicio, fim);
+        return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/frequencia/trimestre/dias-sem-chamada")
+    public ResponseEntity<List<AvisoSemChamadaDTO>> getDiasSemChamada(
+            @RequestParam int ano, @RequestParam int trimestre) {
+
+        LocalDate inicio;
+        LocalDate fim;
+
+        switch (trimestre) {
+            case 1: inicio = LocalDate.of(ano, 1, 1); fim = LocalDate.of(ano, 3, 31); break;
+            case 2: inicio = LocalDate.of(ano, 4, 1); fim = LocalDate.of(ano, 6, 30); break;
+            case 3: inicio = LocalDate.of(ano, 7, 1); fim = LocalDate.of(ano, 9, 30); break;
+            case 4: inicio = LocalDate.of(ano, 10, 1); fim = LocalDate.of(ano, 12, 31); break;
+            default: throw new IllegalArgumentException("Trimestre inválido");
+        }
+
+        LocalDate hoje = LocalDate.now();
+        if (fim.isAfter(hoje)) {
+            fim = hoje;
+        }
+
+        List<LocalDate> chamadasGlobais = chamadaRepository.findDatasChamadas(inicio, fim);
+        List<Turma> turmas = turmaRepository.findAll();
+        List<AvisoSemChamadaDTO> avisos = new ArrayList<>();
+
+        for (Turma turma : turmas) {
+            List<LocalDate> chamadasTurma = chamadaRepository.findDatasChamadasPorTurma(turma.getNome(), inicio, fim);
+
+            List<LocalDate> diasSemChamada = new ArrayList<>();
+            for (LocalDate data : chamadasGlobais) {
+                if (!chamadasTurma.contains(data)) {
+                    diasSemChamada.add(data);
+                }
+            }
+
+            if (!diasSemChamada.isEmpty()) {
+                avisos.add(new AvisoSemChamadaDTO(turma.getNome(), diasSemChamada));
+            }
+        }
+
+        return ResponseEntity.ok(avisos);
+    }
+
     @Transactional
     @PutMapping("/{turmaNome}/{data}")
     public ResponseEntity<?> atualizarChamada(

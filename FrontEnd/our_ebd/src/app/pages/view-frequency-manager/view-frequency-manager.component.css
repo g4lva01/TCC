@@ -59,3 +59,97 @@ app-menu {
   -webkit-background-clip: text;
   background-clip: text;
 }
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* padrão: duas colunas */
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 20px;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card h4 {
+  margin-bottom: 15px;
+  color: #732991;
+  font-weight: bold;
+  text-align: center;
+}
+
+.avisos {
+  grid-column: 1 / -1;
+  margin-top: 30px;
+  text-align: center;
+}
+
+.avisos h4 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.avisos ul {
+  list-style: none;
+  padding: 0;
+  padding-left: 30px;
+}
+
+.avisos > ul > li {
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #732991;
+}
+
+.avisos > ul > li ul {
+  margin-top: 8px;
+  padding-left: 20px;
+}
+
+.aviso-link {
+  display: inline-block;
+  margin: 4px 0;
+  padding: 8px 14px;
+  background-color: #732991;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.aviso-link:hover {
+  background-color: #5a2170;
+  transform: translateY(-2px);
+}
+
+/* Responsividade: em telas médias, uma coluna */
+@media (max-width: 992px) {
+  .dashboard {
+    grid-template-columns: 1fr; /* uma coluna */
+  }
+}
+
+/* Ajustes extras para telas muito pequenas */
+@media (max-width: 480px) {
+  .card {
+    padding: 15px;
+  }
+
+  .card h4 {
+    font-size: 16px;
+  }
+
+  .aviso-link {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}

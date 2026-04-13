@@ -15,10 +15,6 @@ public class Chamada {
     @JoinColumn(name = "turma_id", nullable = false)
     private Turma turma;
 
-    @ManyToOne
-    @JoinColumn(name = "professor_id", nullable = true)
-    private Pessoa professor;
-
     private LocalDate dataChamada;
     private String statusChamada;
     private BigDecimal valorOferta;
@@ -37,14 +33,6 @@ public class Chamada {
 
     public void setTurma(Turma turma) {
         this.turma = turma;
-    }
-
-    public Pessoa getProfessor() {
-        return professor;
-    }
-
-    public void setProfessor(Pessoa professor) {
-        this.professor = professor;
     }
 
     public LocalDate getDataChamada() {
