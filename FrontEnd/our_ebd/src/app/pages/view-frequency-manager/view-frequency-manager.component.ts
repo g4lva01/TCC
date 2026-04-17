@@ -38,19 +38,19 @@ export class ViewFrequencyManagerComponent implements OnInit {
     this.frequencyService.getTopPresencas(ano, trimestre).subscribe(res => {
       this.topPresencas = res;
       this.presencasLabels = res.map(a => a.nomeAluno);
-      this.presencasData = res.map(a => a.presencas);
+      this.presencasData = res.map(a => Number(a.presencas));
     });
 
     this.frequencyService.getTopFaltas(ano, trimestre).subscribe(res => {
       this.topFaltas = res;
       this.faltasLabels = res.map(a => a.nomeAluno);
-      this.faltasData = res.map(a => a.faltas);
+      this.faltasData = res.map(a => Number(a.faltas));
     });
 
     this.frequencyService.getFaltasPorDia(ano, trimestre).subscribe(res => {
       this.faltasPorDia = res;
       this.faltasDiaLabels = res.map(d => d.data);
-      this.faltasDiaData = res.map(d => d.totalFaltas);
+      this.faltasDiaData = res.map(d => Number(d.totalFaltas));
     });
 
     this.frequencyService.getDiasSemChamada(ano,  trimestre)
@@ -58,7 +58,7 @@ export class ViewFrequencyManagerComponent implements OnInit {
 
     this.frequencyService.getFrequenciaPorTurma(ano, trimestre).subscribe(res => {
       this.turmasLabels = res.map(t => t.nomeTurma);
-      this.turmasData = res.map(t => t.frequencia);
+      this.turmasData = res.map(t => Number(t.frequencia));
     });
   }
 }

@@ -35,14 +35,19 @@ public interface PresencaRepository extends JpaRepository<Presenca, Long> {
             nativeQuery = true)
     List<AlunoFrequenciaDTO> findTopPresencas(@Param("inicio") LocalDate inicio, @Param("fim") LocalDate fim);
 
-    @Query("SELECT new com.example.our_ebd.dto.AlunoFrequenciaDTO(p.aluno.id, p.aluno.nome, " +
-            "COUNT(CASE WHEN p.presente = true THEN 1 ELSE 0 END), " +
-            "COUNT(CASE WHEN p.presente = false THEN 1 ELSE 0 END)) " +
-            "FROM Presenca p " +
-            "WHERE p.chamada.dataChamada BETWEEN :inicio AND :fim " +
-            "GROUP BY p.aluno.id, p.aluno.nome " +
-            "ORDER BY SUM(CASE WHEN p.presente = false THEN 1 ELSE 0 END) DESC")
-    List<AlunoFrequenciaDTO> findTopFaltas(@Param("inicio") LocalDate inicio,  @Param("fim") LocalDate fim);
+    @Query(value = "SELECT p.aluno_id AS alunoId, pes.nome AS nomeAluno, " +
+            "SUM(CASE WHEN p.presente = true THEN 1 ELSE 0 END) AS presencas, " +
+            "SUM(CASE WHEN p.presente = false THEN 1 ELSE 0 END) AS faltas " +
+            "FROM presenca p " +
+            "JOIN pessoa pes ON pes.id = p.aluno_id " +
+            "JOIN chamada c ON c.id = p.chamada_id " +
+            "JOIN pessoa_perfil pp ON pes.id = pp.pessoa_id " +
+            "JOIN perfil perf ON pp.perfil_id = perf.id " +
+            "WHERE perf.nome = 'ALUNO' AND c.data_chamada BETWEEN :inicio AND :fim " +
+            "GROUP BY p.aluno_id, pes.nome " +
+            "ORDER BY faltas DESC",
+            nativeQuery = true)
+    List<AlunoFrequenciaDTO> findTopFaltas(@Param("inicio") LocalDate inicio, @Param("fim") LocalDate fim);
 
     @Query("SELECT new com.example.our_ebd.dto.TurmaFrequenciaDTO(c.turma.id, c.turma.nome, " +
             "AVG(CASE WHEN p.presente = true THEN 1 ELSE 0 END)) " +

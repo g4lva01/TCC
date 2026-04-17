@@ -18,6 +18,7 @@ export class FrequencyGraphComponent implements OnInit {
   @Input() titulo: string = '';
   @Input() datasets: any[] = [];
   @Input() labels: string[] = [];
+  @Input() frequencias: any[] = [];
 
   constructor(private frequencyService: FrequencyService) {}
 
@@ -46,8 +47,6 @@ export class FrequencyGraphComponent implements OnInit {
     labels: [],
     datasets: []
   };
-
-  @Input() frequencias: any[] = [];
 
   get temDados(): boolean {
     return this.chartData.datasets.some(dataset => dataset.data.length > 0);

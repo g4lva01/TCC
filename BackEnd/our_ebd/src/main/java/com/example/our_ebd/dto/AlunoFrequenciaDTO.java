@@ -1,23 +1,25 @@
 package com.example.our_ebd.dto;
 
-public class AlunoFrequenciaDTO {
-    private Long alunoId;
-    private String nomeAluno;
-    private Long presencas;
-    private Long faltas;
+import java.math.BigDecimal;
 
-    public AlunoFrequenciaDTO(Long alunoId, String nomeAluno, Long presencas, Long faltas) {
+public class AlunoFrequenciaDTO {
+    private Integer alunoId;
+    private String nomeAluno;
+    private BigDecimal presencas;
+    private BigDecimal faltas;
+
+    public AlunoFrequenciaDTO(Integer alunoId, String nomeAluno, BigDecimal presencas, BigDecimal faltas) {
         this.alunoId = alunoId;
         this.nomeAluno = nomeAluno;
         this.presencas = presencas;
         this.faltas = faltas;
     }
 
-    public Long getAlunoId() {
+    public Integer getAlunoId() {
         return alunoId;
     }
 
-    public void setAlunoId(Long alunoId) {
+    public void setAlunoId(Integer alunoId) {
         this.alunoId = alunoId;
     }
 
@@ -29,19 +31,19 @@ public class AlunoFrequenciaDTO {
         this.nomeAluno = nomeAluno;
     }
 
-    public Long getPresencas() {
+    public BigDecimal getPresencas() {
         return presencas;
     }
 
-    public void setPresencas(Long presencas) {
+    public void setPresencas(BigDecimal presencas) {
         this.presencas = presencas;
     }
 
-    public Long getFaltas() {
+    public BigDecimal getFaltas() {
         return faltas;
     }
 
-    public void setFaltas(Long faltas) {
+    public void setFaltas(BigDecimal faltas) {
         this.faltas = faltas;
     }
 }
