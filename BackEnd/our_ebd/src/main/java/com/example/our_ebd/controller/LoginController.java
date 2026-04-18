@@ -301,6 +301,12 @@ public class LoginController {
 
         vincularPerfilAluno(pessoa);
 
+        UsuarioAutenticacao usuario = new UsuarioAutenticacao();
+        usuario.setPessoa(pessoa);
+        usuario.setSenha(passwordEncoder.encode("Senha"));
+        usuario.setRoles(List.of("ROLE_ALUNO"));
+        usuarioAutenticacaoRepository.save(usuario);
+
         Map<String, Object> resultado = Map.of(
                 "id", pessoa.getId(),
                 "nome", pessoa.getNome(),

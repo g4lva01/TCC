@@ -3,10 +3,12 @@ import { MenuComponent } from '../../components/menu/menu.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { BarcodeFormat } from '@zxing/library';
 
 @Component({
   selector: 'app-enroll',
-  imports: [MenuComponent, CommonModule, FormsModule],
+  imports: [MenuComponent, CommonModule, FormsModule, ZXingScannerModule],
   templateUrl: './enroll.component.html',
   styleUrl: './enroll.component.css'
 })
@@ -20,6 +22,10 @@ export class EnrollComponent {
   busca: string = '';
   alunoEncontrado: any = null;
   alunoNaoEncontrado: boolean = false;
+  campoSelecionado: string = '';
+  formats: BarcodeFormat[] = [BarcodeFormat.QR_CODE];
+  mostrarScanner: boolean = false;
+
 
   constructor(private http: HttpClient) {}
 
@@ -67,5 +73,13 @@ export class EnrollComponent {
         },
         error: err => console.error('Erro ao desmatricular aluno:', err)
       });
+  }
+
+  onScanSuccess(valor: string) {
+    if (this.campoSelecionado) {
+      (this.novoAluno as any)[this.campoSelecionado] = valor;
+    } else {
+      this.novoAluno.matricula = valor;
+    }
   }
 }
