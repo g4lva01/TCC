@@ -57,7 +57,22 @@ export class ActivitysManagerComponent implements OnInit{
 
   carregarAtividades() {
     this.http.get<any[]>(`http://localhost:8080/api/atividade/turma/${this.turmaSelecionada}`)
-      .subscribe(res => this.atividades = res);
+      .subscribe(res => {
+        this.atividades = res.filter(a => {
+          if (!a.dataPublicacao) return false;
+
+          const data = new Date(a.dataPublicacao);
+          const mes = data.getMonth() + 1;
+
+          let trimestre = 0;
+          if (mes >= 1 && mes <= 3) trimestre = 1;
+          else if (mes >= 4 && mes <= 6) trimestre = 2;
+          else if (mes >= 7 && mes <= 9) trimestre = 3;
+          else if (mes >= 10 && mes <= 12) trimestre = 4;
+
+          return trimestre === this.trimestreSelecionado;
+        });
+      });
   }
   
   editarAtividade(atividade: any) {
@@ -134,13 +149,14 @@ export class ActivitysManagerComponent implements OnInit{
   }
 
   onTrimestreChange(event: any) {
-    const trimestre = event.target.value;
+    this.trimestreSelecionado = +event.target.value;
     const ano = new  Date().getFullYear();
 
-    this.http.get<string[]>(`http://localhost:8080/api/atividade/domingos/${ano}/${trimestre}`)
+    this.http.get<string[]>(`http://localhost:8080/api/atividade/domingos/${ano}/${this.trimestreSelecionado}`)
       .subscribe({
         next: data => {
           this.domingos = data.map(d => new Date(d + 'T00:00:00'));
+          this.carregarAtividades();
         },
         error: err => console.error('Erro ao buscar domingos:', err)
       });

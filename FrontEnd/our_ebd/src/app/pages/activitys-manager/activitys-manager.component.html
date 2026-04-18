@@ -24,7 +24,7 @@
     <option [value]="4">4º Trimestre</option>
   </select>
 
-  <button *ngIf="temPermissao" (click)="mostrarModal = true">Nova Atividade</button>
+  <button *ngIf="temPermissao && trimestreSelecionado" (click)="mostrarModal = true">Nova Atividade</button>
 
   <div class="modal-overlay" *ngIf="mostrarModal">
     <div class="modal">
@@ -59,23 +59,25 @@
     </div>
   </div>
 
-  <div *ngFor="let atividade of atividades" class="card">
-    <h2>Lição {{ atividade.numeroLicao }}</h2>
-    <h3>{{ atividade.titulo }}</h3>
-    <p><strong>Data (Domingo):</strong> {{ atividade.dataPublicacao | date:'dd/MM/yyyy' }}</p>
-    <p><strong>Descrição:</strong> {{ atividade.descricao }}</p>
-    <div *ngIf="atividade.links?.length">
-      <strong>Links:</strong>
-      <ul>
-        <li *ngFor="let link of atividade.links">
-          <a [href]="link.url" target="_blank">{{ link.descricao || link.url }}</a>
-        </li>
-      </ul>
-    </div>
+  <div *ngIf="trimestreSelecionado">
+    <div *ngFor="let atividade of atividades" class="card">
+      <h2>Lição {{ atividade.numeroLicao }}</h2>
+      <h3>{{ atividade.titulo }}</h3>
+      <p><strong>Data (Domingo):</strong> {{ atividade.dataPublicacao | date:'dd/MM/yyyy' }}</p>
+      <p><strong>Descrição:</strong> {{ atividade.descricao }}</p>
+      <div *ngIf="atividade.links?.length">
+        <strong>Links:</strong>
+        <ul>
+          <li *ngFor="let link of atividade.links">
+            <a [href]="link.url" target="_blank">{{ link.descricao || link.url }}</a>
+          </li>
+        </ul>
+      </div>
 
-    <div *ngIf="temPermissao">
-      <button class="botao-editar" (click)="editarAtividade(atividade)">Editar</button>
-      <button class="botao-excluir" (click)="excluirAtividade(atividade)">Excluir</button>
+      <div *ngIf="temPermissao">
+        <button class="botao-editar" (click)="editarAtividade(atividade)">Editar</button>
+        <button class="botao-excluir" (click)="excluirAtividade(atividade)">Excluir</button>
+      </div>
     </div>
   </div>
 </div>
