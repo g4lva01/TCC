@@ -324,17 +324,26 @@ public class ChamadaController {
             fim = hoje;
         }
 
-        List<LocalDate> chamadasGlobais = chamadaRepository.findDatasChamadas(inicio, fim);
+        List<LocalDate> domingos = new ArrayList<>();
+        LocalDate data = inicio;
+        while (!data.isAfter(fim)) {
+            if (data.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                domingos.add(data);
+            }
+            data = data.plusDays(1);
+        }
         List<Turma> turmas = turmaRepository.findAll();
         List<AvisoSemChamadaDTO> avisos = new ArrayList<>();
 
         for (Turma turma : turmas) {
-            List<LocalDate> chamadasTurma = chamadaRepository.findDatasChamadasPorTurma(turma.getNome(), inicio, fim);
+            List<LocalDate> chamadasTurma = chamadaRepository.findDatasChamadasPorTurma(
+                    turma.getNome(), inicio, fim
+            );
 
             List<LocalDate> diasSemChamada = new ArrayList<>();
-            for (LocalDate data : chamadasGlobais) {
-                if (!chamadasTurma.contains(data)) {
-                    diasSemChamada.add(data);
+            for (LocalDate domingo : domingos) {
+                if (!chamadasTurma.contains(domingo)) {
+                    diasSemChamada.add(domingo);
                 }
             }
 

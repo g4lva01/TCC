@@ -59,11 +59,12 @@ public interface PresencaRepository extends JpaRepository<Presenca, Long> {
     List<TurmaFrequenciaDTO> findTurmasComMaiorFrequencia(@Param("inicio") LocalDate inicio, @Param("fim") LocalDate fim);
 
     @Query("SELECT new com.example.our_ebd.dto.FaltasDiaDTO(c.dataChamada, " +
-            "COUNT(CASE WHEN p.presente = false THEN 1 ELSE 0 END)) " +
+            "SUM(CASE WHEN p.presente = false THEN 1 ELSE 0 END)) " +
             "FROM Presenca p " +
             "JOIN p.chamada c " +
             "WHERE c.dataChamada BETWEEN :inicio AND :fim " +
             "GROUP BY c.dataChamada " +
+            "HAVING SUM(CASE WHEN p.presente = false THEN 1 ELSE 0 END) > 0 " +
             "ORDER BY SUM(CASE WHEN p.presente = false THEN 1 ELSE 0 END) DESC")
     List<FaltasDiaDTO> findDiasComMaisFaltas(@Param("inicio") LocalDate inicio, @Param("fim") LocalDate fim);
 

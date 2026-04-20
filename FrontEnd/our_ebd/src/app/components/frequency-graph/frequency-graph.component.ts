@@ -1,26 +1,21 @@
-import { Component, inject, PLATFORM_ID, Input, OnInit } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, inject, PLATFORM_ID, Input, OnInit, SimpleChange, OnChanges, SimpleChanges } from '@angular/core';
+import { CommonModule} from '@angular/common';
 import { ChartOptions, ChartType, ChartData } from 'chart.js';
 import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, BarController } from 'chart.js';
-import { FrequencyService } from '../../services/frequency.service';
+import { BaseChartDirective } from 'ng2-charts';
 
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, BarController);
 
 @Component({
   selector: 'app-frequency-graph',
-  imports: [CommonModule],
+  imports: [CommonModule, BaseChartDirective],
   templateUrl: './frequency-graph.component.html',
   styleUrls: ['./frequency-graph.component.css']
 })
-export class FrequencyGraphComponent implements OnInit {
-  isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-
+export class FrequencyGraphComponent implements OnInit, OnChanges {
   @Input() titulo: string = '';
   @Input() datasets: any[] = [];
   @Input() labels: string[] = [];
-  @Input() frequencias: any[] = [];
-
-  constructor(private frequencyService: FrequencyService) {}
 
   chartOptions: ChartOptions = {
     responsive: true,
@@ -42,27 +37,35 @@ export class FrequencyGraphComponent implements OnInit {
   };
 
   chartType: ChartType = 'bar';
-
-  chartData: ChartData<'bar'> = {
-    labels: [],
-    datasets: []
-  };
+  chartData: ChartData<'bar'> = { labels: [], datasets: [] };
 
   get temDados(): boolean {
-    return this.chartData.datasets.some(dataset => dataset.data.length > 0);
+    return this.chartData.datasets?.some(ds => Array.isArray(ds.data) && ds.data.length > 0) ?? false;
   }
 
   ngOnInit(): void {
     this.atualizarGrafico();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['labels'] || changes['datasets'] || changes['titulo']) {
+      this.atualizarGrafico();
+    }
+  }
+
   atualizarGrafico(): void {
-    const labels = this.frequencias.map(f => f.nomeAluno);
-    const data = this.frequencias.map(f => f.presencas);
+    const safeDatasets = (this.datasets || []).map(ds => ({
+      ...ds,
+      data: (ds.data || []).map((v: any) => Number(v)) // força número
+    }));
 
     this.chartData = {
-      labels: this.labels,
-      datasets: this.datasets
+      labels: this.labels || [],
+      datasets: safeDatasets
     };
+
+    if (this.chartOptions.plugins?.title) {
+      (this.chartOptions.plugins.title as any).text = this.titulo;
+    }
   }
 }

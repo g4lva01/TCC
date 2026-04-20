@@ -50,7 +50,7 @@ export class ViewFrequencyManagerComponent implements OnInit {
     this.frequencyService.getFaltasPorDia(ano, trimestre).subscribe(res => {
       this.faltasPorDia = res;
       this.faltasDiaLabels = res.map(d => d.data);
-      this.faltasDiaData = res.map(d => Number(d.totalFaltas));
+      this.faltasDiaData = res.map(d => Number(d.totalFaltas)); 
     });
 
     this.frequencyService.getDiasSemChamada(ano,  trimestre)
@@ -58,7 +58,7 @@ export class ViewFrequencyManagerComponent implements OnInit {
 
     this.frequencyService.getFrequenciaPorTurma(ano, trimestre).subscribe(res => {
       this.turmasLabels = res.map(t => t.nomeTurma);
-      this.turmasData = res.map(t => Number(t.frequencia));
+      this.turmasData = res.map(t => Number(t.mediaPresencas));
     });
   }
 }

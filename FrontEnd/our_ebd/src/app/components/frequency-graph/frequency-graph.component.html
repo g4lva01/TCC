@@ -1,6 +1,12 @@
 <div class="grafico-container">
   <div class="grafico-titulo">{{ titulo }}</div>
-  <canvas *ngIf="datasets.length > 0; else vazio"></canvas>
+
+  <canvas *ngIf="temDados; else vazio"
+          baseChart
+          [data]="chartData"
+          [options]="chartOptions"
+          [type]="chartType">
+  </canvas>
 
   <ng-template #vazio>
     <div class="mensagem-vazia">Nenhum dado disponível</div>
