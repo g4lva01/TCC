@@ -155,9 +155,9 @@ public class ChamadaController {
         return ResponseEntity.ok(resultado);
     }
 
-    @GetMapping("/frequencia/trimestre/aluno/{alunoId}")
-    public ResponseEntity<FrequenciaAlunoDTO> getFrequenciaTrimestralAluno(@PathVariable Long alunoId) {
-        Pessoa aluno = pessoaRepository.findById(alunoId)
+    @GetMapping("/frequencia/trimestre/aluno")
+    public ResponseEntity<DashboardFrequenciaAlunoDTO> getFrequenciaTrimestralAluno(@RequestParam String alunoNome) {
+        Pessoa aluno = pessoaRepository.findByNomeIgnoreCase(alunoNome)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
 
         Turma turma = aluno.getTurma();
@@ -178,14 +178,31 @@ public class ChamadaController {
         long presencas = presencaRepository
                 .countByAlunoAndPresenteTrueAndChamada_DataChamadaBetween(aluno, inicio, fim);
 
-        double percentual = domingos > 0 ? (presencas * 100.0) / domingos : 0.0;
+        long faltas = presencaRepository
+                .countByAlunoAndPresenteFalseAndChamada_DataChamadaBetween(aluno, inicio, fim);
 
-        FrequenciaAlunoDTO resultado = new FrequenciaAlunoDTO(
+        long totalRegistraosAluno = presencas + faltas;
+
+        double percentual = totalRegistraosAluno > 0 ? (presencas * 100.0) / totalRegistraosAluno : 0.0;
+
+        List<Pessoa> colegas = pessoaRepository.findByTurma(turma);
+
+        double somaPercentuais = colegas.stream()
+                .mapToDouble(c -> {
+                    long p = presencaRepository.countByAlunoAndPresenteTrueAndChamada_DataChamadaBetween(c, inicio, fim);
+                    return (domingos > 0) ? (p * 100.0) / domingos : 0.0;
+                })
+                .average()
+                .orElse(0.0);
+
+        DashboardFrequenciaAlunoDTO resultado = new DashboardFrequenciaAlunoDTO(
                 aluno.getNome(),
                 turma.getNome(),
                 presencas,
+                faltas,
                 domingos,
-                percentual
+                percentual,
+                somaPercentuais
         );
 
         return ResponseEntity.ok(resultado);

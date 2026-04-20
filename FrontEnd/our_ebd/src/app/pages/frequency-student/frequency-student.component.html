@@ -4,8 +4,35 @@
     <div class="header">
       <h3 id="title">EBD</h3>
     </div>
-    <div class="content">
-      <app-frequency-graph-student [frequencias]="frequencias"></app-frequency-graph-student>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <div class="medalha-badge" *ngIf="hasPerfectAttendance">
+        <span class="icon">🏅</span>
+        <span class="text">Presença Perfeita</span>
+      </div>
+    </header>
+
+    <div class="grid-layout">
+      <div class="card graph-card">
+        <app-frequency-graph-student [frequencias]="frequencias"></app-frequency-graph-student>
+      </div>
+
+      <div class="stats-container">
+        <div class="card stat-card">
+          <span class="label">Seu Desempenho</span>
+          <div class="value-container">
+            <span class="value">{{ desempenhoAluno | number:'1.0-0' }}%</span>
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="desempenhoAluno"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card stat-card secondary">
+          <span class="label">Média da Turma</span>
+          <span class="value">{{ mediaTurma | number:'1.0-0' }}%</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>

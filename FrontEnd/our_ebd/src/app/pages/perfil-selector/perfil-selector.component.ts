@@ -31,9 +31,9 @@ export class PerfilSelectorComponent {
     localStorage.setItem('perfilAtivo', perfil);
 
     if (this.aluno?.id) {
-      localStorage.setItem('alunoId', this.aluno.id);
+      localStorage.setItem('alunoNome', this.aluno.nome);
     } else {
-      console.warn('ID do aluno não encontrado no objeto aluno:', this.aluno);
+      console.warn('Nome do aluno não encontrado no objeto aluno:', this.aluno);
     }
 
     switch (perfil) {

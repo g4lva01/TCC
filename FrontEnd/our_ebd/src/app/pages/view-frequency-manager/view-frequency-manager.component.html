@@ -49,23 +49,25 @@
         </app-frequency-graph>
       </div>
 
-      <!-- Avisos -->
-      <div class="avisos">
-        <h4>Avisos</h4>
-        <ul>
-          <li *ngFor="let aviso of diasSemChamada">
-            📌 Turma {{ aviso.nomeTurma }}
-            <ul>
-              <li *ngFor="let dia of aviso.diasSemChamada">
-                <a class="aviso-link"
-                  [routerLink]="['/chamada', aviso.nomeTurma, (dia | date:'yyyy-MM-dd')]">
-                  - Dia {{ dia | date:'dd/MM/yyyy' }} sem chamada registrada
-                </a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+      <aside class="alerts-section" *ngIf="diasSemChamada.length > 0">
+        <div class="alerts-header">
+          <span class="icon">🔔</span>
+          <h4>Pendências de Chamada</h4>
+        </div>
+        
+        <div class="alerts-list">
+          <div class="alert-item" *ngFor="let aviso of diasSemChamada">
+            <div class="turma-badge">{{ aviso.nomeTurma }}</div>
+            <div class="days-grid">
+              <a class="day-pill" 
+                *ngFor="let dia of aviso.diasSemChamada"
+                [routerLink]="['/chamada', aviso.nomeTurma, (dia | date:'yyyy-MM-dd')]">
+                📅 {{ dia | date:'dd/MM' }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </aside>
     </div>
   </div>
 </div>

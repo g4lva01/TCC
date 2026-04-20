@@ -12,16 +12,21 @@ import { FrequencyService } from '../../services/frequency.service';
 })
 export class FrequencyStudentComponent implements OnInit {
   frequencias: any[] = [];
+  hasPerfectAttendance = false;
+  desempenhoAluno = 0;
+  mediaTurma = 0;
 
   constructor(private frequencyService: FrequencyService) {}
 
   ngOnInit(): void {
-    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado') || '{}');
-    const alunoId = usuarioLogado.id;
+    const alunoNome = localStorage.getItem('alunoNome') || '';
 
-    this.frequencyService.getFrequenciaAluno(alunoId).subscribe({
+    this.frequencyService.getFrequenciaAluno(alunoNome).subscribe({
       next: dado => {
         this.frequencias = [dado];
+        this.hasPerfectAttendance = dado.faltas === 0 && dado.presencas > 0;
+        this.desempenhoAluno = dado.percentualPresenca || 0;
+        this.mediaTurma = dado.mediaTurma || 0;
       },
       error: err => console.error('Erro ao buscar frequência do aluno:', err)
     });

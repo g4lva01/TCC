@@ -15,8 +15,8 @@ export class FrequencyService {
     return this.http.get<any[]>(`${this.baseUrl}/todas`);
   }
 
-  getFrequenciaAluno(alunoId: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/aluno/${alunoId}`);
+  getFrequenciaAluno(alunoNome: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/aluno?alunoNome=${alunoNome}`);
   }
 
   getTopPresencas(ano: number, trimestre: number): Observable<any[]> {

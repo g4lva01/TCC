@@ -70,6 +70,7 @@ public interface PresencaRepository extends JpaRepository<Presenca, Long> {
 
     Optional<Presenca> findByAlunoAndChamada(Pessoa alunoId, Chamada chamada);
     long countByAlunoAndPresenteTrueAndChamada_DataChamadaBetween(Pessoa aluno, LocalDate inicio, LocalDate fim);
+    long countByAlunoAndPresenteFalseAndChamada_DataChamadaBetween(Pessoa aluno, LocalDate inicio, LocalDate fim);
     void deleteByAluno(Pessoa aluno);
     void deleteByChamada(Chamada chamada);
 }

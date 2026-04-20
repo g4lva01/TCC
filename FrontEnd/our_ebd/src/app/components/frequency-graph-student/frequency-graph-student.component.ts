@@ -1,4 +1,4 @@
-import { Component, inject, PLATFORM_ID, Input, OnInit } from '@angular/core';
+import { Component, inject, PLATFORM_ID, Input, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartOptions, ChartType, ChartData } from 'chart.js';
@@ -13,27 +13,28 @@ Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, B
   templateUrl: './frequency-graph-student.component.html',
   styleUrl: './frequency-graph-student.component.css'
 })
-export class FrequencyGraphStudentComponent implements OnInit{
+export class FrequencyGraphStudentComponent implements OnInit, OnChanges{
   isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   constructor(private frequencyService: FrequencyService) {}
 
   chartOptions: ChartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
-      legend: {
-        position: 'top',
-        labels: {color: '#732991'}
-      },
-      title: {
-        display: true,
-        text: 'Frequência do Aluno',
-        color: '#732991'
-      }
+      legend: { display: false },
+      title: { display: false }
     },
     scales: {
-      x: { ticks: { color: '#732991'}},
-      y: { ticks: { color: '#732991'}}
+      x: { 
+        grid: { display: false },
+        ticks: { color: '#999' }
+      },
+      y: { 
+        beginAtZero: true,
+        grid: { color: '#f0f0f0' },
+        ticks: { color: '#999' }
+      }
     }
   };
 
@@ -50,11 +51,19 @@ export class FrequencyGraphStudentComponent implements OnInit{
     return this.chartData.datasets.some(dataset => dataset.data.length > 0);
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['frequencias'] && this.frequencias && this.frequencias.length >0) {
+      this.atualizarGrafico();
+    }
+  }
+
   ngOnInit(): void {
     this.atualizarGrafico();
   }
 
   atualizarGrafico(): void {
+    if (!this.frequencias || this.frequencias.length === 0) return;
+
     const labels = this.frequencias.map(f => f.nomeAluno);
     const data = this.frequencias.map(f => f.presencas);
 
