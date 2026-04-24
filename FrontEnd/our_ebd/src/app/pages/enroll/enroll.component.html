@@ -10,12 +10,12 @@
     <form class="form-enroll" (ngSubmit)="matricularAluno()">
       <div class="form-group">
         <label for="nome">Nome completo</label>
-        <input id="nome" type="text" [(ngModel)]="novoAluno.nome" name="nome" required (focus)="campoSelecionado='nome'">
+        <input id="nome" type="text" [(ngModel)]="novoAluno.nome" name="nome" required>
       </div>
 
       <div class="form-group">
         <label for="dtNascimento">Data de Nascimento</label>
-        <input id="dtNascimento" type="date" [(ngModel)]="novoAluno.dtNascimento" name="dtNascimento" required (focus)="campoSelecionado='dtNascimento'">
+        <input id="dtNascimento" type="date" [(ngModel)]="novoAluno.dtNascimento" name="dtNascimento" required>
       </div>
 
       <div class="form-group">
@@ -27,11 +27,17 @@
     </form>
 
     
-    <button type="button" (click)="mostrarScanner = !mostrarScanner">Ativar QR Code</button>
-    <div *ngIf="mostrarScanner">
+    <button type="button" (click)="toggleScanner()">
+      {{ mostrarScanner ? 'Desativar' : 'Ativar' }} QR Code
+    </button>
+    <div *ngIf="renderizarScanner">
       <zxing-scanner
+        [enable]="mostrarScanner"
+        [device]="selectedDevice"
         [formats]="formats"
-        (scanSuccess)="onScanSuccess($event)">
+        (camerasFound)="onCamerasFound($event)"
+        (scanSuccess)="onScanSuccess($event)"
+        (scanError)="onScanError($event)">
       </zxing-scanner>
     </div>
 
@@ -39,7 +45,7 @@
 
     <h2>Pesquisar Aluno</h2>
     <form class="form-search" (ngSubmit)="pesquisarAluno()">
-      <input type="text" [(ngModel)]="busca" name="busca" placeholder="Digite nome ou matrícula" required>
+      <input type="text" [(ngModel)]="busca" name="busca" placeholder="Digite nome ou matrícula" required (focus)="campoSelecionado = 'busca'">
       <button type="submit">Pesquisar</button>
     </form>
 
