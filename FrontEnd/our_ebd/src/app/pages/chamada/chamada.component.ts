@@ -6,11 +6,13 @@ import { CommonModule } from '@angular/common';
 import { MenuComponent } from '../../components/menu/menu.component';
 import { ChamadaService } from '../../services/chamada.service';
 import { NgxCurrencyDirective } from 'ngx-currency';
+import { BarcodeFormat } from "@zxing/library";
+import { ZXingScannerModule } from "@zxing/ngx-scanner";
 
 @Component({
   selector: 'app-chamada',
   standalone: true,
-  imports: [CommonModule, MenuComponent, FormsModule, NgxCurrencyDirective],
+  imports: [CommonModule, MenuComponent, FormsModule, NgxCurrencyDirective, ZXingScannerModule],
   templateUrl: './chamada.component.html',
   styleUrl: './chamada.component.css'
 })
@@ -26,6 +28,11 @@ export class ChamadaComponent implements OnInit {
   trimestres: string[] = [];
   trimestreSelecionado: string | null = null;
   chamadaExistente: boolean = false;
+  mostrarScanner: boolean = false;
+  formats: BarcodeFormat[] = [BarcodeFormat.QR_CODE];
+  availableDevice: MediaDeviceInfo[] = [];
+  selectedDevice: MediaDeviceInfo | undefined;
+  renderizarScanner: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -56,6 +63,7 @@ export class ChamadaComponent implements OnInit {
             this.alunos = alunos.map(a => ({
               id: a.id,
               nome: a.nome,
+              matricula: a.matricula,
               presente: false,
               biblia: false,
               revista: false
@@ -177,5 +185,52 @@ export class ChamadaComponent implements OnInit {
         error: () => alert('Erro ao registrar chamada.')
       });
     }
+  }
+
+  onScanSuccess(resultString: string) {
+    console.log('QR Code lido:', resultString);
+
+    const aluno = this.alunos.find(a => String(a.matricula) === String(resultString));
+
+    if (aluno) {
+      aluno.presente = true;
+    } else {
+      alert(`Matricula ${resultString} não encontrada nesta turma.`);
+    }
+
+    this.toggleScanner();
+  }
+
+  onCamerasFound(devices: MediaDeviceInfo[]) {
+    this.availableDevice = devices;
+    if (!this.selectedDevice && devices.length > 0) {
+      const backCamera = devices.find(d => d.label.toLocaleLowerCase().includes('back'));
+      this.selectedDevice = backCamera || devices[0];
+    }
+  }
+
+  async toggleScanner() {
+    if(this.mostrarScanner) {
+      this.mostrarScanner = false;
+
+      this.renderizarScanner = false;
+      this.selectedDevice = undefined;
+    } else {
+      this.selectedDevice = undefined;
+      this.renderizarScanner = true;
+
+      setTimeout(() => {
+        this.mostrarScanner = true;
+      }, 200);
+    }
+  }
+
+  onScanError(err: any) {
+    console.error('Erro no scanner:', err);
+  }
+
+  ngOnDestroy() {
+    this.mostrarScanner = false;
+    this.selectedDevice = undefined;
   }
 }

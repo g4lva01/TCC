@@ -55,3 +55,17 @@
 
   <button class="finalizar" (click)="finalizarChamada()">Finalizar Chamada</button>
 </div>
+
+<button type="button" (click)="toggleScanner()">
+  {{ mostrarScanner ? 'Desativar' : 'Ativar' }} QR Code
+</button>
+<div class="scanner-container" *ngIf="renderizarScanner">
+  <zxing-scanner
+    [enable]="mostrarScanner"
+    [device]="selectedDevice"
+    [formats]="formats"
+    (camerasFound)="onCamerasFound($event)"
+    (scanSuccess)="onScanSuccess($event)"
+    (scanError)="onScanError($event)">
+  </zxing-scanner>
+</div>

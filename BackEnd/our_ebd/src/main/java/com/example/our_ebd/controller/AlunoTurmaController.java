@@ -59,7 +59,7 @@ public class AlunoTurmaController {
             List<Pessoa> alunos = pessoaRepository.findByTurma(turma);
 
             return alunos.stream()
-                    .map(aluno -> new AlunoDTO(aluno.getId(), aluno.getNome()))
+                    .map(aluno -> new AlunoDTO(aluno.getId(), aluno.getNome(), aluno.getMatricula()))
                     .toList();
 
         } catch (Exception e) {
