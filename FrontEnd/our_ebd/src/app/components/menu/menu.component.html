@@ -32,6 +32,6 @@
       *ngIf="perfilAtivo === 'GESTOR' || perfilAtivo === 'ADMIN'">
       Matricular
     </button>
-    <button [routerLink]="['/']">Sair</button>
+    <button (click)="sair()">Sair</button>
   </div>
 </div>

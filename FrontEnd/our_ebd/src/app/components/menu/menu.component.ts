@@ -38,6 +38,15 @@ export class MenuComponent implements OnInit {
     }
   }
 
+  sair() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuarioLogado');
+    localStorage.removeItem('perfilAtivo');
+    localStorage.removeItem('alunoNome');
+
+    this.router.navigate(['/']);
+  }
+
   ngOnInit() {
     const token = localStorage.getItem('token');
     this.perfilAtivo = localStorage.getItem('perfilAtivo');
