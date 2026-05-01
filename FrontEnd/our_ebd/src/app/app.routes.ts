@@ -7,7 +7,6 @@ import { ViewReportManagerComponent } from './pages/view-report-manager/view-rep
 import { ClassHistoryComponent } from './pages/class-history/class-history.component';
 import { ChamadaComponent } from './pages/chamada/chamada.component';
 import { ActivitysManagerComponent } from './pages/activitys-manager/activitys-manager.component';
-import { PerfilSelectorComponent } from './pages/perfil-selector/perfil-selector.component';
 import { GerenciarPerfisComponent } from './pages/gerenciar-perfis/gerenciar-perfis.component';
 import { FrequencyStudentComponent } from './pages/frequency-student/frequency-student.component';
 import { ReportStudentComponent } from './pages/report-student/report-student.component';
@@ -47,10 +46,6 @@ export const routes: Routes = [
     {
       path: 'activitysManager',
       component: ActivitysManagerComponent
-    },
-    {
-      path: 'selecionar-perfil',
-      component: PerfilSelectorComponent
     },
     {
       path: 'managingProfiles',

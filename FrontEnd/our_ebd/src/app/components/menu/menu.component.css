@@ -92,9 +92,34 @@
 .user-icon {
   background: none;
   border: none;
-  font-size: 24px;
-  color: white;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+}
+
+.svg-icon {
+  width: 28px;
+  height: 28px;
+  color: #FFD700;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.user-icon:hover .svg-icon {
+  color: #ffffff; /* Cor quando passa o mouse */
+  transform: scale(1.1); /* Efeito de zoom opcional */
+}
+
+.perfil-label {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #d1d1d1;
+}
+
+.icon-avatar {
+  color: #FFD700;
 }
 
 .perfil-dropdown {
@@ -106,6 +131,7 @@
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
+  z-index: 100;
 }
 
 .perfil-dropdown button {
@@ -115,6 +141,13 @@
   padding: 0.4rem 0.8rem;
   text-align: left;
   cursor: pointer;
+  border-radius: 4px;
+}
+
+.perfil-dropdown button.perfil-selecionado {
+  background-color: rgba(255, 255, 255, 0.2);
+  font-weight: bold;
+  color: #FFD700; 
 }
 
 .perfil-dropdown button:hover {
