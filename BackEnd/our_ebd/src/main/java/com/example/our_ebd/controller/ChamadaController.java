@@ -70,6 +70,11 @@ public class ChamadaController {
         chamada.setPresencas(presencas);
 
         Chamada chamadaSalva = chamadaRepository.save(chamada);
+
+        for (Presenca p : presencas) {
+            processarStatusAutomatico(p.getAluno(), p.getPresente());
+        }
+
         ChamadaRespostaDTO resposta = new ChamadaRespostaDTO(
                 chamadaSalva.getId(),
                 chamadaSalva.getDataChamada(),
@@ -412,6 +417,10 @@ public class ChamadaController {
 
         Chamada chamadaAtualizada = chamadaRepository.save(chamada);
 
+        for (Presenca p : novasPresencas) {
+            processarStatusAutomatico(p.getAluno(), p.getPresente());
+        }
+
         return ResponseEntity.ok(new ChamadaRespostaDTO(
                 chamadaAtualizada.getId(),
                 chamadaAtualizada.getDataChamada(),
@@ -419,5 +428,24 @@ public class ChamadaController {
                 chamadaAtualizada.getValorOferta(),
                 chamadaAtualizada.getQtdVisitantes()
         ));
+    }
+
+    private void processarStatusAutomatico(Pessoa aluno, boolean presenteAgora) {
+        if (presenteAgora) {
+            if (!aluno.isAtivo()) {
+                aluno.setAtivo(true);
+                pessoaRepository.save(aluno);
+            }
+        } else {
+            List<Presenca> historico = presencaRepository.findTop4ByAlunoOrderByChamadaDataChamadaDesc(
+                    aluno, org.springframework.data.domain.PageRequest.of(0,4));
+            if (historico.size() >= 4) {
+                boolean todasFaltas = historico.stream().noneMatch(Presenca::getPresente);
+                if (todasFaltas) {
+                    aluno.setAtivo(false);
+                    pessoaRepository.save(aluno);
+                }
+            }
+        }
     }
 }

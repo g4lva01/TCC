@@ -60,65 +60,199 @@ app-menu {
   background-clip: text;
 }
 
-/* Card de usuário */
-h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
-  color: #222;
+.container {
+  padding: 30px;
+  background-color: #f4f7f6;
+  min-height: 100vh;
 }
 
-div[ngFor] {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+.header-pagina {
+  margin-bottom: 30px;
+  text-align: center;
 }
 
-/* Checkboxes */
-label {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 15px;
-  font-size: 16px;
-  color: #555;
+.header-pagina h2 {
+  color: #732991;
+  font-size: 24px;
+  margin-bottom: 5px;
 }
 
-input[type="checkbox"] {
-  margin-right: 6px;
-  transform: scale(1.2);
-}
-
-/* Botão salvar */
-button {
-  margin-top: 10px;
-  padding: 8px 16px;
-  background-color: #732991;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.header-pagina p {
+  color: #666;
   font-size: 14px;
-  transition: background-color 0.3s ease;
-  width: 100px;
 }
 
-button:hover {
-  background-color: #732981;
+/* Layout em Grid */
+.grid-usuarios {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Separador */
-hr {
-  margin-top: 20px;
-  border: none;
-  border-top: 1px solid #ccc;
-}
-
+/* Estilo do Card */
 .usuario-card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  border: 1px solid #eef0f2;
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
+}
+
+.usuario-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.inativo-card {
+  background-color: #fdfdfd;
+  opacity: 0.9;
+  border-left: 6px solid #e74c3c;
+}
+
+/* Cabeçalho do Card */
+.card-header {
+  padding: 20px;
+  border-bottom: 1px solid #f4f4f4;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  text-align: center;
-  margin-bottom: 20px;
+}
+
+/* Nome do usuário com mais peso */
+.user-info h3 {
+  font-size: 1.25rem;
+  color: #1a1a1a; /* Preto mais profundo */
+  font-weight: 700;
+}
+
+/* Labels das seções com cor mais definida */
+.label-secao {
+  color: #5d676e; /* Cinza médio-escuro em vez de cinza claro */
+  letter-spacing: 0.5px;
+  font-size: 0.75rem;
+}
+
+/* ID e Matrícula */
+.matricula-tag {
+  color: #718096;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.badge-status {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  background: #ffebee;
+  color: #c62828;
+}
+
+.badge-status.ativo {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Corpo */
+.card-body {
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.label-secao {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.secao-acesso, .secao-tecnica, .secao-status {
+  margin-bottom: 24px; /* Espaço maior entre os blocos */
+}
+
+.checkbox-group {
+  gap: 12px; /* Mais espaço entre um checkbox e outro */
+}
+
+/* Estilo do checkbox quando selecionado para dar feedback visual */
+.check-item {
+  transition: all 0.2s ease;
+}
+
+.check-item:has(input:checked) {
+  border-color: #732991;
+  background-color: #f9f5fa;
+  color: #732991;
+}
+
+.check-item input {
+  margin-right: 8px;
+}
+
+.nome-perfil {
+  font-size: 13px;
+  color: #34495e;
+}
+
+/* Roles */
+.roles-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.role-tag {
+  background: #edf2f7; /* Azul acinzentado bem claro */
+  color: #2d3748;      /* Texto escuro */
+  border: 1px solid #cbd5e0;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+/* Select de Status */
+.select-status {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #dcdde1;
+  background: #fff;
+  color: #2f3640;
+}
+
+/* Rodapé */
+.card-footer {
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 0 0 15px 15px;
+}
+
+.btn-salvar {
+  width: 100%;
+  padding: 12px;
+  background: #732991;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-salvar:hover {
+  background: #5a1f72;
+}
+
+@media (max-width: 600px) {
+  .grid-usuarios {
+    grid-template-columns: 1fr;
+  }
 }

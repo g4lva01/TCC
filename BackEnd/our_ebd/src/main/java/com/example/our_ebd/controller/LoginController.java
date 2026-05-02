@@ -166,6 +166,9 @@ public class LoginController {
         Pessoa pessoa = pessoaRepository.findById(request.getPessoaId())
                 .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
 
+        pessoa.setAtivo(request.isAtivo());
+        pessoaRepository.save(pessoa);
+
         UsuarioAutenticacao usuario = usuarioAutenticacaoRepository.findByPessoa(pessoa)
                 .orElseThrow(() -> new RuntimeException("Usuário de autenticação não encontrado"));
 
@@ -217,6 +220,7 @@ public class LoginController {
                     "id", u.getPessoa().getId(),
                     "nome", u.getPessoa().getNome(),
                     "matricula", u.getPessoa().getMatricula(),
+                    "ativo", u.getPessoa().isAtivo(),
                     "roles", u.getRoles(),
                     "perfis", perfis
             );

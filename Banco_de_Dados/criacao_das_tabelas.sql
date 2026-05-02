@@ -3,7 +3,8 @@ CREATE TABLE Pessoa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     data_de_nascimento DATE,
-    matricula INT UNIQUE
+    matricula INT UNIQUE,
+    ativo BOOLEAN DEFAULT TRUE -- Coluna adicionada aqui
 );
 
 -- Dados de autenticação (Relacionamento 1:1 com Pessoa)
@@ -82,8 +83,7 @@ CREATE TABLE Presenca (
     FOREIGN KEY (aluno_id) REFERENCES Pessoa(id)
 );
 
--- Tabela de Atividades (Modificada: professor_id agora permite NULL)
--- Alterado id para BIGINT para compatibilidade com atividade_link
+-- Tabela de Atividades
 CREATE TABLE Atividade (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     turma_id INT NOT NULL,

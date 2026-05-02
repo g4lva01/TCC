@@ -6,6 +6,7 @@ import com.example.our_ebd.dto.TurmaFrequenciaDTO;
 import com.example.our_ebd.model.Chamada;
 import com.example.our_ebd.model.Pessoa;
 import com.example.our_ebd.model.Presenca;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -67,6 +68,9 @@ public interface PresencaRepository extends JpaRepository<Presenca, Long> {
             "HAVING SUM(CASE WHEN p.presente = false THEN 1 ELSE 0 END) > 0 " +
             "ORDER BY SUM(CASE WHEN p.presente = false THEN 1 ELSE 0 END) DESC")
     List<FaltasDiaDTO> findDiasComMaisFaltas(@Param("inicio") LocalDate inicio, @Param("fim") LocalDate fim);
+
+    @Query("SELECT p FROM Presenca p WHERE p.aluno = :aluno ORDER BY p.chamada.dataChamada DESC")
+    List<Presenca> findTop4ByAlunoOrderByChamadaDataChamadaDesc(@Param("aluno") Pessoa aluno, Pageable pageable);
 
     Optional<Presenca> findByAlunoAndChamada(Pessoa alunoId, Chamada chamada);
     long countByAlunoAndPresenteTrueAndChamada_DataChamadaBetween(Pessoa aluno, LocalDate inicio, LocalDate fim);

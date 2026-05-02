@@ -7,17 +7,67 @@
     </div>
 </div>
 
-<h2>Gerenciar Perfis</h2>
-<div *ngFor="let usuario of usuarios" class="usuario-card">
-  <h3>{{ usuario.nome }} (Matrícula: {{ usuario.matricula }})</h3>
-
-  <div class="checkbox-group">
-    <label *ngFor="let perfil of perfisDisponiveis">
-      <input type="checkbox"
-              [(ngModel)]="usuario.perfisMap[perfil]">
-      {{ perfil }}
-    </label>
+<div class="container">
+  <div class="header-pagina">
+    <h2>Gerenciar Perfis e Acessos</h2>
+    <p>Configure as permissões e o status de atividade dos alunos e professores.</p>
   </div>
 
-  <button (click)="salvar(usuario)">Salvar</button>
+  <div class="grid-usuarios">
+    <!-- Card de Usuário -->
+    <div *ngFor="let usuario of usuarios" class="usuario-card" [class.inativo-card]="!usuario.ativo">
+      
+      <!-- Topo: Nome e Status -->
+      <div class="card-header">
+        <div class="user-info">
+          <h3>{{ usuario.nome }}</h3>
+          <span class="matricula-tag">Matrícula: {{ usuario.matricula }}</span>
+        </div>
+        <div class="badge-status" [class.ativo]="usuario.ativo">
+          {{ usuario.ativo ? 'ATIVO' : 'INATIVO' }}
+        </div>
+      </div>
+
+      <div class="card-body">
+        <!-- Seção 1: Perfis (Negócio) -->
+        <div class="secao-acesso">
+          <label class="label-secao">Perfis de Usuário</label>
+          <div class="checkbox-group">
+            <label *ngFor="let perfil of perfisDisponiveis" class="check-item">
+              <input type="checkbox" [(ngModel)]="usuario.perfisMap[perfil]">
+              <span class="nome-perfil">{{ perfil }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Seção 2: Roles (Técnico/Segurança) -->
+        <div class="secao-tecnica">
+          <label class="label-secao">Roles Ativas no Sistema</label>
+          <div class="roles-lista">
+            <span *ngFor="let role of usuario.roles" class="role-tag">
+              {{ role.replace('ROLE_', '') }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Seção 3: Controle de Status -->
+        <div class="secao-status">
+          <label class="label-secao">Status de Atividade</label>
+          <div class="toggle-status">
+             <select [(ngModel)]="usuario.ativo" class="select-status">
+               <option [ngValue]="true">Ativo (Participando)</option>
+               <option [ngValue]="false">Inativo (Afastado/Ausente)</option>
+             </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rodapé: Ação -->
+      <div class="card-footer">
+        <button class="btn-salvar" (click)="salvar(usuario)">
+          Atualizar Perfil
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

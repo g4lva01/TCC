@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MenuComponent } from '../../components/menu/menu.component';
 import { FormsModule } from '@angular/forms';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-gerenciar-perfis',
@@ -17,20 +18,24 @@ export class GerenciarPerfisComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
+    this.carregarLogins();
+  }
+
+  carregarLogins() {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
 
     this.http.get<any[]>('http://localhost:8080/api/login/logins', { headers }).subscribe({
       next: res => {
         this.usuarios = res
-        .filter(u => u.nome.toLowerCase() !== 'admin' && u.matricula !=='999999')
-        .map(u => ({
-          ...u,
-          perfisMap: this.perfisDisponiveis.reduce((map: any, p) => {
-            map[p] = u.perfis?.includes(p) || false;
-            return map;
-          }, {})
-        }));
+          .filter(u => u.nome.toLowerCase() !== 'admin' && u.matricula !== '999999')
+          .map(u => ({
+            ...u,
+            perfisMap: this.perfisDisponiveis.reduce((map: any, p) => {
+              map[p] = u.perfis?.some((perfil: string) => perfil.toUpperCase() === p) || false;
+              return map;
+            }, {})
+          }));
       },
       error: err => console.error('Erro ao buscar logins:', err)
     });
@@ -44,15 +49,23 @@ export class GerenciarPerfisComponent implements OnInit {
 
     const dados = {
       pessoaId: usuario.id,
-      perfilIds: perfilIds
+      perfilIds: perfilIds,
+      ativo: usuario.ativo
     };
 
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
 
     this.http.put<any>('http://localhost:8080/api/login/perfil', dados, { headers }).subscribe({
-      next: res => alert(res.message),
-      error: err => console.error('Erro ao atualizar perfis:', err)
+      next: res => {
+        alert(res.message || "Perfil atualizado com sucesso!");
+
+        this.carregarLogins();
+      },
+      error: err => {
+        console.error('Erro ao atualizar perfis:', err);
+        alert("Erro ao salvar alterações.");
+      }
     });
   }
 

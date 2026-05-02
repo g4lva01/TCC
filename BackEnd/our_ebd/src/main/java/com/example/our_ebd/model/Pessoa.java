@@ -24,6 +24,9 @@ public class Pessoa {
     @JsonIgnore
     private Turma turma;
 
+    @Column(name = "ativo")
+    private boolean ativo = true;
+
     public Long getId() {
         return id;
     }
@@ -70,5 +73,13 @@ public class Pessoa {
 
     public void setTurma(Turma turma) {
         this.turma = turma;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }
