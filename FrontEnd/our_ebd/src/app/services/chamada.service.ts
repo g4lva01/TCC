@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class ChamadaService {
@@ -7,12 +7,24 @@ export class ChamadaService {
 
   constructor(private http: HttpClient) {}
 
+  private getHeaders() {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
   atualizarChamada(turmaNome: string, data: string, chamada: any) {
-    return this.http.put(`http://localhost:8080/api/chamada/${turmaNome}/${data}`, chamada);
+    const headers = this.getHeaders();
+    return this.http.put(
+      `http://localhost:8080/api/chamada/${turmaNome}/${data}`, 
+      chamada, 
+      { headers }
+    );
   }
   
   registrarChamada(payload: any) {
-    return this.http.post(this.apiUrl, payload);
+    const headers = this.getHeaders();
+    return this.http.post(this.apiUrl, payload, { headers });
   }
-
 }

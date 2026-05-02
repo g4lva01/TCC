@@ -73,6 +73,16 @@ CREATE TABLE Chamada (
     FOREIGN KEY (turma_id) REFERENCES Turma(id)
 );
 
+CREATE TABLE Chamada_Log (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    chamada_id INT NOT NULL,
+    usuario_id INT NOT NULL, -- ID da Pessoa que fez a alteração
+    data_alteracao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    acao VARCHAR(100), -- Ex: "Criação", "Atualização de Status", "Correção de Presenças"
+    FOREIGN KEY (chamada_id) REFERENCES Chamada(id),
+    FOREIGN KEY (usuario_id) REFERENCES Pessoa(id)
+);
+
 -- Registro de presença individual por chamada
 CREATE TABLE Presenca (
     chamada_id INT,

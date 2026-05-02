@@ -1,14 +1,9 @@
 package com.example.our_ebd.controller;
 
 import com.example.our_ebd.dto.*;
-import com.example.our_ebd.model.Chamada;
-import com.example.our_ebd.model.Pessoa;
-import com.example.our_ebd.model.Presenca;
-import com.example.our_ebd.model.Turma;
-import com.example.our_ebd.repository.ChamadaRepository;
-import com.example.our_ebd.repository.PessoaRepository;
-import com.example.our_ebd.repository.PresencaRepository;
-import com.example.our_ebd.repository.TurmaRepository;
+import com.example.our_ebd.model.*;
+import com.example.our_ebd.repository.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -39,6 +34,9 @@ public class ChamadaController {
 
     @Autowired
     private PresencaRepository presencaRepository;
+
+    @Autowired
+    private ChamadaLogRepository chamadaLogRepository;
 
     @PostMapping
     public ResponseEntity<?> registrarChamada(@RequestBody ChamadaRegistroDTO dto) {
@@ -382,7 +380,8 @@ public class ChamadaController {
     public ResponseEntity<?> atualizarChamada(
             @PathVariable String turmaNome,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data,
-            @RequestBody ChamadaRegistroDTO dto) {
+            @RequestBody ChamadaRegistroDTO dto,
+            Authentication authentication) {
 
         Turma turma = turmaRepository.findByNomeIgnoreCase(turmaNome)
                 .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
@@ -420,6 +419,28 @@ public class ChamadaController {
         for (Presenca p : novasPresencas) {
             processarStatusAutomatico(p.getAluno(), p.getPresente());
         }
+
+
+        String identificador = authentication.getName();
+        Pessoa usuarioLogado = pessoaRepository.findByNomeIgnoreCase(identificador)
+                .orElseGet(() -> {
+                    try {
+                        Integer matricula = Integer.parseInt(identificador);
+                        return pessoaRepository.findByMatricula(matricula).orElse(null);
+                    } catch (NumberFormatException e) {
+                        return null;
+                    }
+                });
+
+        if (usuarioLogado == null) {
+            throw new RuntimeException("Usuário logado '" + identificador + "' não encontrado no banco.");
+        }
+
+        ChamadaLog log = new ChamadaLog();
+        log.setChamada(chamada);
+        log.setUsuario(usuarioLogado);
+        log.setAcao("Chamada atualizada: " + dto.getStatusChamada());
+        chamadaLogRepository.save(log);
 
         return ResponseEntity.ok(new ChamadaRespostaDTO(
                 chamadaAtualizada.getId(),
