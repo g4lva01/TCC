@@ -160,3 +160,26 @@ input {
   color: white;
   border-color: #0056b3;
 }
+
+button.futuro {
+  background-color: #ffffff;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+button.com-chamada {
+  background-color: #28a745 !important;
+  color: white !important;
+  border-color: #1e7e34;
+}
+
+button.sem-chamada {
+  background-color: #dc3545 !important;
+  color: white !important;
+  border-color: #bd2130;
+}
+
+.botoes-domingos button.selecionado {
+  outline: 3px solid #007bff;
+  box-shadow: 0 0 10px rgba(0,123,255,0.5);
+}

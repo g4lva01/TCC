@@ -33,6 +33,7 @@ export class ChamadaComponent implements OnInit {
   availableDevice: MediaDeviceInfo[] = [];
   selectedDevice: MediaDeviceInfo | undefined;
   renderizarScanner: boolean = false;
+  domingosComChamada: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -91,6 +92,10 @@ export class ChamadaComponent implements OnInit {
   }
 
   selecionarDomingo(d: string) {
+    if (this.isPastDate(d)) {
+      const confirmacao = confirm('Este domingo já passou. Deseja realmente visualizar ou alterar esta chamada?');
+      if (!confirmacao) return;
+    }
     this.data = d;
     this.carregarChamada();
   }
@@ -99,11 +104,21 @@ export class ChamadaComponent implements OnInit {
     const start = new Date(dataMin);
     const end = new Date(dataMax);
     const domingos: string[] = [];
+    this.domingosComChamada = [];
 
     let current = new Date(start);
     while (current <= end) {
       if (current.getDay() === 0) {
-        domingos.push(current.toISOString().split('T')[0]);
+        const dataFormatada = current.toISOString().split('T')[0];
+        domingos.push(dataFormatada);
+
+        this.http.get<any>(`http://localhost:8080/api/chamada/${this.turmaNome}/${dataFormatada}`)
+          .subscribe({
+            next: (res) => {
+              this.domingosComChamada = [...this.domingosComChamada, dataFormatada];
+            },
+            error: () => {}
+          })
       }
       current.setDate(current.getDate() + 1);
     }
@@ -232,5 +247,17 @@ export class ChamadaComponent implements OnInit {
   ngOnDestroy() {
     this.mostrarScanner = false;
     this.selectedDevice = undefined;
+  }
+
+  isPastDate(dateStr: string): boolean {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const dataBotao = new Date(dateStr + 'T00:00:00');
+    return dataBotao < hoje;
+  }
+
+  isToday(dateStr: string): boolean {
+    const hoje = new Date().toISOString().split('T')[0];
+    return dateStr === hoje;
   }
 }

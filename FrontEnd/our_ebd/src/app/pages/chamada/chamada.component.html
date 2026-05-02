@@ -20,7 +20,10 @@
     <div class="botoes-domingos">
       <button *ngFor="let d of domingosTrimestre"
               (click)="selecionarDomingo(d)"
-              [class.selecionado]="data === d">
+              [class.selecionado]="data === d"
+              [class.com-chamada]="domingosComChamada.includes(d)"
+              [class.sem-chamada]="!domingosComChamada.includes(d) && isPastDate(d)"
+              [class.futuro]="!isPastDate(d) && !isToday(d)">
         {{ d | date:'dd/MM/yyyy' }}
       </button>
     </div>
