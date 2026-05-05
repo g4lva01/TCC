@@ -320,4 +320,35 @@ public class LoginController {
 
         return ResponseEntity.ok(resultado);
     }
+
+    @Transactional
+    @PutMapping("/atualizar-aluno/{id}")
+    public ResponseEntity<?> atualizarAluno(@PathVariable Long id, @RequestBody MatricularAlunoRequest request) {
+        Pessoa pessoa = pessoaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+
+        Optional<Pessoa> pessoaExistente = pessoaRepository.findByMatricula(request.getMatricula());
+        if (pessoaExistente.isPresent() && !pessoaExistente.get().getId().equals(id)) {
+            return ResponseEntity.badRequest().body("Esta matrícula já está em uso por outro aluno.");
+        }
+
+        pessoa.setNome(request.getNome());
+        pessoa.setDataDeNascimento(request.getDtNascimento());
+        pessoa.setMatricula(request.getMatricula());
+
+        int idade = Period.between(pessoa.getDataDeNascimento(), LocalDate.now()).getYears();
+        Turma turma = turmaRepository.findAll().stream()
+                .filter(t -> t.getLimiteDeIdade() == null || idade <= t.getLimiteDeIdade())
+                .min(Comparator.comparingInt(t -> t.getLimiteDeIdade() == null ? Integer.MAX_VALUE : t.getLimiteDeIdade()))
+                .orElse(pessoa.getTurma());
+
+        pessoa.setTurma(turma);
+        pessoaRepository.save(pessoa);
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Aluno atualizado com sucesso!",
+                "id", pessoa.getId(),
+                "nome", pessoa.getNome()
+        ));
+    }
 }

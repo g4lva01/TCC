@@ -30,7 +30,52 @@ export class EnrollComponent implements OnDestroy {
   availableDevices: MediaDeviceInfo[] = [];
   selectedDevice: MediaDeviceInfo | undefined;
   renderizarScanner: boolean = false;
+  editando: boolean = false;
+  idAlunoSendoEditado: number | null = null;
 
+  submeterFormulario() {
+    if (this.editando && this.idAlunoSendoEditado) {
+      this.atualizarAluno();
+    } else {
+      this.matricularAluno();
+    }
+  }
+
+  prepararEdicao() {
+    if (this.alunoEncontrado) {
+      this.novoAluno = {
+        nome: this.alunoEncontrado.nome,
+        dtNascimento: this.alunoEncontrado.dtNascimento,
+        matricula: this.alunoEncontrado.matricula
+      };
+      this.idAlunoSendoEditado = this.alunoEncontrado.id;
+      this.editando = true;
+
+      window.scrollTo({ top: 0, behavior: 'smooth'});
+    }
+  }
+
+  atualizarAluno() {
+    this.http.put(`http://localhost:8080/api/login/atualizar-aluno/${this.idAlunoSendoEditado}`, this.novoAluno)
+      .subscribe({
+        next: (res: any) => {
+          alert('Aluno atualizado com sucesso!');
+          this.limparFormulario();
+          this.pesquisarAluno();
+        },
+        error: err => alert(err.error || 'Erro ao atualizar aluno.')
+      });
+  }
+
+  cancelarEdicao() {
+    this.limparFormulario();
+  }
+
+  limparFormulario() {
+    this.novoAluno = {nome: '', dtNascimento: '', matricula: ''};
+    this.editando = false;
+    this.idAlunoSendoEditado = null;
+  }
 
   constructor(private http: HttpClient) {}
 

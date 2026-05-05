@@ -60,41 +60,158 @@ app-menu {
   background-clip: text;
 }
 
-.form-enroll {
-  width: 100%;
-  max-width: 400px;
-  margin-top: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #333;
 }
 
+h2 {
+  color: #4a148c;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  border-left: 5px solid #6a1b9a;
+  padding-left: 15px;
+}
+
+/* Cards (Formulário e Resultados) */
+.form-enroll, .resultado-aluno, .form-search {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+/* Grupos de Input */
 .form-group {
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 15px;
 }
 
 .form-group label {
-  font-weight: bold;
-  margin-bottom: 5px;
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
 }
 
 .form-group input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box; /* Garante que o padding não quebre a largura */
+}
+
+.form-group input:focus {
+  border-color: #6a1b9a;
+  outline: none;
+}
+
+/* Botoes */
+.botoes-form {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
 }
 
 button {
-  background-color: #6a1b9a;
-  color: white;
+  padding: 12px 20px;
   border: none;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-button:hover {
+button[type="submit"] {
+  background-color: #6a1b9a;
+  color: white;
+  flex: 2;
+}
+
+button[type="submit"]:hover {
   background-color: #4a148c;
+  transform: translateY(-2px);
+}
+
+.btn-cancelar {
+  background-color: #f5f5f5;
+  color: #666;
+  flex: 1;
+}
+
+.btn-cancelar:hover {
+  background-color: #e0e0e0;
+}
+
+/* Estilo Especial para Edição */
+.btn-edicao {
+  background-color: #2e7d32 !important; /* Verde Sucesso */
+}
+
+/* Scanner */
+.btn-scanner {
+  background-color: #f3e5f5;
+  color: #6a1b9a;
+  margin-bottom: 15px;
+  width: auto;
+}
+
+.scanner-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 3px solid #6a1b9a;
+  margin-bottom: 20px;
+}
+
+/* Resultado da Pesquisa */
+.resultado-aluno {
+  border-top: 4px solid #6a1b9a;
+}
+
+.aluno-info p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+.acoes-aluno {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-editar {
+  background-color: #fb8c00; /* Laranja */
+  color: white;
+}
+
+.btn-deletar {
+  background-color: #e53935; /* Vermelho */
+  color: white;
+}
+
+/* Mensagens de Erro */
+.aviso-erro {
+  background-color: #fff3e0;
+  color: #e65100;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #eee;
+  margin: 40px 0;
 }

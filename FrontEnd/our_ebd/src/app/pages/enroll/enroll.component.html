@@ -5,61 +5,78 @@
       <h3 id="title">EBD</h3>
     </div>
 
-    <h2>Matricular Novo Aluno</h2>
+    <div class="container">
+      <h2>{{ editando ? 'Editar Aluno' : 'Matricular Novo Aluno' }}</h2>
 
-    <form class="form-enroll" (ngSubmit)="matricularAluno()">
-      <div class="form-group">
-        <label for="nome">Nome completo</label>
-        <input id="nome" type="text" [(ngModel)]="novoAluno.nome" name="nome" required>
+      <form class="form-enroll" (ngSubmit)="submeterFormulario()">
+        <div class="form-group">
+          <label for="nome">Nome completo</label>
+          <input id="nome" type="text" [(ngModel)]="novoAluno.nome" name="nome" placeholder="Ex: João Silva" required>
+        </div>
+
+        <div class="form-group">
+          <label for="dtNascimento">Data de Nascimento</label>
+          <input id="dtNascimento" type="date" [(ngModel)]="novoAluno.dtNascimento" name="dtNascimento" required>
+        </div>
+
+        <div class="form-group">
+          <label for="matricula">Matrícula</label>
+          <input id="matricula" type="number" [(ngModel)]="novoAluno.matricula" name="matricula" placeholder="000000" required (focus)="campoSelecionado='matricula'">
+        </div>
+
+        <div class="botoes-form">
+          <button type="submit" [class.btn-edicao]="editando">
+            {{ editando ? '💾 Salvar Alterações' : '➕ Matricular Aluno' }}
+          </button>
+          
+          <button type="button" *ngIf="editando" (click)="cancelarEdicao()" class="btn-cancelar">
+            Cancelar
+          </button>
+        </div>
+      </form>
+
+      <button type="button" class="btn-scanner" (click)="toggleScanner()">
+        {{ mostrarScanner ? '🚫 Desativar' : '📷 Ativar' }} Scanner QR Code
+      </button>
+
+      <div *ngIf="renderizarScanner" class="scanner-wrapper">
+        <zxing-scanner
+          [enable]="mostrarScanner"
+          [device]="selectedDevice"
+          [formats]="formats"
+          (camerasFound)="onCamerasFound($event)"
+          (scanSuccess)="onScanSuccess($event)"
+          (scanError)="onScanError($event)">
+        </zxing-scanner>
       </div>
 
-      <div class="form-group">
-        <label for="dtNascimento">Data de Nascimento</label>
-        <input id="dtNascimento" type="date" [(ngModel)]="novoAluno.dtNascimento" name="dtNascimento" required>
+      <hr>
+
+      <h2>Pesquisar Aluno</h2>
+      <form class="form-search" (ngSubmit)="pesquisarAluno()">
+        <div class="form-group">
+          <input type="text" [(ngModel)]="busca" name="busca" placeholder="Digite nome ou matrícula para buscar..." required (focus)="campoSelecionado = 'busca'">
+        </div>
+        <button type="submit">🔍 Pesquisar</button>
+      </form>
+
+      <div *ngIf="alunoEncontrado" class="resultado-aluno">
+        <h3>✅ Aluno encontrado</h3>
+        <div class="aluno-info">
+          <p><strong>👤 Nome:</strong> {{ alunoEncontrado.nome }}</p>
+          <p><strong>🆔 Matrícula:</strong> {{ alunoEncontrado.matricula }}</p>
+          <p><strong>📅 Nascimento:</strong> {{ alunoEncontrado.dtNascimento }}</p>
+        </div>
+
+        <div class="acoes-aluno">
+          <button type="button" class="btn-editar" (click)="prepararEdicao()">✏️ Editar</button>
+          <button type="button" class="btn-deletar" (click)="desmatricularAluno(alunoEncontrado.id)">🗑️ Desmatricular</button>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="matricula">Matrícula</label>
-        <input id="matricula" type="number" [(ngModel)]="novoAluno.matricula" name="matricula" required (focus)="campoSelecionado='matricula'">
+      <div *ngIf="alunoNaoEncontrado" class="aviso-erro">
+        <p>⚠️ Nenhum aluno encontrado com esse critério.</p>
       </div>
-
-      <button type="submit">Matricular</button>
-    </form>
-
-    
-    <button type="button" (click)="toggleScanner()">
-      {{ mostrarScanner ? 'Desativar' : 'Ativar' }} QR Code
-    </button>
-    <div *ngIf="renderizarScanner">
-      <zxing-scanner
-        [enable]="mostrarScanner"
-        [device]="selectedDevice"
-        [formats]="formats"
-        (camerasFound)="onCamerasFound($event)"
-        (scanSuccess)="onScanSuccess($event)"
-        (scanError)="onScanError($event)">
-      </zxing-scanner>
-    </div>
-
-    <hr>
-
-    <h2>Pesquisar Aluno</h2>
-    <form class="form-search" (ngSubmit)="pesquisarAluno()">
-      <input type="text" [(ngModel)]="busca" name="busca" placeholder="Digite nome ou matrícula" required (focus)="campoSelecionado = 'busca'">
-      <button type="submit">Pesquisar</button>
-    </form>
-
-    <div *ngIf="alunoEncontrado">
-      <h3>Aluno encontrado:</h3>
-      <p><strong>Nome:</strong> {{ alunoEncontrado.nome }}</p>
-      <p><strong>Matrícula:</strong> {{ alunoEncontrado.matricula }}</p>
-      <p><strong>Data de Nascimento:</strong> {{ alunoEncontrado.dtNascimento }}</p>
-
-      <button (click)="desmatricularAluno(alunoEncontrado.id)">Desmatricular</button>
-    </div>
-
-    <div *ngIf="alunoNaoEncontrado">
-      <p>⚠️ Nenhum aluno encontrado com esse critério.</p>
     </div>
   </div>
 </div>
