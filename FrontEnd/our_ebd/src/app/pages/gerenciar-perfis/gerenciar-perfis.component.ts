@@ -13,9 +13,20 @@ import { map } from 'rxjs';
 })
 export class GerenciarPerfisComponent implements OnInit {
   usuarios: any[] = [];
+  termoBusca: string = '';
   perfisDisponiveis = ['ALUNO', 'PROFESSOR', 'GESTOR'];
 
   constructor(private http: HttpClient) {}
+
+  get usuariosFiltrados(){
+    const termo = this.termoBusca.toLocaleLowerCase().trim();
+    if (!termo) return this.usuarios;
+
+    return this.usuarios.filter(u =>
+      u.nome.toLowerCase().includes(termo) ||
+      u.matricula.toString().includes(termo)
+    );
+  }
 
   ngOnInit() {
     this.carregarLogins();

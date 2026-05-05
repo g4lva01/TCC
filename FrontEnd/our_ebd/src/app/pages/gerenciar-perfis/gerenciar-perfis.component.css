@@ -82,7 +82,6 @@ app-menu {
   font-size: 14px;
 }
 
-/* Layout em Grid */
 .grid-usuarios {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -91,7 +90,6 @@ app-menu {
   margin: 0 auto;
 }
 
-/* Estilo do Card */
 .usuario-card {
   background: #fff;
   border-radius: 15px;
@@ -113,7 +111,6 @@ app-menu {
   border-left: 6px solid #e74c3c;
 }
 
-/* Cabeçalho do Card */
 .card-header {
   padding: 20px;
   border-bottom: 1px solid #f4f4f4;
@@ -122,16 +119,14 @@ app-menu {
   align-items: center;
 }
 
-/* Nome do usuário com mais peso */
 .user-info h3 {
   font-size: 1.25rem;
-  color: #1a1a1a; /* Preto mais profundo */
+  color: #1a1a1a;
   font-weight: 700;
 }
 
-/* Labels das seções com cor mais definida */
 .label-secao {
-  color: #5d676e; /* Cinza médio-escuro em vez de cinza claro */
+  color: #5d676e;
   letter-spacing: 0.5px;
   font-size: 0.75rem;
 }
@@ -174,14 +169,13 @@ app-menu {
 }
 
 .secao-acesso, .secao-tecnica, .secao-status {
-  margin-bottom: 24px; /* Espaço maior entre os blocos */
+  margin-bottom: 24px;
 }
 
 .checkbox-group {
-  gap: 12px; /* Mais espaço entre um checkbox e outro */
+  gap: 12px;
 }
 
-/* Estilo do checkbox quando selecionado para dar feedback visual */
 .check-item {
   transition: all 0.2s ease;
 }
@@ -209,8 +203,8 @@ app-menu {
 }
 
 .role-tag {
-  background: #edf2f7; /* Azul acinzentado bem claro */
-  color: #2d3748;      /* Texto escuro */
+  background: #edf2f7;
+  color: #2d3748;
   border: 1px solid #cbd5e0;
   padding: 4px 10px;
   border-radius: 6px;
@@ -218,7 +212,6 @@ app-menu {
   text-transform: uppercase;
 }
 
-/* Select de Status */
 .select-status {
   width: 100%;
   padding: 8px;
@@ -228,7 +221,6 @@ app-menu {
   color: #2f3640;
 }
 
-/* Rodapé */
 .card-footer {
   padding: 20px;
   background: #fafafa;
@@ -249,6 +241,30 @@ app-menu {
 
 .btn-salvar:hover {
   background: #5a1f72;
+}
+
+.busca-container {
+  max-width: 1200px;
+  margin: 0 auto 30px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.input-busca {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 2px solid #eef0f2;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.input-busca:focus {
+  border-color: #732991;
+  box-shadow: 0 4px 15px rgba(115, 41, 145, 0.1);
 }
 
 @media (max-width: 600px) {
