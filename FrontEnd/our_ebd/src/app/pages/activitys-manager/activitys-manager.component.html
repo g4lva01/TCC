@@ -8,28 +8,53 @@
   </div>
 </div>
 
-<div class="container">
-  <h2>Atividades da Turma</h2>
+<div class="activity-container">
+  <header class="page-header">
+    <h2>Atividades da Turma</h2>
+    <div class="filters">
+      <select [(ngModel)]="turmaSelecionada" (change)="carregarAtividades()">
+        <option *ngFor="let turma of turmas" [value]="turma.id">{{ turma.nome }}</option>
+      </select>
 
-  <label>Selecione a turma:</label>
-  <select [(ngModel)]="turmaSelecionada" (change)="carregarAtividades()">
-      <option *ngFor="let turma of turmas" [value]="turma.id">{{ turma.nome }}</option>
-  </select>
+      <select (change)="onTrimestreChange($event)" [ngModel]="trimestreSelecionado">
+        <option [value]="1">1º Trimestre</option>
+        <option [value]="2">2º Trimestre</option>
+        <option [value]="3">3º Trimestre</option>
+        <option [value]="4">4º Trimestre</option>
+      </select>
+    </div>
+    
+    <button *ngIf="temPermissao" class="btn-primary" (click)="mostrarModal = true">
+      + Nova Atividade
+    </button>
+  </header>
 
-  <label>Selecione o trimestre:</label>
-  <select [(ngModel)]="trimestreSelecionado" (change)="onTrimestreChange($event)">
-    <option [value]="1">1º Trimestre</option>
-    <option [value]="2">2º Trimestre</option>
-    <option [value]="3">3º Trimestre</option>
-    <option [value]="4">4º Trimestre</option>
-  </select>
+  <div class="activities-grid" *ngIf="trimestreSelecionado">
+    <div *ngFor="let atividade of atividades" class="activity-card">
+      <div class="card-header">
+        <span class="lesson-badge">Lição {{ atividade.numeroLicao }}</span>
+        <span class="date-tag">{{ atividade.dataPublicacao | date:'dd/MM' }}</span>
+      </div>
+      <h3>{{ atividade.titulo }}</h3>
+      <p class="description">{{ atividade.descricao }}</p>
+      
+      <div class="links-section" *ngIf="atividade.links?.length">
+        <a *ngFor="let link of atividade.links" [href]="link.url" target="_blank" class="link-pill">
+          🔗 {{ link.descricao || 'Link' }}
+        </a>
+      </div>
 
-  <button *ngIf="temPermissao && trimestreSelecionado" (click)="mostrarModal = true">Nova Atividade</button>
+      <div class="card-actions" *ngIf="temPermissao">
+        <button class="btn-icon edit" (click)="editarAtividade(atividade)">✏️</button>
+        <button class="btn-icon delete" (click)="excluirAtividade(atividade)">🗑️</button>
+      </div>
+    </div>
+  </div>
 
   <div class="modal-overlay" *ngIf="mostrarModal">
     <div class="modal">
       <button class="fechar" (click)="mostrarModal = false">✖</button>
-      <h3>Criar Nova Atividade</h3>
+      <h3>{{ atividadeEditandoId ? 'Editar' : 'Nova' }} Atividade</h3>
 
       <label>Número da Lição</label>
       <input type="number" [(ngModel)]="novaAtividade.numeroLicao" placeholder="Ex: 1"/>
@@ -42,42 +67,20 @@
       </select>
 
       <label>Título</label>
-      <input type="text" [(ngModel)]="novaAtividade.titulo" placeholder="Ex: Estudo Bíblico sobre Romanos"/>
+      <input type="text" [(ngModel)]="novaAtividade.titulo" placeholder="Título da lição"/>
 
       <label>Descrição</label>
-      <textarea [(ngModel)]="novaAtividade.descricao" placeholder="Ex: Encontro semanal para estudo e reflexão sobre o livro de Romanos"></textarea>
+      <textarea [(ngModel)]="novaAtividade.descricao" rows="3"></textarea>
 
-      <label>Links</label>
-      <div *ngFor="let link of novaAtividade.links; let i = index">
+      <label>Links Úteis</label>
+      <div *ngFor="let link of novaAtividade.links; let i = index" class="link-input-group">
         <input type="text" [(ngModel)]="link.url" placeholder="URL">
-        <input type="text" [(ngModel)]="link.descricao" placeholder="Descrição">
-        <button (click)="removerLink(i)">Remover</button>
+        <input type="text" [(ngModel)]="link.descricao" placeholder="Nome">
+        <button class="btn-remover" (click)="removerLink(i)">🗑️</button>
       </div>
-      <button (click)="adicionarLink()">+ Adicionar Link</button>
+      <button class="btn-adicionar" (click)="adicionarLink()">+ Adicionar Link</button>
 
-      <button class="concluido" (click)="salvarAtividade()">CONCLUÍDO</button>
-    </div>
-  </div>
-
-  <div *ngIf="trimestreSelecionado">
-    <div *ngFor="let atividade of atividades" class="card">
-      <h2>Lição {{ atividade.numeroLicao }}</h2>
-      <h3>{{ atividade.titulo }}</h3>
-      <p><strong>Data (Domingo):</strong> {{ atividade.dataPublicacao | date:'dd/MM/yyyy' }}</p>
-      <p><strong>Descrição:</strong> {{ atividade.descricao }}</p>
-      <div *ngIf="atividade.links?.length">
-        <strong>Links:</strong>
-        <ul>
-          <li *ngFor="let link of atividade.links">
-            <a [href]="link.url" target="_blank">{{ link.descricao || link.url }}</a>
-          </li>
-        </ul>
-      </div>
-
-      <div *ngIf="temPermissao">
-        <button class="botao-editar" (click)="editarAtividade(atividade)">Editar</button>
-        <button class="botao-excluir" (click)="excluirAtividade(atividade)">Excluir</button>
-      </div>
+      <button class="btn-concluido" (click)="salvarAtividade()">SALVAR ATIVIDADE</button>
     </div>
   </div>
 </div>

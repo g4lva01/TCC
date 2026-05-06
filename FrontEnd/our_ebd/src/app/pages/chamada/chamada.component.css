@@ -60,24 +60,15 @@ app-menu {
   background-clip: text;
 }
 
-:root {
-  --primary: #2563eb;
-  --success: #22c55e;
-  --danger: #ef4444;
-  --bg-body: #f8fafc;
-  --card-bg: #ffffff;
-  --text-main: #1e293b;
-}
-
 .chamada-container {
   width: 95%;
   max-width: 600px;
   margin: 0 auto;
   padding: 16px;
   box-sizing: border-box;
-  background-color: var(--bg-body);
+  background-color: #f8fafc;
   font-family: 'Inter', system-ui, sans-serif;
-  color: var(--text-main);
+  color: #1e293b;
 }
 
 .header-chamada {
@@ -139,15 +130,15 @@ app-menu {
 .botoes-domingos button.com-chamada::after { background-color: #22c55e; }
 .botoes-domingos button.sem-chamada::after { background-color: #ef4444; }
 
-.com-chamada { color: var(--success); }
-.sem-chamada { color: var(--danger); }
+.com-chamada { color: #22c55e; }
+.sem-chamada { color: #ef4444; }
 
 .aluno-card {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  background: var(--card-bg);
+  background: #ffffff;
   margin-bottom: 10px;
   padding: 14px;
   border-radius: 12px;
@@ -156,7 +147,7 @@ app-menu {
   gap: 10px;
 }
 
-.presente-border { border-left: 5px solid var(--success); }
+.presente-border { border-left: 5px solid #22c55e; }
 
 .aluno-info .nome { font-weight: 600; font-size: 1rem; }
 
@@ -173,7 +164,7 @@ app-menu {
 
 .btn-check.active {
   background: #dcfce7;
-  border-color: var(--success);
+  border-color: #22c55e;
   color: #166534;
 }
 
@@ -200,7 +191,7 @@ app-menu {
   padding: 16px;
   border-radius: 12px;
   border: none;
-  background: var(--primary);
+  background: #2563eb;
   color: white;
   font-size: 1.1rem;
   font-weight: bold;
@@ -223,7 +214,7 @@ app-menu {
   margin: 15px 0;
   border-radius: 15px;
   overflow: hidden;
-  border: 3px solid var(--primary);
+  border: 3px solid #2563eb;
 }
 
 @media (max-width: 450px) {

@@ -45,12 +45,14 @@ export class ActivitysManagerComponent implements OnInit{
   }
 
   ngOnInit() {
+    this.definirTrimestreAutomatico();
+
     this.http.get<any[]>('http://localhost:8080/api/turmas')
       .subscribe(res => {
         this.turmas = res;
         if (res.length > 0) {
           this.turmaSelecionada = res[0].id;
-          this.carregarAtividades();
+          this.carregarDomingosEAtividades();
         }
       });
   }
@@ -150,16 +152,7 @@ export class ActivitysManagerComponent implements OnInit{
 
   onTrimestreChange(event: any) {
     this.trimestreSelecionado = +event.target.value;
-    const ano = new  Date().getFullYear();
-
-    this.http.get<string[]>(`http://localhost:8080/api/atividade/domingos/${ano}/${this.trimestreSelecionado}`)
-      .subscribe({
-        next: data => {
-          this.domingos = data.map(d => new Date(d + 'T00:00:00'));
-          this.carregarAtividades();
-        },
-        error: err => console.error('Erro ao buscar domingos:', err)
-      });
+    this.carregarDomingosEAtividades();
   }
 
   adicionarLink() {
@@ -168,5 +161,28 @@ export class ActivitysManagerComponent implements OnInit{
 
   removerLink(index: number) {
     this.novaAtividade.links.splice(index, 1);
+  }
+
+  definirTrimestreAutomatico() {
+    const hoje = new Date();
+    const mes = hoje.getMonth();
+    const ano = hoje.getFullYear();
+
+    if (mes < 3) this.trimestreSelecionado = 1;
+    else if (mes < 6) this.trimestreSelecionado = 2;
+    else if (mes < 9) this.trimestreSelecionado = 3;
+    else this.trimestreSelecionado = 4;
+  }
+
+  carregarDomingosEAtividades() {
+    const ano = new Date().getFullYear();
+    this.http.get<string[]>(`http://localhost:8080/api/atividade/domingos/${ano}/${this.trimestreSelecionado}`)
+      .subscribe({
+        next: data => {
+          this.domingos = data.map(d => new Date(d + 'T00:00:00'));
+          this.carregarAtividades();
+        },
+        error: err => console.error('Erro ao buscar domingos:', err)
+      });
   }
 }
