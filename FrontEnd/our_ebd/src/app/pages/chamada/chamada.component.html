@@ -8,15 +8,18 @@
 </div>
 
 <div class="chamada-container">
-  <div class="trimestre-selector">
-    <label>Selecione o trimestre:</label>
-    <select [(ngModel)]="trimestreSelecionado" (change)="onTrimestreChange()">
-      <option *ngFor="let t of trimestres" [value]="t">{{ t }}</option>
-    </select>
-  </div>
+  <header class="header-chamada">
+    <h2>Chamada</h2>
+    <div class="trimestre-selector">
+      <label>Trimestre</label>
+      <select [(ngModel)]="trimestreSelecionado" (change)="onTrimestreChange()">
+        <option *ngFor="let t of trimestres" [value]="t">{{ t }}</option>
+      </select>
+    </div>
+  </header>
 
-  <div class="domingos-trimestre" *ngIf="domingosTrimestre.length > 0">
-    <label>Domingos do trimestre:</label>
+  <div class="domingos-section" *ngIf="domingosTrimestre.length > 0">
+    <label class="label-section">Próximos Domingos</label>
     <div class="botoes-domingos">
       <button *ngFor="let d of domingosTrimestre"
               (click)="selecionarDomingo(d)"
@@ -24,51 +27,59 @@
               [class.com-chamada]="domingosComChamada.includes(d)"
               [class.sem-chamada]="!domingosComChamada.includes(d) && isPastDate(d)"
               [class.futuro]="!isPastDate(d) && !isToday(d)">
-        {{ d | date:'dd/MM/yyyy' }}
+        <span class="dia">{{ d | date:'dd' }}</span>
+        <span class="mes">{{ d | date:'MMM' }}</span>
       </button>
     </div>
   </div>
 
-  <h3>Turma: {{ turmaNome }}</h3>
-
-  <div *ngFor="let aluno of alunos; let i = index" class="aluno">
-    <span class="nome">{{ aluno.nome }}</span>
-
-    <button (click)="togglePresenca(i)">
-      Presente: {{ aluno.presente ? '✅' : '❌' }}
-    </button>
-
-    <button (click)="toggleBiblia(i)" [disabled]="!aluno.presente">
-      Bíblia: {{ aluno.biblia ? '✅' : '❌' }}
+  <div class="turma-header">
+    <h3>Turma: <span>{{ turmaNome }}</span></h3>
+    <button class="btn-qr" (click)="toggleScanner()">
+      <span class="icon">📷</span> {{ mostrarScanner ? 'Fechar' : 'QR Code' }}
     </button>
   </div>
 
-  <div class="resumo">
-    <div class="campo">
-      <label>Visitantes:</label>
-      <input type="number" [(ngModel)]="visitantes" />
-    </div>
-    <div class="campo">
-      <label>Oferta da Turma:</label>
-      <input currencyMask [(ngModel)]="oferta"
-        [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
-      />
+  <!-- Scanner Card -->
+  <div class="scanner-card" *ngIf="renderizarScanner">
+    <zxing-scanner
+      [enable]="mostrarScanner"
+      [device]="selectedDevice"
+      [formats]="formats"
+      (camerasFound)="onCamerasFound($event)"
+      (scanSuccess)="onScanSuccess($event)">
+    </zxing-scanner>
+  </div>
+
+  <div class="aluno-lista">
+    <div *ngFor="let aluno of alunos; let i = index" class="aluno-card" [class.presente-border]="aluno.presente">
+      <div class="aluno-info">
+        <span class="nome">{{ aluno.nome }}</span>
+      </div>
+      
+      <div class="aluno-actions">
+        <button class="btn-check" (click)="togglePresenca(i)" [class.active]="aluno.presente">
+          {{ aluno.presente ? '✅' : 'Presença' }}
+        </button>
+        <button class="btn-check" (click)="toggleBiblia(i)" [disabled]="!aluno.presente" [class.active]="aluno.biblia">
+          {{ aluno.biblia ? '📖' : 'Bíblia' }}
+        </button>
+      </div>
     </div>
   </div>
 
-  <button class="finalizar" (click)="finalizarChamada()">Finalizar Chamada</button>
-</div>
+  <div class="resumo-financeiro">
+    <div class="campo">
+      <label>Visitantes</label>
+      <input type="number" [(ngModel)]="visitantes" placeholder="0" />
+    </div>
+    <div class="campo">
+      <label>Oferta da Turma</label>
+      <input currencyMask [(ngModel)]="oferta" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
+    </div>
+  </div>
 
-<button type="button" (click)="toggleScanner()">
-  {{ mostrarScanner ? 'Desativar' : 'Ativar' }} QR Code
-</button>
-<div class="scanner-container" *ngIf="renderizarScanner">
-  <zxing-scanner
-    [enable]="mostrarScanner"
-    [device]="selectedDevice"
-    [formats]="formats"
-    (camerasFound)="onCamerasFound($event)"
-    (scanSuccess)="onScanSuccess($event)"
-    (scanError)="onScanError($event)">
-  </zxing-scanner>
+  <button class="btn-finalizar" (click)="finalizarChamada()">
+    Finalizar Chamada
+  </button>
 </div>

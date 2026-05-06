@@ -60,126 +60,186 @@ app-menu {
   background-clip: text;
 }
 
+:root {
+  --primary: #2563eb;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --bg-body: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #1e293b;
+}
+
 .chamada-container {
+  width: 95%;
   max-width: 600px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: sans-serif;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+  padding: 16px;
+  box-sizing: border-box;
+  background-color: var(--bg-body);
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text-main);
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.turma-selector {
-  margin-bottom: 20px;
+.header-chamada {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-select {
-  padding: 5px;
-  font-size: 16px;
-}
-
-.aluno-lista {
   margin-bottom: 20px;
 }
 
-.aluno {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px;
-  background-color: #fff;
-  border-bottom: 1px solid #ddd;
-}
-
-.nome {
-  font-weight: bold;
-}
-
-.status span {
-  margin-left: 5px;
-  font-size: 18px;
-}
-
-.check {
-  color: green;
-}
-
-.cross {
-  color: red;
-}
-
-.resumo {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.campo {
-  display: flex;
-  flex-direction: column;
-  width: 48%;
-}
-
-input {
-  padding: 5px;
-  font-size: 16px;
-}
-
-.finalizar {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.finalizar:hover {
-  background-color: #0056b3;
+.trimestre-selector select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  font-weight: 500;
 }
 
 .botoes-domingos button {
-  margin: 5px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #e2e8f0;
+}
+
+.botoes-domingos button.com-chamada {
+  background-color: #f0fdf4;
+  border-color: #22c55e;
+  color: #166534;
+}
+
+.botoes-domingos button.sem-chamada {
+  background-color: #fef2f2;
+  border-color: #ef4444;
+  color: #991b1b;
+}
+
+.botoes-domingos button.futuro {
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+  color: #94a3b8;
+  opacity: 0.7;
+}
+
+.botoes-domingos button.selecionado {
+  border-width: 3px;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.botoes-domingos button::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.botoes-domingos button.com-chamada::after { background-color: #22c55e; }
+.botoes-domingos button.sem-chamada::after { background-color: #ef4444; }
+
+.com-chamada { color: var(--success); }
+.sem-chamada { color: var(--danger); }
+
+.aluno-card {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card-bg);
+  margin-bottom: 10px;
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: 0.3s;
+  gap: 10px;
+}
+
+.presente-border { border-left: 5px solid var(--success); }
+
+.aluno-info .nome { font-weight: 600; font-size: 1rem; }
+
+.aluno-actions { display: flex; gap: 8px; }
+
+.btn-check {
   padding: 8px 12px;
-  border: 1px solid #ccc;
-  background: #f5f5f5;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 0.85rem;
   cursor: pointer;
 }
 
-.botoes-domingos button.selecionado {
-  background: #007bff;
+.btn-check.active {
+  background: #dcfce7;
+  border-color: var(--success);
+  color: #166534;
+}
+
+.resumo-financeiro {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 25px;
+  background: #f1f5f9;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.resumo-financeiro input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  margin-top: 5px;
+}
+
+.btn-finalizar {
+  width: 100%;
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
+  background: var(--primary);
   color: white;
-  border-color: #0056b3;
+  font-size: 1.1rem;
+  font-weight: bold;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+  cursor: pointer;
 }
 
-button.futuro {
-  background-color: #ffffff;
-  color: #333;
-  border: 1px solid #ddd;
+.btn-qr {
+  background: #334155;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: none;
+  font-size: 0.8rem;
 }
 
-button.com-chamada {
-  background-color: #28a745 !important;
-  color: white !important;
-  border-color: #1e7e34;
+.scanner-card {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin: 15px 0;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 3px solid var(--primary);
 }
 
-button.sem-chamada {
-  background-color: #dc3545 !important;
-  color: white !important;
-  border-color: #bd2130;
-}
-
-.botoes-domingos button.selecionado {
-  outline: 3px solid #007bff;
-  box-shadow: 0 0 10px rgba(0,123,255,0.5);
+@media (max-width: 450px) {
+  .header-chamada {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .aluno-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .aluno-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
 }

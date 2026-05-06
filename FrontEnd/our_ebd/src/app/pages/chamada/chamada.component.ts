@@ -58,6 +58,8 @@ export class ChamadaComponent implements OnInit {
     this.http.get<any>(`http://localhost:8080/api/turmas/nome/${this.turmaNome}`)
       .subscribe(turma => {
         this.turmaId = turma.id;
+        
+        this.definirTrimestreAutomatico();
 
         this.http.get<any[]>(`http://localhost:8080/api/matriculas/turma/${this.turmaNome}/alunos`)
           .subscribe(alunos => {
@@ -71,6 +73,23 @@ export class ChamadaComponent implements OnInit {
             }));
           });
       });
+  }
+
+  definirTrimestreAutomatico() {
+    const hoje = new Date();
+    const mes = hoje.getMonth();
+    const ano = hoje.getFullYear();
+
+    let t = '';
+    if (mes < 3) t = 'T1';
+    else if (mes < 6) t = 'T2';
+    else if (mes < 9) t = 'T3';
+    else t = 'T4';
+
+    const trimestreAtual = `${ano}-${t}`;
+
+    this.trimestreSelecionado = trimestreAtual;
+    this.onTrimestreChange();
   }
 
   onTrimestreChange() {
