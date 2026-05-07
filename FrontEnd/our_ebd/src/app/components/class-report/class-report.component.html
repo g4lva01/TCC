@@ -1,49 +1,66 @@
 <div class="report-container">
-  <h2>DATA DA FREQUÊNCIA</h2>
+  <header class="report-header">
+    <h2>📊 Relatório de Frequência</h2>
+    
+    <div class="filter-bar">
+      <div class="input-group">
+        <label>Período</label>
+        <select [(ngModel)]="trimestreSelecionado" (change)="onTrimestreChange()">
+          <option *ngFor="let trimestre of trimestres" [value]="trimestre">
+            {{ trimestre.split('-')[0] }} - {{ trimestre.includes('T1') ? '1º' : trimestre.includes('T2') ? '2º' : trimestre.includes('T3') ? '3º' : '4º' }} Trimestre
+          </option>
+        </select>
+      </div>
 
-  <div class="filtro-container">
-    <label for="filtro">Ano e Trimestre:</label>
-    <select id="filtro" class="filtro" [(ngModel)]="trimestreSelecionado" (change)="onTrimestreChange()">
-      <option value="">Selecione</option>
-      <option *ngFor="let trimestre of trimestres" [value]="trimestre">
-        {{ trimestre.replace('-T1', ' - 1º Trimestre')
-                    .replace('-T2', ' - 2º Trimestre')
-                    .replace('-T3', ' - 3º Trimestre')
-                    .replace('-T4', ' - 4º Trimestre') }}
-      </option>
-    </select>
+      <div class="input-group" *ngIf="trimestreSelecionado">
+        <label>Domingo</label>
+        <select [(ngModel)]="dataSelecionada" (change)="onDataChange()">
+          <option [ngValue]="null">Selecione o dia</option>
+          <option *ngFor="let domingo of domingosTrimestre" [value]="domingo">
+            {{ domingo | date:'dd/MM/yyyy' }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <section class="total-dashboard" *ngIf="grupos.length > 0">
+    <div class="stat-card principal">
+      <h3>Total Geral</h3>
+      <div class="stat-grid">
+        <div class="stat-item"><span>👥 Matriculados</span> <strong>{{ totalGeral.matriculados }}</strong></div>
+        <div class="stat-item"><span>✅ Presentes</span> <strong class="text-success">{{ totalGeral.presentes }}</strong></div>
+        <div class="stat-item"><span>❌ Ausentes</span> <strong class="text-danger">{{ totalGeral.ausentes }}</strong></div>
+        <div class="stat-item"><span>📖 Bíblias</span> <strong>{{ totalGeral.biblia }}</strong></div>
+        <div class="stat-item"><span>📚 Revistas</span> <strong>{{ totalGeral.revistas }}</strong></div>
+        <div class="stat-item"><span>🤝 Visitantes</span> <strong>{{ totalGeral.visitante }}</strong></div>
+        <div class="stat-item highlight"><span>💰 Oferta</span> <strong>R$ {{ totalGeral.oferta | number:'1.2-2' }}</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="classes-grid">
+    <div class="class-card" *ngFor="let grupo of grupos">
+      <div class="class-header">
+        <h3>{{ grupo.nome }}</h3>
+        <button [routerLink]="['/schoolHistoryManager/', grupo.nome]">Detalhes</button>
+      </div>
+      <div class="class-info">
+        <p>Presentes: <strong>{{ grupo.presentes }}</strong> / {{ grupo.matriculados }}</p>
+        <div class="progress-bar">
+          <div class="progress" [style.width.%]="(grupo.presentes / grupo.matriculados) * 100"></div>
+        </div>
+        <div class="mini-stats">
+          <span>📖 {{ grupo.biblia }}</span>
+          <span>📚 {{ grupo.revistas }}</span>
+          <span>🤝 {{ grupo.qtdVisitantes }}</span>
+          <span>💰 R$ {{ grupo.oferta }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="filtro-container" *ngIf="trimestreSelecionado">
-    <label for="data">Data (Domingos):</label>
-    <select id="data" [(ngModel)]="dataSelecionada" (change)="onDataChange()">
-      <option value="">Selecione</option>
-      <option *ngFor="let domingo of domingosTrimestre" [value]="domingo">
-        {{ domingo }}
-      </option>
-    </select>
-  </div>
-
-  <div class="grupo" *ngFor="let grupo of grupos">
-    <h3>{{ grupo.nome }}</h3>
-    <p>Matriculados: {{ grupo.matriculados }}</p>
-    <p>Presentes: {{ grupo.presentes }}</p>
-    <p>Ausentes: {{ grupo.ausentes }}</p>
-    <p>Bíblias: {{ grupo.biblia }}</p>
-    <p>Revistas: {{ grupo.revistas }}</p>
-    <p>Visitantes: {{grupo.qtdVisitantes}}</p>
-    <p>Oferta: R$ {{ grupo.oferta }}</p>
-    <button [routerLink]="['/schoolHistoryManager/', grupo.nome]">Ver Mais</button>
-  </div>
-
-  <div class="total-geral">
-    <h3>Total Geral</h3>
-    <p>Matriculados: {{ totalGeral.matriculados }}</p>
-    <p>Presentes: {{ totalGeral.presentes }}</p>
-    <p>Ausentes: {{ totalGeral.ausentes }}</p>
-    <p>Bíblias: {{ totalGeral.biblia }}</p>
-    <p>Revistas: {{ totalGeral.revistas }}</p>
-    <p>Visitantes: {{totalGeral.visitante}}</p>
-    <p>Oferta: R$ {{ totalGeral.oferta }}</p>
+  <div class="empty-state" *ngIf="grupos.length === 0 && dataSelecionada">
+    <p>Nenhum registro encontrado para esta data.</p>
   </div>
 </div>

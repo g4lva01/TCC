@@ -25,15 +25,8 @@ export class ClassReportComponent {
   domingosTrimestre: string[] = [];
 
   ngOnInit() {
-    const anoAtual = new Date().getFullYear();
-    const anos = [anoAtual, anoAtual - 1];
-
-    this.trimestres = anos.flatMap(ano => [
-      `${ano}-T1`,
-      `${ano}-T2`,
-      `${ano}-T3`,
-      `${ano}-T4`
-    ]);
+    this.gerarListaTrimestre();
+    this.definirTrimestreAutomatico();
   }
 
   onTrimestreChange() {
@@ -94,5 +87,26 @@ export class ClassReportComponent {
   }
   verMais(grupo: string) {
     console.log(`Ver mais sobre ${grupo}`);
+  }
+
+  gerarListaTrimestre() {
+    const anoAtual = new Date().getFullYear();
+    const anos = [anoAtual, anoAtual - 1];
+    this.trimestres = anos.flatMap(ano => [`${ano}-T1`, `${ano}-T2`, `${ano}-T3`, `${ano}-T4`]);
+  }
+
+  definirTrimestreAutomatico() {
+    const hoje = new Date();
+    const mes = hoje.getMonth();
+    const ano = hoje.getFullYear();
+
+    let t = '';
+    if (mes < 3) t = 'T1';
+    else if (mes < 6) t = 'T2';
+    else if (mes < 9) t = 'T3';
+    else t = 'T4';
+
+    this.trimestreSelecionado = `${ano}-${t}`;
+    this.onTrimestreChange();
   }
 }
