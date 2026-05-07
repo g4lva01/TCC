@@ -37,6 +37,7 @@ export class ClassHistoryComponent implements OnInit {
     const anoAtual = new Date().getFullYear();
     this.anosDisponiveis = Array.from({length: 5}, (_, i) => anoAtual - i);
     
+    this.definirTrimestreAutomatico();
     this.carregarHistorico();
   }
 
@@ -56,5 +57,15 @@ export class ClassHistoryComponent implements OnInit {
       next: () => alert(`Chamada registrada para ${data}`),
       error: () => alert('Erro ao registrar chamada')
     });
+  }
+
+  definirTrimestreAutomatico() {
+    const mes = new Date().getMonth();
+    this.anoSelecionado = new Date().getFullYear();
+    
+    if (mes < 3) this.trimestreSelecionado = 1;
+    else if (mes < 6) this.trimestreSelecionado = 2;
+    else if (mes < 9) this.trimestreSelecionado = 3;
+    else this.trimestreSelecionado = 4;
   }
 }

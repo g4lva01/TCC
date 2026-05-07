@@ -61,51 +61,113 @@ app-menu {
 }
 
 .historico-container {
-  padding: 2rem;
-  max-width: 800px;
-  margin: auto;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
 }
 
-.registro {
-  background-color: #f4f4f4;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 0 4px rgba(0,0,0,0.1);
-  font-family: 'Istok web', sans-serif;
+/* Header e Filtros */
+.header-secao {
+  margin-bottom: 30px;
+  text-align: center;
 }
 
-button {
-  background-color: #732991;
-  color: white;
-  border: none;
-  padding: 0.4rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.filtros {
+.filtros-bar {
   display: flex;
   justify-content: center;
-  gap: 2rem;
-  margin-bottom: 1.5rem;
+  gap: 15px;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  margin-top: 15px;
 }
 
-.filtro {
+.campo-filtro {
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+}
+
+.campo-filtro label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+select {
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #f8fafc;
+}
+
+/* Cards de Histórico */
+.card-registro {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+  border-left: 5px solid #732991;
+  transition: transform 0.2s;
+}
+
+.card-registro:hover {
+  transform: scale(1.01);
+}
+
+.data-label {
+  display: block;
+  font-weight: 800;
+  color: #732991;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.stats-row {
+  display: flex;
+  gap: 20px;
+}
+
+.stat {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.filtro label {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  font-family: 'Istok Web', sans-serif;
+.stat .valor { font-weight: 700; font-size: 1.1rem; }
+.stat .desc { font-size: 0.7rem; color: #64748b; }
+
+/* Botão */
+.btn-detalhes {
+  background: #732991;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
 
-.filtro select {
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-family: 'Istok Web', sans-serif;
+.btn-detalhes:hover { opacity: 0.9; }
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .card-registro {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .stats-row { justify-content: center; }
+  
+  .btn-detalhes { width: 100%; }
 }

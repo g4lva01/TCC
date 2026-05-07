@@ -8,32 +8,60 @@
 </div>
 
 <div class="historico-container">
-  <h2>Histórico de Frequência - {{ turma }}</h2>
+  <header class="header-secao">
+    <h2>📅 Histórico: {{ turma }}</h2>
+    
+    <div class="filtros-bar">
+      <div class="campo-filtro">
+        <label>Período</label>
+        <select [(ngModel)]="trimestreSelecionado" (change)="carregarHistorico()">
+          <option [value]="1">1º Trimestre</option>
+          <option [value]="2">2º Trimestre</option>
+          <option [value]="3">3º Trimestre</option>
+          <option [value]="4">4º Trimestre</option>
+        </select>
+      </div>
 
-  <div class="filtros">
-    <div class="filtro">
-      <label for="trimestre">Trimestre:</label>
-      <select id="trimestre" [(ngModel)]="trimestreSelecionado" (change)="carregarHistorico()">
-        <option value="1">1º Trimestre</option>
-        <option value="2">2º Trimestre</option>
-        <option value="3">3º Trimestre</option>
-        <option value="4">4º Trimestre</option>
-      </select>
+      <div class="campo-filtro">
+        <label>Ano</label>
+        <select [(ngModel)]="anoSelecionado" (change)="carregarHistorico()">
+          <option *ngFor="let ano of anosDisponiveis" [value]="ano">{{ ano }}</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <div class="lista-historico">
+    <div class="card-registro" *ngFor="let item of historico">
+      <div class="info-principal">
+        <span class="data-label">{{ item.data | date:'dd/MM/yyyy' }}</span>
+        <div class="stats-row">
+          <div class="stat">
+            <span class="icon">👥</span>
+            <span class="valor">{{ item.presentes }}</span>
+            <span class="desc">Presenças</span>
+          </div>
+          <div class="stat">
+            <span class="icon">📖</span>
+            <span class="valor">{{ item.levouBiblia }}</span>
+            <span class="desc">Bíblias</span>
+          </div>
+          <div class="stat">
+            <span class="icon">📚</span>
+            <span class="valor">{{ item.revistas }}</span>
+            <span class="desc">Revistas</span>
+          </div>
+        </div>
+      </div>
+      
+      <button class="btn-detalhes" [routerLink]="['/chamada', turma, item.data]">
+        Ver Chamada
+      </button>
     </div>
 
-    <div class="filtro">
-      <label for="ano">Ano:</label>
-      <select id="ano" [(ngModel)]="anoSelecionado" (change)="carregarHistorico()">
-        <option *ngFor="let ano of anosDisponiveis" [value]="ano">{{ ano }}</option>
-      </select>
+    <!-- Feedback caso não haja registros -->
+    <div class="vazio" *ngIf="historico.length === 0">
+      <p>Nenhum registro encontrado para este período.</p>
     </div>
-  </div>
-
-  <div class="registro" *ngFor="let item of historico">
-    <p><strong>Data:</strong> {{ item.data }}</p>
-    <p><strong>Total Presentes:</strong> {{ item.presentes }}</p>
-    <p><strong>Total de Bíblias:</strong> {{ item.levouBiblia }}</p>
-    <p><strong>Total de Revistas:</strong> {{ item.revistas }}</p>
-    <button [routerLink]="['/chamada', turma, item.data]">Chamada</button>
   </div>
 </div>
