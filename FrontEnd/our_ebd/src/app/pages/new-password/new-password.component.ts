@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-new-password',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './new-password.component.html',
   styleUrl: './new-password.component.css'
 })

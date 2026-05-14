@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from "@angular/common";
-import { Router} from '@angular/router';
+import { Router, RouterLink} from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -15,7 +15,7 @@ export class RegisterComponent {
     nome: new FormControl('', Validators.required),
     dtNascimento: new FormControl('', Validators.required),
     matricula: new FormControl('', Validators.required),
-    senha: new FormControl('', Validators.required),
+    senha: new FormControl('', [Validators.required, senhaForteValidator]), 
     cfSenha: new FormControl('', Validators.required)
   }, { validators: this.senhasIguaisValidator });
 

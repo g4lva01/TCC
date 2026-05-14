@@ -1,22 +1,47 @@
-<div class="container_logo">
-    <h3 id="title">EBD</h3>
-</div>
+<div class="register-wrapper">
+  <div class="register-card">
+    <div class="container_logo">
+      <h3 id="title">EBD</h3>
+      <p class="subtitle">Criar Nova Conta</p>
+    </div>
 
-<div class="container_camps">
-    <form [formGroup]="formulario" (ngSubmit)="criarLogin()">
+    <form [formGroup]="formulario" (ngSubmit)="criarLogin()" class="container_camps">
+      <div class="input-group">
         <input type="text" formControlName="nome" placeholder="Nome completo" required />
-        <input type="date" formControlName="dtNascimento" placeholder="Data de Nascimento" required />
-        <input type="number" formControlName="matricula" placeholder="Matrícula" required />
-        <input type="password" formControlName="senha" placeholder="Criar senha" required />
-        <small class="info-senha">
-            A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, um número e um símbolo.
-        </small>
-        <input type="password" formControlName="cfSenha" placeholder="Confirmar senha" required />
+      </div>
 
-        <div *ngIf="formulario.errors?.['senhasDiferentes'] && formulario.touched">
-            ⚠️ As senhas não coincidem.
+      <div class="input-row">
+        <div class="input-group">
+          <label class="field-label">Nascimento</label>
+          <input type="date" formControlName="dtNascimento" required />
         </div>
+        <div class="input-group">
+          <label class="field-label">Matrícula</label>
+          <input type="number" formControlName="matricula" placeholder="0000" required />
+        </div>
+      </div>
 
-        <button type="submit" [disabled]="formulario.invalid">Criar Login</button>
+      <div class="input-group">
+        <input type="password" formControlName="senha" placeholder="Criar senha" required />
+        <small class="info-senha" [class.error]="formulario.get('senha')?.errors?.['senhaFraca'] && formulario.get('senha')?.touched">
+          Mínimo 8 caracteres, maiúscula, número e símbolo.
+        </small>
+      </div>
+
+      <div class="input-group">
+        <input type="password" formControlName="cfSenha" placeholder="Confirmar senha" required />
+        <div class="error-message" *ngIf="formulario.errors?.['senhasDiferentes'] && formulario.get('cfSenha')?.touched">
+          ⚠️ As senhas não coincidem.
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="formulario.invalid">
+        CRIAR CONTA
+      </button>
+
+      <button type="button" class="btn-link" [routerLink]="['/']">
+        Já tenho uma conta? Fazer login
+      </button>
     </form>
+  </div>
 </div>

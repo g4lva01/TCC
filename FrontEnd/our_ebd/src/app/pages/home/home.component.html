@@ -1,20 +1,35 @@
-<form [formGroup]="formulario" (ngSubmit)="fazerLogin()">
-  <div class="container_logo">
-    <h3 id="title">EBD</h3>
-  </div>
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="container_logo">
+      <h3 id="title">EBD</h3>
+      <p class="subtitle">Escola Bíblica Dominical</p>
+    </div>
 
-  <div class="container_camps">
-    <input type="text" formControlName="identificador" placeholder="Matrícula/Nome completo" required />
-    <input type="password" formControlName="senha" placeholder="Senha" required />
-    <br>
-    <button type="submit" class="entra" [disabled]="formulario.invalid">ENTRA</button>
-    <br>
-    <button class="nova_conta">
-      <a [routerLink]="['/register']" class="conta">CADASTRAR-SE</a>
-    </button>
-    <br>
-    <button class="nova_senha">
-      <a [routerLink]="['/new_password']" class="esquecir">ESQUECI A SENHA</a>
-    </button>
+    <form [formGroup]="formulario" (ngSubmit)="fazerLogin()" class="container_camps">
+      <div class="input-group">
+        <input type="text" formControlName="identificador" placeholder="Matrícula ou Nome completo" required />
+      </div>
+      
+      <div class="input-group">
+        <input type="password" formControlName="senha" placeholder="Senha" required />
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="formulario.invalid">
+        ENTRAR
+      </button>
+
+      <div class="actions">
+        <button type="button" class="btn-link" [routerLink]="['/new_password']">
+          Esqueci a senha
+        </button>
+        
+        <hr class="divider">
+        
+        <p>Ainda não tem conta?</p>
+        <button type="button" class="btn-outline" [routerLink]="['/register']">
+          CADASTRAR-SE
+        </button>
+      </div>
+    </form>
   </div>
-</form>
+</div>

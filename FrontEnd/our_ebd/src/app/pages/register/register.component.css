@@ -1,56 +1,124 @@
-.container_logo {
-    display: flex;
-    justify-content: center;
+.register-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: 'Inter', sans-serif;
+  padding: 20px;
 }
 
-.container_logo > h3{
-    font-size: 128px;
-    font-family: 'Istok Web', sans-serif;
-    background-image: linear-gradient(to right, #FF0000, #0000FF);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+.register-card {
+  background: white;
+  padding: 2.5rem 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
 }
 
-.container_camps > form{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+#title {
+  font-size: 64px;
+  margin: 0;
+  font-family: 'Istok Web', sans-serif;
+  background: linear-gradient(to right, #FF0000, #0000FF);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 900;
 }
 
-.container_camps > form>  input{
-    width: 325px;
-    height: 33px;
-    margin-bottom: 20px;
-    border-radius: 100px;
-    background-color: #D9D9D0;
-    color: #000000;
-    text-align: center;
+.subtitle {
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.container_camps > form> button{
-    background: #0000FF;
-    border-radius: 100px;
-    width: 168px;
-    height: 40px;
-    font-size: 24px;
-    color: #FFFFFF;
-    margin-bottom: 20px;
+.container_camps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
 }
 
-.container_camps > button > a{
-    color: #FFFFFF;
-    text-decoration: none;
+.input-row {
+  display: flex;
+  gap: 10px;
 }
 
-.container_camps > form > small.info-senha {
-    display: block;
-    width: 325px;
-    margin-top: -15px;
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: #555555;
-    font-style: italic;
-    text-align: left;
-    padding-left: 10px;
+.field-label {
+  display: block;
+  text-align: left;
+  font-size: 12px;
+  color: #95a5a6;
+  margin-left: 10px;
+  margin-bottom: 2px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1.5px solid #eee;
+  background-color: #f8f9fa;
+  transition: all 0.3s;
+  box-sizing: border-box;
+}
+
+.input-group input:focus {
+  border-color: #0000FF;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(0, 0, 255, 0.1);
+}
+
+.info-senha {
+  font-size: 11px;
+  color: #7f8c8d;
+  text-align: left;
+  margin-top: 5px;
+  display: block;
+}
+
+.info-senha.error {
+  color: #e74c3c;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 12px;
+  text-align: left;
+  margin-top: 5px;
+}
+
+.btn-primary {
+  background: #0000FF;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #0000CC;
+  transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: #732991;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
 }
