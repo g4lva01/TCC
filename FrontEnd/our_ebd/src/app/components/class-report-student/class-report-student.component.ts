@@ -1,36 +1,44 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-class-report-student',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './class-report-student.component.html',
   styleUrl: './class-report-student.component.css'
 })
 export class ClassReportStudentComponent implements OnInit {
   relatorio: any[] = [];
   trimestres: string[] = [];
+  trimestreSelecionado: string = '';
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    const anoAtual = new Date().getFullYear();
-    const anos = [anoAtual, anoAtual - 1];
+    const dataAtual = new Date();
+    const anoAtual = dataAtual.getFullYear();
+    const mesAtual = dataAtual.getMonth() + 1;
 
-    this.trimestres = anos.flatMap(ano => [
-      `${ano}-T1`,
-      `${ano}-T2`,
-      `${ano}-T3`,
-      `${ano}-T4`
-    ]);
+    const anos = [anoAtual, anoAtual - 1];
+    this.trimestres = anos.flatMap(ano => [`${ano}-T1`, `${ano}-T2`, `${ano}-T3`, `${ano}-T4`]);
+
+    const tAtual = Math.ceil(mesAtual / 3);
+    this.trimestreSelecionado = `${anoAtual}-T${tAtual}`;
+
+    this.buscarDados(this.trimestreSelecionado);
   }
 
 
   onTrimestreChange(event: any) {
     const valor = event.target.value;
-    if(!valor) return;
+    if (valor) {
+      this.buscarDados(valor);
+    }
+  }
 
+  buscarDados(valor: string) {
     const [ano, trimestreStr] = valor.split('-T');
     const trimestre = parseInt(trimestreStr, 10);
 

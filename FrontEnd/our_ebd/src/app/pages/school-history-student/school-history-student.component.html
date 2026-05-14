@@ -12,12 +12,28 @@
     <h2>Histórico Escolar</h2>
 
     <div class="turma-card" *ngFor="let turma of turmas">
-        <h5>{{ turma.nomeTurma }}</h5>
-        <p>Presenças: {{ turma.presencas }}</p>
-        <p>Qtd. Bíblia: {{ turma.qtdBiblia }}</p>
-        <p>Ausências: {{ turma.ausencias }}</p>
-        <p>Qtd. Revista: {{ turma.qtdRevista }}</p>
+        <div class="card-header">
+            <h5>{{ turma.nomeTurma }}</h5>
+            <button [routerLink]="['/reportStudent', turma.nomeTurma]">Ver Detalhes</button>
+        </div>
 
-        <button [routerLink]="['/reportStudent', turma.nomeTurma]">Ver Mais</button>
+        <div class="card-stats">
+            <div class="stat-item">
+                <span class="label">Presenças</span>
+                <span class="value">{{ turma.presencas }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">Bíblias</span>
+                <span class="value">{{ turma.qtdBiblia }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">Ausências</span>
+                <span class="value danger">{{ turma.ausencias }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">Revistas</span>
+                <span class="value">{{ turma.qtdRevista }}</span>
+            </div>
+        </div>
     </div>
 </div>

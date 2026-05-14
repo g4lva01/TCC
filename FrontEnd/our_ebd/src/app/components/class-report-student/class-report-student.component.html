@@ -1,24 +1,40 @@
 <div class="report-container">
-    <h2>FREQUÊNCIA</h2>
-
-    <div class="filtro-container">
-        <label for="filtro">Ano e Trimestre:</label>
-        <select id="filtro" class="filtro" (change)="onTrimestreChange($event)">
-        <option value="">Selecione</option>
-        <option *ngFor="let trimestre of trimestres" [value]="trimestre">
-            {{ trimestre.replace('-T1', ' - 1º Trimestre')
-                        .replace('-T2', ' - 2º Trimestre')
-                        .replace('-T3', ' - 3º Trimestre')
-                        .replace('-T4', ' - 4º Trimestre') }}
-        </option>
-        </select>
+    <div class="header-section">
+        <h2>FREQUÊNCIA</h2>
+        <div class="filtro-container">
+            <label for="filtro">Ano e Trimestre:</label>
+            <select 
+                id="filtro" 
+                class="filtro" 
+                [(ngModel)]="trimestreSelecionado" 
+                (change)="onTrimestreChange($event)">
+                
+                <option value="">Selecione</option>
+                <option *ngFor="let trimestre of trimestres" [value]="trimestre">
+                    {{ trimestre.replace('-T1', ' - 1º Trimestre')
+                                .replace('-T2', ' - 2º Trimestre')
+                                .replace('-T3', ' - 3º Trimestre')
+                                .replace('-T4', ' - 4º Trimestre') }}
+                </option>
+            </select>
+        </div>
     </div>
 
-    <div *ngFor="let item of relatorio">
-    <hr />
-    <p><strong>Data:</strong> {{ item.data | date:'dd/MM/yyyy' }}</p>
-    <p><strong>Presente:</strong> {{ item.presente ? 'Sim' : 'Não' }}</p>
-    <p><strong>Levou Bíblia:</strong> {{ item.levouBiblia ? 'Sim' : 'Não' }}</p>
-    <p><strong>Levou Revista:</strong> {{ item.levouRevista ? 'Sim' : 'Não' }}</p>
+    <div class="report-list">
+        <div class="report-item" *ngFor="let item of relatorio">
+            <div class="date-badge">
+                <span class="day">{{ item.data | date:'dd' }}</span>
+                <span class="month">{{ item.data | date:'MMM' }}</span>
+            </div>
+
+            <div class="status-group">
+                <span class="badge" [class.success]="item.presente" [class.danger]="!item.presente">
+                    {{ item.presente ? 'Presente' : 'Ausente' }}
+                </span>
+
+                <span class="badge-outline" *ngIf="item.levouBiblia">📖 Bíblia</span>
+                <span class="badge-outline" *ngIf="item.levouRevista">📚 Revista</span>
+            </div>
+        </div>
     </div>
 </div>
