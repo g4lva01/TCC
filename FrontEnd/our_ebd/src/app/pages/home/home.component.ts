@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule} from '@angular/common';
 import { Token } from '@angular/compiler';
+import { environment } from '../../../environments/environment.prod'
 
 @Component({
   selector: 'app-home',
@@ -39,7 +40,7 @@ export class HomeComponent implements OnInit {
   fazerLogin() {
     if (this.formulario.invalid) return;
 
-    this.http.post<any>('http://localhost:8080/api/login', this.formulario.value)
+    this.http.post<any>(`${environment.apiUrl}/api/login`, this.formulario.value)
       .subscribe({
         next: res => {
           // Armazenamento centralizado
