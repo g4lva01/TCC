@@ -1,14 +1,14 @@
-INSERT INTO Perfil (nome)
+INSERT INTO perfil (nome)
 VALUES ('aluno');
-INSERT INTO Perfil (nome)
+INSERT INTO perfil (nome)
 VALUES ('professor');
-INSERT INTO Perfil (nome)
+INSERT INTO perfil (nome)
 VALUES ('gestor');
 
-INSERT INTO Pessoa (nome,matricula)
+INSERT INTO pessoa (nome,matricula)
 VALUES ('admin',999999);
 
-INSERT INTO Usuario_Autenticacao (pessoa_id, senha, data_ultimo_login)
+INSERT INTO usuario_autenticacao (pessoa_id, senha, data_ultimo_login)
 VALUES (1, SHA2('7654321', 256), NOW());
 
 INSERT INTO pessoa_perfil (pessoa_id, perfil_id)
