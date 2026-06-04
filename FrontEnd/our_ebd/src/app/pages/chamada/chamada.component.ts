@@ -8,6 +8,7 @@ import { ChamadaService } from '../../services/chamada.service';
 import { NgxCurrencyDirective } from 'ngx-currency';
 import { BarcodeFormat } from "@zxing/library";
 import { ZXingScannerModule } from "@zxing/ngx-scanner";
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-chamada',
@@ -55,13 +56,13 @@ export class ChamadaComponent implements OnInit {
     this.turmaNome = this.route.snapshot.paramMap.get('turma') || '';
     this.data = this.route.snapshot.paramMap.get('data') || '';
 
-    this.http.get<any>(`http://localhost:8080/api/turmas/nome/${this.turmaNome}`)
+    this.http.get<any>(`${environment.apiUrl}/api/turmas/nome/${this.turmaNome}`)
       .subscribe(turma => {
         this.turmaId = turma.id;
         
         this.definirTrimestreAutomatico();
 
-        this.http.get<any[]>(`http://localhost:8080/api/matriculas/turma/${this.turmaNome}/alunos`)
+        this.http.get<any[]>(`${environment.apiUrl}/api/matriculas/turma/${this.turmaNome}/alunos`)
           .subscribe(alunos => {
             this.alunos = alunos.map(a => ({
               id: a.id,
@@ -131,7 +132,7 @@ export class ChamadaComponent implements OnInit {
         const dataFormatada = current.toISOString().split('T')[0];
         domingos.push(dataFormatada);
 
-        this.http.get<any>(`http://localhost:8080/api/chamada/${this.turmaNome}/${dataFormatada}`)
+        this.http.get<any>(`${environment.apiUrl}/api/chamada/${this.turmaNome}/${dataFormatada}`)
           .subscribe({
             next: (res) => {
               this.domingosComChamada = [...this.domingosComChamada, dataFormatada];
@@ -148,7 +149,7 @@ export class ChamadaComponent implements OnInit {
   carregarChamada() {
     if (!this.data) return;
 
-    this.http.get<any>(`http://localhost:8080/api/chamada/${this.turmaNome}/${this.data}`)
+    this.http.get<any>(`${environment.apiUrl}/api/chamada/${this.turmaNome}/${this.data}`)
       .subscribe({
         next: chamada => {
           this.chamadaExistente = true;

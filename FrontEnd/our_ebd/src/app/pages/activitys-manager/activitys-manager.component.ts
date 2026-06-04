@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MenuStudentComponent } from '../../components/menu-student/menu-student.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-activitys-manager',
@@ -47,7 +48,7 @@ export class ActivitysManagerComponent implements OnInit{
   ngOnInit() {
     this.definirTrimestreAutomatico();
 
-    this.http.get<any[]>('http://localhost:8080/api/turmas')
+    this.http.get<any[]>(`${environment.apiUrl}/api/turmas`)
       .subscribe(res => {
         this.turmas = res;
         if (res.length > 0) {
@@ -58,7 +59,7 @@ export class ActivitysManagerComponent implements OnInit{
   }
 
   carregarAtividades() {
-    this.http.get<any[]>(`http://localhost:8080/api/atividade/turma/${this.turmaSelecionada}`)
+    this.http.get<any[]>(`${environment.apiUrl}/api/atividade/turma/${this.turmaSelecionada}`)
       .subscribe(res => {
         this.atividades = res.filter(a => {
           if (!a.dataPublicacao) return false;
@@ -103,7 +104,7 @@ export class ActivitysManagerComponent implements OnInit{
     };
 
     if (this.atividadeEditandoId) {
-      this.http.put(`http://localhost:8080/api/atividade/${this.atividadeEditandoId}`, body)
+      this.http.put(`${environment.apiUrl}/api/atividade/${this.atividadeEditandoId}`, body)
       .subscribe({
         next: () => {
           alert('Atividade atualizada com sucesso!');
@@ -113,7 +114,7 @@ export class ActivitysManagerComponent implements OnInit{
         error: () => alert('Erro ao atualizar atividade')
       });
     } else {
-      this.http.post('http://localhost:8080/api/atividade', body)
+      this.http.post(`${environment.apiUrl}/api/atividade`, body)
         .subscribe({
           next: () => {
             alert('Atividade criada com sucesso!');
@@ -139,7 +140,7 @@ export class ActivitysManagerComponent implements OnInit{
         turma: { id: this.turmaSelecionada }
       };
 
-      this.http.request('delete', 'http://localhost:8080/api/atividade', {body})
+      this.http.request('delete', `${environment.apiUrl}/api/atividade`, {body})
         .subscribe({
           next: () => {
             alert('Atividade excluída com sucesso!');
@@ -176,7 +177,7 @@ export class ActivitysManagerComponent implements OnInit{
 
   carregarDomingosEAtividades() {
     const ano = new Date().getFullYear();
-    this.http.get<string[]>(`http://localhost:8080/api/atividade/domingos/${ano}/${this.trimestreSelecionado}`)
+    this.http.get<string[]>(`${environment.apiUrl}/api/atividade/domingos/${ano}/${this.trimestreSelecionado}`)
       .subscribe({
         next: data => {
           this.domingos = data.map(d => new Date(d + 'T00:00:00'));

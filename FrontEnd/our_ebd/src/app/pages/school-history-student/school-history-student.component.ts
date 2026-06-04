@@ -4,6 +4,7 @@ import { CommonModule} from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-school-history-student',
@@ -28,7 +29,7 @@ export class SchoolHistoryStudentComponent implements OnInit {
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
 
     if (alunoNome) {
-      this.http.get<any[]>(`http://localhost:8080/api/presencas/historico/aluno/${alunoNome}`, { headers })
+      this.http.get<any[]>(`${environment.apiUrl}/api/presencas/historico/aluno/${alunoNome}`, { headers })
         .subscribe({
           next: res => {
             console.log('Resposta do back:', res);

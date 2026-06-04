@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MenuComponent } from '../../components/menu/menu.component';
 import { FormsModule } from '@angular/forms';
 import { map } from 'rxjs';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-gerenciar-perfis',
@@ -36,7 +37,7 @@ export class GerenciarPerfisComponent implements OnInit {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
 
-    this.http.get<any[]>('http://localhost:8080/api/login/logins', { headers }).subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/api/login/logins`, { headers }).subscribe({
       next: res => {
         this.usuarios = res
           .filter(u => u.nome.toLowerCase() !== 'admin' && u.matricula !== '999999')
@@ -67,7 +68,7 @@ export class GerenciarPerfisComponent implements OnInit {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
 
-    this.http.put<any>('http://localhost:8080/api/login/perfil', dados, { headers }).subscribe({
+    this.http.put<any>(`${environment.apiUrl}/api/login/perfil`, dados, { headers }).subscribe({
       next: res => {
         alert(res.message || "Perfil atualizado com sucesso!");
 

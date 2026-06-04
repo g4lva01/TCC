@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule} from '@angular/common';
 import { Token } from '@angular/compiler';
-import { environment } from '../../../environments/environment.prod'
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-home',

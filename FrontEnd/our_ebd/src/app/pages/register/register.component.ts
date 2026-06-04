@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { Router, RouterLink} from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-register',
@@ -22,7 +23,7 @@ export class RegisterComponent {
   constructor(private router: Router, private http: HttpClient) {}
 
   criarLogin() {
-    this.http.post('http://localhost:8080/api/login/criar', this.formulario.value, {
+    this.http.post(`${environment.apiUrl}/api/login/criar`, this.formulario.value, {
       withCredentials: true
     })
     .subscribe({

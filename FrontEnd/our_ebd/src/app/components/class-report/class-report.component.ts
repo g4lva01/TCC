@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-class-report',
@@ -64,7 +65,7 @@ export class ClassReportComponent {
   onDataChange() {
     if (!this.dataSelecionada) return;
 
-    this.http.get<any[]>(`http://localhost:8080/api/presencas/historico/data/${this.dataSelecionada}`)
+    this.http.get<any[]>(`${environment.apiUrl}/api/presencas/historico/data/${this.dataSelecionada}`)
       .subscribe(dados => {
         this.grupos = dados;
         this.calcularTotal();

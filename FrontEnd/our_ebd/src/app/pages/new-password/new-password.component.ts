@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-new-password',
@@ -28,7 +29,7 @@ export class NewPasswordComponent {
       confirmarSenha: this.formulario.value.cfNvSenha
     };
 
-    this.http.put('http://localhost:8080/api/login/alterar', body)
+    this.http.put(`${environment.apiUrl}/api/login/alterar`, body)
       .subscribe({
         next: res => {
           alert('Senha alterada com sucesso!');

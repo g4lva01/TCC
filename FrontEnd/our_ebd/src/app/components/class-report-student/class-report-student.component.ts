@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-class-report-student',
@@ -46,7 +47,7 @@ export class ClassReportStudentComponent implements OnInit {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}`});
 
-    this.http.get<any[]>(`http://localhost:8080/api/presencas/relatorio/aluno/${alunoNome}/${ano}/${trimestre}`, {headers})
+    this.http.get<any[]>(`${environment.apiUrl}/api/presencas/relatorio/aluno/${alunoNome}/${ano}/${trimestre}`, {headers})
       .subscribe({
         next: data => this.relatorio = data,
         error: err => console.error('Erro ao buscar relatório:', err)

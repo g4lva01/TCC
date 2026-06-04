@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment.prod';
 
 @Injectable({ providedIn: 'root' })
 export class ChamadaService {
-  private apiUrl = 'http://localhost:8080/api/chamada';
+  private apiUrl = `${environment.apiUrl}/api/chamada`;
 
   constructor(private http: HttpClient) {}
 
@@ -17,7 +18,7 @@ export class ChamadaService {
   atualizarChamada(turmaNome: string, data: string, chamada: any) {
     const headers = this.getHeaders();
     return this.http.put(
-      `http://localhost:8080/api/chamada/${turmaNome}/${data}`, 
+      `${environment.apiUrl}/api/chamada/${turmaNome}/${data}`, 
       chamada, 
       { headers }
     );

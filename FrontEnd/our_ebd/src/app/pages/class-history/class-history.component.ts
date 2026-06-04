@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ChamadaService } from '../../services/chamada.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-class-history',
@@ -45,7 +46,7 @@ export class ClassHistoryComponent implements OnInit {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
 
-    this.http.get<any[]>(`http://localhost:8080/api/presencas/historico/turma/${this.turma}?trimestre=${this.trimestreSelecionado}&ano=${this.anoSelecionado}`, { headers })
+    this.http.get<any[]>(`${environment.apiUrl}/api/presencas/historico/turma/${this.turma}?trimestre=${this.trimestreSelecionado}&ano=${this.anoSelecionado}`, { headers })
       .subscribe({
         next: res => this.historico = res,
         error: err => console.error('Erro ao buscar histórico:', err)

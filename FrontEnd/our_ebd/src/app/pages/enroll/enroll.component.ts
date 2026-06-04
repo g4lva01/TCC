@@ -7,6 +7,7 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { BarcodeFormat } from '@zxing/library';
 import e from 'express';
 import { log } from 'console';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-enroll',
@@ -56,7 +57,7 @@ export class EnrollComponent implements OnDestroy {
   }
 
   atualizarAluno() {
-    this.http.put(`http://localhost:8080/api/login/atualizar-aluno/${this.idAlunoSendoEditado}`, this.novoAluno)
+    this.http.put(`${environment.apiUrl}/api/login/atualizar-aluno/${this.idAlunoSendoEditado}`, this.novoAluno)
       .subscribe({
         next: (res: any) => {
           alert('Aluno atualizado com sucesso!');
@@ -80,7 +81,7 @@ export class EnrollComponent implements OnDestroy {
   constructor(private http: HttpClient) {}
 
   matricularAluno() {
-    this.http.post('http://localhost:8080/api/login/matricular', this.novoAluno)
+    this.http.post(`${environment.apiUrl}/api/login/matricular`, this.novoAluno)
       .subscribe({
         next: res => {
           this.alunoEncontrado = res;
@@ -100,7 +101,7 @@ export class EnrollComponent implements OnDestroy {
     const token = localStorage.getItem('token');
     const headers = { Authorization: `Bearer ${token}` };
 
-    this.http.get<any>(`http://localhost:8080/api/login/pesquisar?query=${this.busca}`, { headers })
+    this.http.get<any>(`${environment.apiUrl}/api/login/pesquisar?query=${this.busca}`, { headers })
       .subscribe({
         next: res => {
           this.alunoEncontrado = res;
@@ -115,7 +116,7 @@ export class EnrollComponent implements OnDestroy {
   }
 
   desmatricularAluno(id: number) {
-    this.http.delete(`http://localhost:8080/api/login/desmatricular/${id}`)
+    this.http.delete(`${environment.apiUrl}/api/login/desmatricular/${id}`)
       .subscribe({
         next: () => {
           alert('Aluno desmatriculado com sucesso!');
