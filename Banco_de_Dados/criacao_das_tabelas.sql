@@ -15,9 +15,11 @@ CREATE TABLE usuario_autenticacao (
     FOREIGN KEY (pessoa_id) REFERENCES pessoa(id)
 );
 
-create table usuario_autenticacao_roles (
-	usuario_autenticacao_pessoa_id bigint primary key,
-    roles varchar(255)
+CREATE TABLE usuario_autenticacao_roles (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    usuario_autenticacao_pessoa_id BIGINT NOT NULL,
+    roles VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
 );
 
 -- Definição de perfis (Ex: Aluno, Professor, Gestor)

@@ -39,4 +39,9 @@ public class Sha256PasswordEncoder implements PasswordEncoder {
             throw new RuntimeException("SHA-256 not available", e);
         }
     }
+
+    public static void main(String[] args) {
+        Sha256PasswordEncoder encoder = new Sha256PasswordEncoder();
+        System.out.println("HASH CORRETO: " + encoder.encode("7654321"));
+    }
 }

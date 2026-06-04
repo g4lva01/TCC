@@ -1,6 +1,7 @@
 package com.example.our_ebd.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ public class UsuarioAutenticacao implements UserDetails {
 
     @OneToOne
     @MapsId
+    @JoinColumn(name = "pessoa_id")
     private Pessoa pessoa;
 
     @Column(nullable = false)
@@ -25,8 +27,13 @@ public class UsuarioAutenticacao implements UserDetails {
 
     private LocalDate dataUltimoLogin;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> roles = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "usuario_autenticacao_roles",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Role> roles = new ArrayList<>();
 
     public Long getPessoaId() {
         return pessoaId;
@@ -63,13 +70,13 @@ public class UsuarioAutenticacao implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
-                .map(SimpleGrantedAuthority::new)
+                .map(role -> new SimpleGrantedAuthority(role.getNome()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public String getUsername() {
-        return pessoa.getNome(); // ou matrícula, se preferir
+        return pessoa.getNome();
     }
 
     @Override
@@ -97,11 +104,11 @@ public class UsuarioAutenticacao implements UserDetails {
         return true;
     }
 
-    public List<String> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<String> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 }

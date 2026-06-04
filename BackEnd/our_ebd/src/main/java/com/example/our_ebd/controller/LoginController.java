@@ -48,6 +48,9 @@ public class LoginController {
     @Autowired
     private PresencaRepository presencaRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     private void vincularPerfilAluno(Pessoa pessoa) {
         Perfil perfilAluno = perfilRepository.findById(2L)
                 .orElseThrow(() -> new RuntimeException("Perfil aluno não encontrado"));
@@ -71,6 +74,19 @@ public class LoginController {
             usuario = usuarioAutenticacaoRepository.findByPessoa_NomeIgnoreCase(identificador)
                     .orElse(null);
         }
+
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não encontrado.");
+        }
+
+        if (!passwordEncoder.matches(senha, usuario.getSenha())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas.");
+        }
+
+        boolean senhaValida = passwordEncoder.matches(senha, usuario.getSenha());
+        System.out.println("Usuário encontrado: " + usuario.getPessoa().getNome());
+        System.out.println("Senha informada: " + senha);
+        System.out.println("Senha válida? " + senhaValida);
 
         if (usuario == null || !passwordEncoder.matches(senha, usuario.getSenha())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas.");
@@ -119,7 +135,9 @@ public class LoginController {
         UsuarioAutenticacao usuario = new UsuarioAutenticacao();
         usuario.setPessoa(pessoa);
         usuario.setSenha(passwordEncoder.encode(request.getSenha()));
-        usuario.setRoles(List.of("ROLE_ALUNO"));
+        Role roleAluno = roleRepository.findByNome("ROLE_ALUNO")
+                .orElseThrow(() -> new RuntimeException("Role não encontrada"));
+        usuario.setRoles(List.of(roleAluno));
         usuarioAutenticacaoRepository.save(usuario);
 
         vincularPerfilAluno(pessoa);
@@ -189,7 +207,10 @@ public class LoginController {
                     .orElseThrow(() -> new RuntimeException("Perfil não encontrado: " + id));
             pessoaPerfilRepository.save(new PessoaPerfil(pessoa, perfil));
 
-            String role = "ROLE_" + perfil.getNome().toUpperCase();
+            String nomeRole = "ROLE_" + perfil.getNome().toUpperCase();
+            Role role = roleRepository.findByNome(nomeRole)
+                    .orElseThrow(() -> new RuntimeException("Role não cadastrada no sistema: " + nomeRole));
+
             if (!usuario.getRoles().contains(role)) {
                 usuario.getRoles().add(role);
             }
@@ -199,8 +220,13 @@ public class LoginController {
             if (remover.contains(pp.getPerfil().getId())) {
                 pessoaPerfilRepository.delete(pp);
 
-                String role = "ROLE_" + pp.getPerfil().getNome().toUpperCase();
-                usuario.getRoles().remove(role);
+                String nomeRole = "ROLE_" + pp.getPerfil().getNome().toUpperCase();
+                Role role = roleRepository.findByNome(nomeRole)
+                        .orElse(null);
+
+                if (role != null) {
+                    usuario.getRoles().remove(role);
+                }
             }
         }
 
@@ -308,7 +334,9 @@ public class LoginController {
         UsuarioAutenticacao usuario = new UsuarioAutenticacao();
         usuario.setPessoa(pessoa);
         usuario.setSenha(passwordEncoder.encode("Senha"));
-        usuario.setRoles(List.of("ROLE_ALUNO"));
+        Role roleAluno = roleRepository.findByNome("ROLE_ALUNO")
+                .orElseThrow(() -> new RuntimeException("Role não encontrada"));
+        usuario.setRoles(List.of(roleAluno));
         usuarioAutenticacaoRepository.save(usuario);
 
         Map<String, Object> resultado = Map.of(
