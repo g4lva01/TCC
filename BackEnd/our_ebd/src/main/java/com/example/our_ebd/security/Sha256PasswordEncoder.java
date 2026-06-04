@@ -13,7 +13,15 @@ public class Sha256PasswordEncoder implements PasswordEncoder {
 
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        return encode(rawPassword).equalsIgnoreCase(encodedPassword);
+        String hashedInput = encode(rawPassword);
+
+        System.out.println("DEBUG - Hash gerado do input: [" + hashedInput + "]");
+        System.out.println("DEBUG - Hash vindo do banco:  [" + encodedPassword + "]");
+
+        boolean match = hashedInput.equalsIgnoreCase(encodedPassword);
+        System.out.println("DEBUG - Resultado da comparação: " + match);
+
+        return match;
     }
 
     private String hashWithSHA256(String input) {
