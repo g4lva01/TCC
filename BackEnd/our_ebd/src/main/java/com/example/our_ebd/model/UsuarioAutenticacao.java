@@ -27,12 +27,8 @@ public class UsuarioAutenticacao implements UserDetails {
 
     private LocalDate dataUltimoLogin;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "usuario_autenticacao_roles",
-            joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "usuario_autenticacao_pessoa_id")
     private List<Role> roles = new ArrayList<>();
 
     public Long getPessoaId() {

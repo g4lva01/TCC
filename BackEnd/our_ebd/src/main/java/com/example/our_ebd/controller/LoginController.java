@@ -75,19 +75,6 @@ public class LoginController {
                     .orElse(null);
         }
 
-        if (usuario == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não encontrado.");
-        }
-
-        if (!passwordEncoder.matches(senha, usuario.getSenha())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas.");
-        }
-
-        boolean senhaValida = passwordEncoder.matches(senha, usuario.getSenha());
-        System.out.println("Usuário encontrado: " + usuario.getPessoa().getNome());
-        System.out.println("Senha informada: " + senha);
-        System.out.println("Senha válida? " + senhaValida);
-
         if (usuario == null || !passwordEncoder.matches(senha, usuario.getSenha())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas.");
         }
@@ -101,7 +88,7 @@ public class LoginController {
         return ResponseEntity.ok(Map.of(
                 "token", token,
                 "nome", usuario.getPessoa().getNome(),
-                "roles", usuario.getRoles(),
+                "roles", roles,
                 "id", usuario.getPessoa().getId()
         ));
     }
