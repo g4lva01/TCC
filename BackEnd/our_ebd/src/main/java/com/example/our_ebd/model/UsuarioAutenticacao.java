@@ -27,9 +27,13 @@ public class UsuarioAutenticacao implements UserDetails {
 
     private LocalDate dataUltimoLogin;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "usuario_autenticacao_pessoa_id")
-    private List<Role> roles = new ArrayList<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "usuario_autenticacao_roles",
+            joinColumns = @JoinColumn(name = "usuario_autenticacao_pessoa_id")
+    )
+    @Column(name = "roles")
+    private List<String> roles = new ArrayList<>();
 
     public Long getPessoaId() {
         return pessoaId;
@@ -66,7 +70,7 @@ public class UsuarioAutenticacao implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getNome()))
+                .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
 
@@ -100,11 +104,11 @@ public class UsuarioAutenticacao implements UserDetails {
         return true;
     }
 
-    public List<Role> getRoles() {
+    public List<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(List<String> roles) {
         this.roles = roles;
     }
 }
