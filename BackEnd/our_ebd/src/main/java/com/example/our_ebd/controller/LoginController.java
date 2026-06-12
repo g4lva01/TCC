@@ -52,7 +52,7 @@ public class LoginController {
     private RoleRepository roleRepository;
 
     private void vincularPerfilAluno(Pessoa pessoa) {
-        Perfil perfilAluno = perfilRepository.findById(2L)
+        Perfil perfilAluno = perfilRepository.findById(1L)
                 .orElseThrow(() -> new RuntimeException("Perfil aluno não encontrado"));
 
         PessoaPerfil vinculo = new PessoaPerfil(pessoa, perfilAluno);
