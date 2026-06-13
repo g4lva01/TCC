@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment.prod';
 })
 export class FrequencyService {
 
-  private baseUrl = `${environment.apiUrl}/api/chamada/api/chamada/frequencia/trimestre`;
+  private baseUrl = `${environment.apiUrl}/api/chamada/frequencia/trimestre`;
 
   constructor(private http: HttpClient) { }
 
